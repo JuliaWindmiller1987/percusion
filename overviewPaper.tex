@@ -1,0 +1,188 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
+
+\title{PERCUSION’s contribution to ORCESTRA}
+\author{PERCUSION crew}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\listoftodos
+
+\subsection*{Goals of the paper} First, explain to the reader what we measured and why; Second, allow the reader to answer the question as to whether she or he can use our data to answer their research question by using our data
+
+\section{Introduction}
+
+ % MSE budget (radiation and dynamic), doldrums, transition regions. 
+ % Goal of the paper: 
+ % (1) explain why and how we collected the data we collected
+ % (2) give an overview about the collected data that allows the reader to easily assess whether the data is also useful for addressing another topic
+
+In August and September 2024, the PERCUSION campaign set out to improve our understanding of the Intertropical Convergence Zone in the Atlantic. 
+In the Intertropical Convergence Zone the air ascends, exporting energy and humidity polewards contributing to driving the mid-latitude storms. 
+
+In line with ORCESTRA, the key goal of PERCUSION was to observe the vertical structure of the atmosphere at horizontal scales that extend up to the mesoscale.
+The vertical structure 
+
+Why the vertical structure? As air ascends in the region of the Intertropical Convergence Zone it exports energy and humidity polewards contributing to driving the mid-latitude storms. 
+The ascending air is also inseparable from the clouds in this region since the rising motion actually happens within the clouds while the area around the clouds tends to be subsiding. 
+Clouds, in turn, crucially impact the radiation budget in ways that is sensitive to their vertical profile.
+
+Why the mesoscale? It has long been understood that the large scale tropical climate cannot be understood without understanding the cloud-scale. For example, general circulation models with a resolution on the order of 100km cannot resolve the cloud scale directly and so the impact of clouds has to be estimated using parameterization schemes. Recent results, using observations or storm resolving simulations highlight the organization and the emergence of features on the meso-scale (citeJulia, citeDaniel) and raise the question of whether long lasting biases in the tropical atmosphere are related to our inability of representing these scales citeDaniel \todo{Read Tiffany's paper}. 
+
+Concrete topics that are related to the mesoscale and vertical structure of the deep tropics:
+% What we know
+
+\textbf{Transition regions.} On the timescale of days, the deep precipitating tropics are well-defined by a sharp gradient in column water vapor in the meridional direction citeMapes2018. Moist regions and dry regions, separated by a column water vapor threshold of 48mm citeMapes or 50mm citeMasunaga. Crossing this threshold the amount of convection picks up, the surface winds converge citeJulia, and convection more often than not is intensified at the edge citeMasunaga.  
+In addition to the meridional transition regions, important vertical transition regions exist as well, e.g. in the Atlantic for the Saharan Air Layer carrying dust across the Atlantic, modifying clouds and radiative cooling on their way citeGutleben \todo{Need to understand Gutleben study better}.
+
+\textbf{Doldrums.} Inside the ITCZ... Surface winds are key for coupling the ocean to the atmosphere--the stronger the surface winds the larger the surface fluxes and the moister and warmer the atmosphere. It has long been known (though until recently somewhat forgotten citeKlocke) that the region of the ITCZ is also the region of frequently occurring low wind speed events, the so called doldrums. The doldrums are persistent and large enough to being able to strand sailing ships. While traditionally thought to be linked to the region of ascending motion, we recently showed that this does not fit with buoy based observations that the doldrums tend to be free of precipitation citeWindmiller. This has led to the hypothesis that the air within the doldrums is subsiding. This shows that we don't know the first thing about the doldrums, even though they are important for the spatial distribution of convection, at least in models citeSegura, and can impact ocean heat waves citeRichards. 
+Missing: a vertically resolved picture of the doldrums, including vertical velocity clouds, ...
+
+\textbf{Moist static energy budget--dynamics perspective.} One key property of the ITCZ is to export energy. How much energy is exported does not only matter for the extra-tropics citeHou1998 but the efficiency of which also impacts the properties of the Hadley cell (citeKang, citeByrne). To calculate the energy export, the vertical structure of both the dynamic and thermodynamic atmospheric state is key. In short only a deep overturning circulation  exports energy. In reanalysis, the vertical motion profile, and thus energy export out of the ITCZ has been shown to depend on latitude (citeBack). 
+The energy export has also been shown to depend on the mesoscale structure of the ITCZ, i.e. whether or not the ITCZ is edge intensified, (citeMasunaga). Idealised simulations even suggest that there are mechanisms that if, left undisturbed, lead to the formation of clusters of deep convection with a mesoscale circulation which leads to an upgradient transport of moist static energy and thus revert the expected energy export out of regions of deep convection (citeBretherton)--energy is imported rather than exported.
+
+\textbf{Moist static energy budget--radiation perspective.} On a global scale, the difference between the incoming and outgoing radiation is referred to as earth's energy imbalance--the fundamental driver of climate change. Earth's energy imbalance has increased much faster than expected over the last two decades citeMauritsen. The radiation budget, i.e. how much of the incoming solar radiation is reflected or emitted back to space, depends on the vertical structure of clouds, humidity, aerosols, as well as the surface properties. All of these components interact: detrained cloud condensate evaporates and increases the humidity, aerosols impact cloud droplet formation and properties, humid layers can help maintain aerosol layers citeGutleben which, in turn impact the radiative heating profile. Need observations to test our process understanding citeBrett.
+
+%What we don't know
+Despite it's apparent importance, our knowledge about what the mesoscale and vertical structure of the deep tropics structure actually looks like is severely limited. This is particularly true for vertical motion where most of our understanding is based on modeling or reanalyses results even though we know from the few comparisons we have that their accuracy highly depends on the situation (citeHuaman, citeGeorge). The latter results are partially based on recent field campaigns (EUREC4A, OTREC). It is also true for the mesoscale, and in particular for how the mesoscale interacts with the small and large scale, because until recently climate models were unable to capture this. 
+
+This paper describes PERCUSION the German research aircraft based subcampaign of ORCESTRA (citeStevens). ORCESTRA the international field campaign in the tropical Atlantic took place in August and September 2024. 
+With a total of seven platforms, extensive measurements were collected on board of a research vessel, two island based observatories, three research aircrafts, and the EarthCARE satellite. While the latter is, strictly speaking, not part of the campaign its calibration and validation played such a crucial role in coordinating the different subcampaigns and its data will be invaluable to analyse the data collected during the campaign and putting them into context that it deserves specific mentioning.
+
+PERCUSION took place  with help of the German research aircraft HALO in its cloud observatory configuration (citeStevens2019). During PERCUSION a vertically resolved thermodynamic (temperature and water vapor), dynamic (large-scale winds and vertical velocity), and particulate (hydrometeors, clouds, and aerosols) state of the atmosphere was collected over the area of flight operations. This was made possible by HALO's cloud observatory configuration, which combines active and passive remote sensing instruments with in-situ measurements from the nose-boom at flight level and vertical profiles from dropsondes. 
+
+This is particularly true for PERCUSION since the subcampaign itself united two related but yet distinct goals. While PERCUSION's contribution to ORCESTRA will be the focus of this paper, PERCUSION also played a critical role in the calibration and validation of the EarthCARE satellite. This part of PERCUSION which also includes a set of research flights performed with the same configuration but out of Germany extending the measurements collected during PERCUSION to polar regions is described in a separate paper (citeGroß). Key results of cal-val: ...
+In addition to serving as a benchmark for satellites, the data collected during PERCUSION also helps to serve as a benchmark for high resolution simulations which ran in parallel to the campaign (citeFievet).
+
+
+%What are we going to do about this:
+To address the questions above, in particular, and to complement our understanding about the structure of the ITCZ, in general, we used the German research aircraft HALO to collect vertical profiles of the atmosphere in the ITCZ / tropical Atlantic (August and September 2024). 
+HALO in cloud observation configuration. 
+Statistical flight pattern in CWV space. 
+
+Structure of the paper: 
+\begin{itemize}
+    \item Describe in detail the rational behind the measurement strategy to address the questions above and summarize the execution--including an overview of the collected data and where it can be found
+    \item To give a first glimpse at the data collected and to illustrate their usefulness in addressing the questions raised above
+    \item Conclusion
+\end{itemize}
+
+
+% Summary of ORCESTRA motivation and setup (Stevens et al., in preparation) 
+% \begin{itemize} 
+%     \item Focus on the tropical mesoscale and scale interactions 
+%     \item Benchmark for high resolution storm resolving models and satellite remote sensing 
+% \end{itemize}
+
+% PERCUSION’s contribution to satellite validation, in particular of EarthCARE (Groß et al., in preparation) 
+% \begin{itemize} 
+%     \item Key results are (short summary) 
+% \end{itemize}
+
+% Narrow down to PERCUSION’s goals; Introduction of the meso-topics (each topic: what do we know, what is missing, what are we going to do about it and how) 
+% \begin{itemize} 
+%     \item MSE budget (radiation and dynamics) 
+%     \item Transition regions 
+%     \item Doldrums 
+% \end{itemize} 
+
+\section{Campaign Design and Implementation}
+
+Describe the overall measurement strategy and how that fits with the meso-topics 
+\begin{itemize} 
+    \item Measurement strategy (includes references to the other sub-campaigns (including modelling) as well as the EarthCARE validation aspect) 
+    \item Why east and west, why across the ITCZ, why the circles at the edges… 
+\end{itemize}
+
+Platform and Instrumentation: 
+\begin{itemize} 
+    \item Summary of HALO/NARVAL paper 
+    \item Updates on VELOX, SpecMACS, dropsondes, new retrievals? \textbf{TODO: ask instrument teams for input}
+\end{itemize}
+
+Operational Details: 
+\begin{itemize} 
+    \item Summarise flights in a table (one row for each day, encountered EC… can probably mostly be deduced from flight segmentation, including instrument status) 
+    \item Highlight homepage as additional source of information for individual flights
+\end{itemize}
+
+
+
+\section{Initial Scientific Findings}
+
+One or two plot(s) per meso-topic — should highlight the different instruments, flight segmentation, a comparison with the simulations… 
+
+MSE budget (radiation): 
+\begin{itemize} 
+    \item tbd
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{Plots/mseRadiation.png}
+\caption{\label{fig:mseRad} MSE budget --- radiation. We want to show that we can reconstruct the observed radiation measurements. Figure shows a \textbf{case study} showing different radiation measurements and corresponding cloud profiles during an \textbf{EarthCARE underflight} and maybe also a \textbf{METEOR overflight}. (top panel) 2D brightness temperature from \textbf{VELOX}, (middle panel)  irradiance measurements from \textbf{BARCADI}, (bottom panel) cloud (\textbf{HAMP active}) and humidity profiles (\textbf{WALES}). If we chose a case with a METEOR overflight, we could also calculate the corresponding surface fluxes. Maybe we could also add cloud images from \textbf{specMACs} to match the brightness temperatures.}
+\end{figure}
+
+MSE budget (dynamics): 
+\begin{itemize} 
+    \item tbd
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{Plots/mseDynamics.png}
+\caption{\label{fig:mseDyn} MSE --- dynamics. We want to show that we can calculate GMS for each of our circles (without actually doing it because we want to do this separately) and that we also captured a significant amount of variability. (left) \textbf{mean profiles plus 25th to 75th percentile} of MSE calculated from all \textbf{dropsonde} circles and (right) corresponding vertical velocity profile. Could think about splitting it into \textbf{east and west Atlantic} circles to test if there is an east - west difference (similar to the Pacific).}
+\end{figure}
+
+Doldrums: 
+\begin{itemize} 
+    \item Map that shows the sondes which measured low surface wind speeds 
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{Plots/doldrums.png}
+\caption{\label{fig:doldrums} Doldrums. We want to show that we frequently collected data in the doldrums which will allow us to characterize them. Show \textbf{2D maps} with (left) \textbf{all dropsondes} but highlighting the ones with low wind surface winds and (right) all flight segments where we have an indication of surface wind speed detected by \textbf{specMACs}, again highlighting the low wind speed cases. Showing the number of dropsondes with low surface winds also shows that we have vertically resolved wind, humidity, and temperature profiles. Potential addition: use the \textbf{LAM simulations} to calculate a low wind speed occurrence frequency plot.}
+\end{figure}
+
+Transition regions: 
+\begin{itemize} 
+    \item tbd 
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\linewidth]{Plots/transitionsAsymmetries.png}
+\caption{\label{fig:mseDyn} Transition regions and asymmetries. We want to show that our measurement strategy worked and that we have measurements inside and at the (sharp) edges of the ITCZ. (top) \textbf{Mean profiles} of water vapour and aerosols from \textbf{WALES} for inside, north, and south of the moist tropics (or define ITCZ differently?), (middle) show how many of the circles actually crossed the 48mm contour (\textbf{dropsondes}), (bottom) PDF of CWV caluclated from \textbf{HAMP --- passiv}.  Maybe also somehow highlight the east/west asymmetries? Can also use \textbf{flight segmentation} to calculate CWV span from HAMP for circles.}
+\end{figure}
+
+ 
+
+Synthesis of meso-topics and Implications, refer back to ORCESTRA goals
+
+\section{Conclusion}
+
+PERCUSION was a measurement campaign with very high resolution data in space and time. 
+Disadvantage: limited to a single region and season but our close link to EarthCARE allows us to, in some degree, overcome the disadvantage of an intensive measurement period extrapolate our findings to different regions and seasons.
+
+\section*{Appendix} \begin{itemize} \item Data table with variables and data locations \item Flight segmentation description \end{itemize}
+\end{document}
+
