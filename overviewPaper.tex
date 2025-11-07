@@ -30,80 +30,38 @@
 
 \section{Introduction}
 
- % MSE budget (radiation and dynamic), doldrums, transition regions. 
- % Goal of the paper: 
- % (1) explain why and how we collected the data we collected
- % (2) give an overview about the collected data that allows the reader to easily assess whether the data is also useful for addressing another topic
+% ORCESTRA follows in the footsteps of GATE but shifts its focus to the mesoscale
+In 1958, Herbert Riehl and Joanne Malkus (Riehl) were the first to demonstrate that the large-scale circulation in the tropics, spanning distances of 1000 km or more, could not be explained without considering the impact of clouds on scales of 10 km or less.
+This finding was pivotal in shaping the GATE campaign, which took place in the tropical Atlantic in the summer of 1974. The largest atmospheric field campaign to date, GATE, aimed to estimate the impact of smaller-scale tropical weather systems on large-scale circulation in order to improve its representation in global circulation models. 
+However, the results from GATE already showed that interactions between scales in the tropics are more complex, and that the large-scale circulation cannot be explained solely by the combined effect of individual convective clouds. Rather, the organisation of clouds into mesoscale patterns must be considered, as demonstrated by Houze, although this is still often neglected today (Shaw). 
+Now, with the new generation of global storm-resolving models (Hohenegger), assessing the role of mesoscale processes and their interaction with storms and large-scale phenomena has become more tangible. The need to benchmark these models, and more importantly the need to test hypotheses based on these models, has increased the demand for observations focusing on these scales. To contribute to these efforts, the ORCESTRA campaign (Stevens) returned to the GATE campaign region after 50 years of global warming (Stevens). 
 
-In 1958, Herbert Riehl and Joanne Malkus (citeRiehl) first showed that the large scale circulation in the tropics and thus its poleward energy export can only be explained when including the effect of small scales. 
-Deep convective clouds, on scales on the order of a few kilometers, maintain the equatorial heat budget, a conclusion they derived using mean equatorial cross sections constructed from radiosondes launched within the equatorial trough. 
-These results critically shaped the GATE campaign in 1974, the largest atmospheric field campaign of all times citeZhang, which had, as one of its two primary objectives the goal "To estimate the effects of smaller-scale tropical weather systems on the large-scale circulations" citeKuettner. 
-%A key reason for this interest was the need to better parameterize the effect of tropical convection in large-scale numerical models.
-The results of GATE showed, however, that the scale interaction is more difficult and that the large scale circulation cannot simply be explained by the sum of individual convective clouds but that the organisation of clouds into mesoscale patterns has to be accounted for citeHouze. 
-Despite these results, a clear scale separation between small and large scales is still commonly assumed, despite mounting evidence that mesoscale processes have to be accounted for citeShaw, citeKlocke. 
+% PERCUSION is one of the subcampaigns of ORCESTRA--particularily suited to investigate the mesoscale structure of the ITCZ and the related vertical velocity field
+The ORCESTRA campaign took place in August and September 2024. Measurements were concentrated in the Intertropical Convergence Zone (ITCZ) and the surrounding subsiding region. Measurements were taken across the entire Atlantic, from east to west, intensifying those west of Cabo Verde and east of Barbados. Measurements were also taken from the seafloor through the entire atmosphere. This was achieved with the help of three research aircraft, one research vessel and two observatories, as well as through intense coordination with the new EarthCARE satellite. A total of eight sub-campaigns were conducted (campaign papers). 
+This paper summarises the PERCUSION sub-campaign, centred around the German research aircraft HALO. 
+Throughout the campaign, HALO was configured as a cloud observatory (Stevens). Thanks to its ability to fly at high altitudes and cover long distances in a short time, it was uniquely positioned to capture 'snapshots' of the mesoscale structure and vertical motion profiles of the ITCZ (Glöckner) and the clouds within. At the same time, the cloud observatory configuration of the HALO aircraft was designed to resemble the instrumentation of the EarthCARE satellite, which was launched just in time for the campaign. Thus, PERCUSION also played a critical role in calibrating and validating EarthCARE, as described by Groß. 
 
-It is with a focus on scale interactions in general, but with a particular focus on the mesoscale, that the ORCESTRA campaign citeStevens set out to improve our understanding of the Intertropical Convergence Zone. 
-In August and September 2024, three research aircrafts, one research vessel, two observatories, and through intense coordination with the new EarthCARE satellite, we sampled the tropical convergence zone and the surrounding subsiding region, spanning the entire Atlantic from east to west and from the sea floor through the atmosphere. 
-%The full potential of the data collected during the campaign will only be done justice by combining measurements across subcampaigns. For example, where the research aircrafts saw the clouds from above or within--the research vessel based ship subcampaign saw the clouds from below and with it the entire ocean properties beneath it. 
-This paper summarizes PERCUSION--the subcampaign centred around the German research aircraft HALO in its cloud observation configuration citeStevens.  
-The goal of the paper is to give an overview of the scientific motivation for PERCUSION, the measurement strategy and the data collected in the deep tropics.
-In addition to PERCUSION's contribution to ORCESTRA, there is also PERCUSION's contribution to EarthCARE calibration and validation. These two aspects are invariably linked and yet serve distinct purposes that the latter is discussed separately in citeGroß. 
+% During PERCUSION the ITCZ edges and inner life were of key interest and defined using CWV
+When sampling the ITCZ, we put a particular emphasize on measuring the edge as well as the interior of the ITCZ. That the ITCZ has, even on short time scales, meaningfully defined edges and an inner life has recently been demonstrated by Mapes and Windmiller. While otherwise often collapsed into a single line (Waliser... ) or defined as a region of high mean precipitation rates or extended regions of low level convergence, definitions which only become meaningful when averaging over a weeks or months, Windmiller showed that on hourly time scales, that sharp edges of the ITCZ exist and that they are marked by rapid changes in the meridional wind speed and direction. These edges  align with the margins of the moist deep tropics, separted from the subsiding region by a steep gradient in column water vapour, CWV, (Mapes), with a threshold of either 48 mm (Mapes) or 50 mm (Masunaga). As CWV is more easily observed from space, PERCUSION used the CWV field to direct its measurements. Collected data in a way that can be thought of as being collected based on CWV space had the further advantage that it connects to studies of the organisation of tropical convection under highly idealised conditions (see Wing and Mueller for reviews) whose impact is still a key uncertainty (Bony). 
 
-% In the Intertropical Convergence Zone the air ascends and exports energy and humidity polewards. 
-% This large scale ascending motion is inseparable from the cloud formation on small scales since the rising motion happens within the clouds.
-% It has, therefore, long been recognized that there is a link between the large scale circulation and the cloud scale circulations. 
-% Clouds within the ITCZ are, however, not randomly distributed but organize into a number of mesoscale patterns (or no clouds at all) citeFrank. 
-% This simple statement has been known since ever since the first satellite observations.
-% In recent years, this organization has received increased attention citeBony as model and observational studies suggest that the degree of organisation impacts key properties such as the amount of radiative cooling (citeBretherton, citeTobin), the efficiency with which energy is exported (citeMasunaga), or extremes in precipitation (citeBao). 
-% Motivated by this, the PERCUSION subcampaign of ORCESTRA statistically sampled vertical profiles of clouds, aerosols, humidity, and mesoscale vertical motion in and at the edge of the Atlantic ITCZ.   
+% 
+In line with the overarching goals of the ORCESTRA campaign, a key motivation of the PERCUSION campaign was to improve our understanding of the factors shaping the mesoscale structure of the ITCZ. 
+What distinguishes convection intensified at the edges from convection intensified in the centre, Julia and Masunaga, and what happens inside the ITCZ when--in the doldrums--the surface winds disappear, Klocke, Stevens and Windmiller? 
 
-In line with the overarching goals of the ORCESTRA campaign, a key motivation of the PERCUSION campaign was to better understand what shapes the mesoscale structure of the ITCZ. 
-What distinguishes convection intensified at the edges from convection intensified in the center citeJulia, citeMasunaga? and what happens inside the ITCZ when the winds disappear citeKlocke, citeStevens, citeWindmiller? 
-To answer these questions, we first needed to define the ITCZ on short time scales. 
-%On weekly or monthly time scales, the ITCZ exhibits a seasonal cycle that can be seen in, for example, the region of pronounced near surface convergence (citeBerry, citeWodzicki), region of frequently occuring deep convection (citeWaliser), or highest precipitation rates (citeSchneider). 
-This is not trivial since, the ITCZ latitude can shifts significantly on these time scales--identifying the latitude of the ITCZ based on the region of highest convective activity, citeFrank found variations in latitude of up to $7\deg$ in two days. 
-More recently, citeMapes2018 showed that, using satellite snapshots, the edge of the ITCZ is well-defined by a region of high column water vapour, with a column water vapor threshold of 48mm citeMapes or 50mm citeMasunaga. Crossing this threshold one enters a region of intense rainfall, the surface winds converge citeJulia, and convection more often than not is intensified at one of the edges rather than in the centre citeMasunaga. 
-Identifying the ITCZ in CWV space also readily connects to studies that have shown the impact of the organization of tropical convection simulated under highly idealized conditions (see citeWing for a review). These studies have shown that under homogeneous boundary and initial conditions, different mechanisms can help the aggregation of convection with important consequences for the atmospheric mean state. To test the importance of these mechanisms under more realistic conditions remains an outstanding challenge citeBony. 
+Edge vs. centrally intensified convection, the doldrums and convective self-aggregation have all been suggested to impact the vertical velocity profile, and thus the energy exported out of the ITCZ or convective region. Exporting energy polewards is one of the ITCZ's key features and depends on the vertical structure of the atmospheric state, both dynamically and thermodynamically. The energy exported is important not only for the extra-tropics (e.g. citeHou1998), but the efficiency of that export also impacts the properties of the Hadley cell (citeKang, citeByrne). 
+Despite its importance, it is unclear what determines this efficiency — a question severely hampered by our limited observational reference data on vertical motion. Many studies are based on modelling or reanalysis results, even though we know from the few comparisons we have that their accuracy depends heavily on the situation, as shown by measurements from recent field campaigns (Huaman, George).
 
-%In addition to the meridional transition regions, important vertical transition regions exist as well, e.g. in the Atlantic for the Saharan Air Layer carrying dust across the Atlantic, modifying clouds and radiative cooling on their way citeGutleben \todo{Need to understand Gutleben study better}.
+In addition to vertical motion, which provides a dynamic perspective on the tropical energy budget, another important component is energy input and loss due to radiation. On a global scale, the difference between incoming and outgoing radiation is referred to as the Earth's energy imbalance—the fundamental driver of climate change. Earth's energy imbalance has increased much faster than expected over the last two decades (cite Mauritsen). The radiation budget — i.e. how much of the incoming solar radiation is reflected or emitted back into space — depends on the vertical structure of clouds, humidity and aerosols, as well as surface properties. All of these components interact: for example, detrained cloud condensate increases humidity, aerosols impact cloud droplet formation and properties, and humid layers can maintain aerosol layers (Gutleben), which in turn impact the radiative heating profile. We need observations to test our process understanding (McKim).
 
-%\textbf{Doldrums.} Inside the ITCZ... Surface winds are key for coupling the ocean to the atmosphere--the stronger the surface winds the larger the surface fluxes and the moister and warmer the atmosphere. It has long been known (though until recently somewhat forgotten citeKlocke) that the region of the ITCZ is also the region of frequently occurring low wind speed events, the so called doldrums. The doldrums are persistent and large enough to being able to strand sailing ships. While traditionally thought to be linked to the region of ascending motion, we recently showed that this does not fit with buoy based observations that the doldrums tend to be free of precipitation citeWindmiller. This has led to the hypothesis that the air within the doldrums is subsiding. This shows that we don't know the first thing about the doldrums, even though they are important for the spatial distribution of convection, at least in models citeSegura, and can impact ocean heat waves citeRichards. 
-%Missing: a vertically resolved picture of the doldrums, including vertical velocity clouds, ...
-
-All three, edge vs. centrally itensified convection, the doldrums, and convective self-aggregation have been suggested to impact the vertical velocity profile and thus the energy export out of the ITCZ or convective region. To export energy polewards is one of the key features of the ITCZ and depends on the vertical structure of both the dynamic and thermodynamic atmospheric state. How much energy is exported does not only matter for the extra-tropics (e.g. citeHou1998) but the efficiency of which also impacts the properties of the Hadley cell (citeKang, citeByrne). 
-Despite its importance it is unclear what sets this efficiency, a question that is hampered severely by our limited observational reference profiles of vertical motion. While many studies are based on modeling or reanalyses results even though we know from the few comparisons we have that their accuracy highly depends on the situation as shown by measurements from recent field campaigns (citeHuaman, citeGeorge).
-
-In addition to the vertical motion and thus dynamic perspective of the tropical energy budget, another important component is the energy input and loss due to radiation. On a global scale, the difference between the incoming and outgoing radiation is referred to as earth's energy imbalance--the fundamental driver of climate change. Earth's energy imbalance has increased much faster than expected over the last two decades citeMauritsen. The radiation budget, i.e. how much of the incoming solar radiation is reflected or emitted back to space, depends on the vertical structure of clouds, humidity, aerosols, as well as the surface properties. All of these components interact: detrained cloud condensate evaporates and increases the humidity, aerosols impact cloud droplet formation and properties, humid layers can help maintain aerosol layers citeGutleben which, in turn impact the radiative heating profile. Need observations to test our process understanding citeBrett.
-
-The discussion above can be summarised into four guiding mesotopics:
+The above discussion can be summarised into four guiding mesotopics:
 \begin{itemize}
-    \item How does the organization of clouds on the mesoscale impact the energy export?
+    \item How does the organisation of clouds on the mesoscale impact the energy export?
     \item How does the interaction between radiation, clouds, humidity and aerosols shape the energy gain and loss of the atmosphere?
     \item How are the edges, or transition regions, of the ITCZ maintained?
     \item How are windstill regions inside the ITCZ maintained?
 \end{itemize}
 
-
-%What are we going to do about this:
-To address the questions above, in particular, and to complement our understanding about the structure of the ITCZ, in general, we used the German research aircraft HALO to collect data of the ITCZ in CWV space. The data collected includes (but is not limited to) vertically resolved thermodynamic (temperature and water vapor), dynamic (large-scale winds and vertical velocity), and particulate (hydrometeors, clouds, and aerosols). A detailed description of our measurement strategy and data collected will be given in section 2. To give a first glimpse at the data collected and to illustrate their usefulness in addressing the questions raised above, we illustrate the usefulness or our collected data in an examplary fashin with respect to the questions above in section 3 before concluding in section 4. 
-
-% Summary of ORCESTRA motivation and setup (Stevens et al., in preparation) 
-% \begin{itemize} 
-%     \item Focus on the tropical mesoscale and scale interactions 
-%     \item Benchmark for high resolution storm resolving models and satellite remote sensing 
-% \end{itemize}
-
-% PERCUSION’s contribution to satellite validation, in particular of EarthCARE (Groß et al., in preparation) 
-% \begin{itemize} 
-%     \item Key results are (short summary) 
-% \end{itemize}
-
-% Narrow down to PERCUSION’s goals; Introduction of the meso-topics (each topic: what do we know, what is missing, what are we going to do about it and how) 
-% \begin{itemize} 
-%     \item MSE budget (radiation and dynamics) 
-%     \item Transition regions 
-%     \item Doldrums 
-% \end{itemize} 
+The outline of the paper is as follows. Section 2 provides a detailed description of our measurement strategy and the data collected. Section 3 provides an initial insight into the data collected and demonstrates its usefulness in answering the above questions before concluding in section 4. 
 
 \section{Campaign Design and Implementation}
 
