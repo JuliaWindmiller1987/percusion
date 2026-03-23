@@ -8,3 +8,6 @@ overviewPaper.synctex.gz
 overviewPaper.tdo
 overviewPaper.bbl
 overviewPaper.blg
+data/*.he5
+data/*.ph
+.DS_Store
