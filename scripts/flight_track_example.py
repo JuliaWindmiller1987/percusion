@@ -11,9 +11,10 @@ import h5py
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+from glob import glob
 import cartopy.crs as ccrs
 
-sns.set_context("talk")
+sns.set_context("paper")
 
 # %%
 
@@ -29,7 +30,7 @@ all_tracks = xr.open_dataset(
 
 # %%
 
-flight_name = "HALO-20240811a"
+flight_name = "HALO-20240907a"  # "HALO-20240811a"
 flight_date = flight_name[5:9] + "-" + flight_name[9:11] + "-" + flight_name[11:13]
 
 tracks = all_tracks.sel(time=flight_date)
@@ -40,12 +41,24 @@ loc_at_sat = tracks.assign_coords({"tid": tracks.time}).sel(
     time=sat_date_time, method="nearest"
 )
 
+flight_date_no_dash = flight_date.replace("-", "")
 # %%
 # Advanced Microwave Scanning Radiometer (AMSR)
 # Integrated water vapor in atmospheric column (TCWV) in mm
-# https://nsidc.org/data/au_rain/versions/1 (download from https://nsidc.org/data/data-access-tool/AU_Rain/versions/1)
+# https://nsidc.org/data/au_rain/versions/1
 
-with h5py.File("./data/AMSR_U2_L2_Rain_V02_202408111422_A.he5", "r") as f:
+files = glob(f"./data/AMSR_U2_L2_Rain_V02_{flight_date_no_dash}*.he5")
+if len(files) == 0:
+    raise FileNotFoundError(
+        f"No AMSR data files found. Please download data from "
+        "https://nsidc.org/data/data-access-tool/AU_Rain/versions/1"
+    )
+if len(files) > 1:
+    print(f"Warning: Found {len(files)} files, using first one")
+
+file_path = files[0]
+
+with h5py.File(file_path, "r") as f:
     swath = f["HDFEOS"]["SWATHS"]["AMSR2_L1R"]
     data = swath["Data Fields"]
     geo = swath["Geolocation Fields"]
@@ -114,5 +127,5 @@ plt.colorbar(
     shrink=0.5,
 )
 
-plt.savefig("./figures/generic_flight_track.pdf", bbox_inches="tight")
+plt.savefig(f"./figures/{flight_name}_flight_track.pdf", bbox_inches="tight")
 # %%
