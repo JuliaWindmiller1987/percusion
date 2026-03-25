@@ -14,14 +14,9 @@ import seaborn as sns
 from glob import glob
 import cartopy.crs as ccrs
 
+from percusion.utils import base_map, lon_min, lon_max, lat_min, lat_max
+
 sns.set_context("paper")
-
-# %%
-
-lon_min = -62
-lon_max = -10
-lat_min = -2
-lat_max = 22
 
 # %%
 all_tracks = xr.open_dataset(
@@ -30,7 +25,7 @@ all_tracks = xr.open_dataset(
 
 # %%
 
-flight_name = "HALO-20240907a"  # "HALO-20240811a"
+flight_name = "HALO-20240811a"  # "HALO-20240907a"  # "HALO-20240811a"
 flight_date = flight_name[5:9] + "-" + flight_name[9:11] + "-" + flight_name[11:13]
 
 tracks = all_tracks.sel(time=flight_date)
@@ -79,28 +74,8 @@ tcwv_grid, lon_edges, lat_edges, _ = binned_statistic_2d(
 )
 
 # %%
-size = 8
-aspect = 16 / 9
 
-map_extent = [lon_min, lon_max, lat_min, lat_max]
-
-fig, ax = plt.subplots(
-    figsize=(size * aspect, size),
-    subplot_kw={"projection": ccrs.PlateCarree()},
-)
-
-ax.set_extent(map_extent, crs=ccrs.PlateCarree())
-ax.coastlines(alpha=1.0, color="white")
-
-gl = ax.gridlines(
-    draw_labels=True,
-    alpha=0.25,
-    xlocs=range(-60, -10, 10),
-    ylocs=range(0, 25, 5),
-)
-
-gl.top_labels = False
-gl.right_labels = False
+fig, ax = base_map()
 
 plt.plot(plan.lon, plan.lat, "C1")
 # plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
@@ -113,7 +88,7 @@ plt.contourf(
     lon_grid[:-1] + np.diff(lon_grid) / 2,
     lat_grid[:-1] + np.diff(lat_grid) / 2,
     tcwv_grid.T,
-    extent=map_extent,
+    extent=[lon_min, lon_max, lat_min, lat_max],
     cmap="Blues",
     alpha=0.75,
     levels=np.arange(36, 68, 4),

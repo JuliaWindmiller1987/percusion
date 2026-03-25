@@ -11,3 +11,6 @@ overviewPaper.blg
 data/*.he5
 data/*.ph
 .DS_Store
+src/percusion.egg-info
+src/percusion/__pycache__
+
