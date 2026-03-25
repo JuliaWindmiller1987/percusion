@@ -14,6 +14,7 @@ def base_map(
     lat_max=lat_max,
     size=8,
     aspect=16 / 9,
+    coastline_kwargs=None,
 ):
     map_extent = [lon_min, lon_max, lat_min, lat_max]
 
@@ -23,7 +24,10 @@ def base_map(
     )
 
     ax.set_extent(map_extent, crs=ccrs.PlateCarree())
-    ax.coastlines(alpha=1.0, color="white")
+
+    default_coast = {"color": "white", "alpha": 1.0}
+    default_coast.update(coastline_kwargs)
+    ax.coastlines(**default_coast)
 
     gl = ax.gridlines(
         draw_labels=True,
