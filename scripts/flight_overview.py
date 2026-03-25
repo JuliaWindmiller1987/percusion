@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 from orcestra.flightplan import sal, tbpb
 import numpy as np
 
+import importlib
+import percusion.utils
+
+importlib.reload(percusion.utils)
+from percusion.utils import base_map, lon_min, lon_max, lat_min, lat_max
 
 # %%
 
@@ -16,25 +21,15 @@ def close_path(lon, lat):
     return lon_closed, lat_closed
 
 
-# %%
+def list_of_kinds(list_of_dicts):
 
-meta = get_flight_segments()
+    lists_of_kinds = [
+        dict["kinds"] if isinstance(dict["kinds"], (list)) else [dict["kinds"]]
+        for dict in list_of_dicts
+    ]
+    kinds = [i for list_of_kinds in lists_of_kinds for i in list_of_kinds]
 
-# %%
-
-flight_ids = [flight_id for flights in meta.values() for flight_id in flights]
-print(f"Total number of flights: {len(flight_ids)}")
-
-# %%
-
-segments = [
-    {**s, "platform_id": platform_id, "flight_id": flight_id}
-    for platform_id, flights in meta.items()
-    for flight_id, flight in flights.items()
-    for s in flight["segments"]
-]
-
-# %%
+    return set(kinds)
 
 
 def get_halo_position(freq="1s"):
@@ -53,10 +48,42 @@ def get_halo_position(freq="1s"):
 # %%
 
 ds = get_halo_position()
+# %%
+
+meta = get_flight_segments()
 
 # %%
 
-fig, ax = plt.subplots()
+flight_ids = [flight_id for flights in meta.values() for flight_id in flights]
+print(f"Total number of flights: {len(flight_ids)}")
+
+# %%
+
+segments = [
+    {**s, "platform_id": platform_id, "flight_id": flight_id}
+    for platform_id, flights in meta.items()
+    for flight_id, flight in flights.items()
+    for s in flight["segments"]
+]
+
+list_of_kinds(segments)
+# %%
+
+events = [
+    {**e, "platform_id": platform_id, "flight_id": flight_id}
+    for platform_id, flights in meta.items()
+    for flight_id, flight in flights.items()
+    for e in flight["events"]
+]
+
+list_of_kinds(events)
+
+# %%
+
+fig, ax = base_map(coastline_kwargs={"color": "k"})
+
+plt.plot(ds.lon, ds.lat, "k", alpha=0.1, linewidth=1, label="HALO")
+
 kind = "circle"
 
 for f in flight_ids:
@@ -78,4 +105,6 @@ ax.annotate("SAL", (sal.lon, sal.lat))
 ax.scatter(tbpb.lon, tbpb.lat, marker="o", color="k")
 ax.annotate("BARBADOS", (tbpb.lon, tbpb.lat))
 ax.spines[["right", "top"]].set_visible(False)
+
+
 # %%
