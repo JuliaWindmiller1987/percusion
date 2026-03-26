@@ -13,4 +13,4 @@ data/*.ph
 .DS_Store
 src/percusion.egg-info
 src/percusion/__pycache__
-
+*.nc
