@@ -31,7 +31,7 @@ def base_map(
 
     gl = ax.gridlines(
         draw_labels=True,
-        alpha=0.25,
+        alpha=0.0,
         xlocs=range(-60, -10, 10),
         ylocs=range(0, 25, 5),
     )
@@ -39,3 +39,14 @@ def base_map(
     gl.top_labels = False
     gl.right_labels = False
     return fig, ax
+
+
+def list_of_kinds(list_of_dicts):
+
+    lists_of_kinds = [
+        dict["kinds"] if isinstance(dict["kinds"], (list)) else [dict["kinds"]]
+        for dict in list_of_dicts
+    ]
+    kinds = [i for list_of_kinds in lists_of_kinds for i in list_of_kinds]
+
+    return list(set(kinds))
