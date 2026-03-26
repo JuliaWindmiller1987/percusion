@@ -122,12 +122,12 @@ for flight_id, flight_info in flights.items():
     flight_data.append(
         {
             "Flight ID": flight_id,
-            "Date (MM-DD)": f"{month:02d}-{day:02d}",
+            "Date": f"{month:02d}-{day:02d}",
             "Takeoff": f"{takeoff_time.strftime("%H:%M")} ({start_and_end_locations['takeoff']})",
             "Landing": f"{landing_time.strftime("%H:%M")} ({start_and_end_locations['landing']})",
-            "Duration": (
-                str(flight_duration).split(".")[0][:-3] if flight_duration else None
-            ),
+            # "Duration": (
+            #     str(flight_duration).split(".")[0][:-3] if flight_duration else None
+            # ),
             "Coordination": ", ".join(
                 specified_events(flight_info, coordination_kinds)
             ),
