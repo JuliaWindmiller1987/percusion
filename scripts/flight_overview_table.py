@@ -4,8 +4,10 @@ import importlib
 import percusion.utils
 
 importlib.reload(percusion.utils)
-from percusion.utils import list_of_kinds
+from percusion.utils import list_of_kinds, get_halo_position
 import pandas as pd
+import numpy as np
+
 
 # %%
 
@@ -24,6 +26,13 @@ events = [
 
 coordination_kinds = ["atr_coordination"] + list_of_kinds(events)
 
+# %%
+
+ds = get_halo_position()
+
+campaign_start = flights[flight_ids[0]]["takeoff"]
+campaign_end = flights[flight_ids[-1]]["landing"]
+ds = ds.sel(time=slice(campaign_start, campaign_end))
 # %%
 
 
@@ -75,6 +84,24 @@ def specified_events(flight_info, specified_kinds):
     return sorted(count_events(abbreviate_kinds(list_of_spec_kinds)))
 
 
+def get_takeoff_landing_location(flight_info, ds):
+    dict_of_locations = {"takeoff": None, "landing": None}
+    for s in dict_of_locations.keys():
+        rel_time = flight_info.get(s)
+        time_slice = (
+            slice(rel_time - pd.Timedelta(hours=1), rel_time)
+            if s == "landing"
+            else slice(rel_time, rel_time + pd.Timedelta(hours=1))
+        )
+        position = ds.sel(time=time_slice)
+
+        lon = int(position.lon.mean("time").values)
+        loc = "SAL" if lon > -30 else "BB"
+        dict_of_locations[s] = loc
+
+    return dict_of_locations
+
+
 # %%
 # Extract flight dates from metadata
 flight_data = []
@@ -90,20 +117,21 @@ for flight_id, flight_info in flights.items():
     landing_time = flight_info.get("landing")
     flight_duration = landing_time - takeoff_time
 
+    start_and_end_locations = get_takeoff_landing_location(flight_info, ds)
+
     flight_data.append(
         {
             "Flight ID": flight_id,
-            "Month": month,
-            "Day": day,
-            "Takeoff": takeoff_time.strftime("%H:%M") if takeoff_time else None,
-            "Landing": landing_time.strftime("%H:%M") if landing_time else None,
+            "Date (MM-DD)": f"{month:02d}-{day:02d}",
+            "Takeoff": f"{takeoff_time.strftime("%H:%M")} ({start_and_end_locations['takeoff']})",
+            "Landing": f"{landing_time.strftime("%H:%M")} ({start_and_end_locations['landing']})",
             "Duration": (
-                str(flight_duration).split(".")[0] if flight_duration else None
+                str(flight_duration).split(".")[0][:-3] if flight_duration else None
             ),
             "Coordination": ", ".join(
                 specified_events(flight_info, coordination_kinds)
             ),
-            "# of circles": ", ".join(specified_events(flight_info, ["circle"])),
+            "Circles": ", ".join(specified_events(flight_info, ["circle"])),
             # "Segments": ", ".join(s["name"] for s in flight_info["segments"]),
         }
     )
