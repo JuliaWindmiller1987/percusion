@@ -11,7 +11,7 @@ import importlib
 import percusion.utils
 
 importlib.reload(percusion.utils)
-from percusion.utils import base_map, list_of_kinds
+from percusion.utils import base_map, list_of_kinds, get_halo_position
 import pandas as pd
 
 # %%
@@ -22,19 +22,6 @@ def close_path(lon, lat):
     lon_closed = np.append(lon, lon[0])
     lat_closed = np.append(lat, lat[0])
     return lon_closed, lat_closed
-
-
-def get_halo_position(freq="1s"):
-    """Return the HALO position at a given time frequency."""
-    # root = "ipns://latest.orcestra-campaign.org"
-    root = "ipfs://QmWyyXuoTGJbf9MGSEjsfAdZzX8fWPfJByDgTb1yR9LWUg"
-    return (
-        xr.open_dataset(f"{root}/products/HALO/position_attitude.zarr", engine="zarr")
-        .reset_coords(("lat", "lon"))[["lat", "lon"]]
-        .resample(time=freq)
-        .mean()
-        .load()
-    )
 
 
 # %%

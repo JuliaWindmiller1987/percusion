@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import xarray as xr
 
 lon_min = -62
 lon_max = -10
@@ -50,3 +51,16 @@ def list_of_kinds(list_of_dicts):
     kinds = [i for list_of_kinds in lists_of_kinds for i in list_of_kinds]
 
     return list(set(kinds))
+
+
+def get_halo_position(freq="1s"):
+    """Return the HALO position at a given time frequency."""
+    # root = "ipns://latest.orcestra-campaign.org"
+    root = "ipfs://QmWyyXuoTGJbf9MGSEjsfAdZzX8fWPfJByDgTb1yR9LWUg"
+    return (
+        xr.open_dataset(f"{root}/products/HALO/position_attitude.zarr", engine="zarr")
+        .reset_coords(("lat", "lon"))[["lat", "lon"]]
+        .resample(time=freq)
+        .mean()
+        .load()
+    )
