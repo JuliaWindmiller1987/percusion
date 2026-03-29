@@ -69,7 +69,7 @@ def count_events(x):
         else:
             item_counted = item
         list_counted.append(item_counted)
-    return list_counted
+    return sorted(list_counted)
 
 
 def specified_events(flight_info, specified_kinds):
@@ -81,7 +81,7 @@ def specified_events(flight_info, specified_kinds):
     for s in return_as_list(flight_info["segments"]):
         if s in specified_kinds:
             list_of_spec_kinds.append(s)
-    return sorted(count_events(abbreviate_kinds(list_of_spec_kinds)))
+    return list_of_spec_kinds  # count_events(abbreviate_kinds(list_of_spec_kinds))
 
 
 def get_takeoff_landing_location(flight_info, ds):
@@ -102,9 +102,38 @@ def get_takeoff_landing_location(flight_info, ds):
     return dict_of_locations
 
 
+def count_all_occurrences(flights, specified_kinds):
+    all_occurrences = []
+    for flight_id, flight_info in flights.items():
+        all_occurrences.extend(specified_events(flight_info, specified_kinds))
+
+    return count_events(abbreviate_kinds(all_occurrences))
+
+
+# %%
+
+print_occurrences = [
+    "circle",
+    "ec_underpass",
+    "bco_overpass",
+    "cvao_overpass",
+    "meteor_overpass",
+    "pace_underpass",
+    "atr_coordination",
+]
+
+for kind in print_occurrences:
+    print(f"{kind}: {count_all_occurrences(flights, [kind])}")
+
+
 # %%
 # Extract flight dates from metadata
 flight_data = []
+
+
+def url_string(flight_id):
+    return f"\\href{{https://orcestra-campaign.org/reports/{flight_id}.html}}{{{flight_id}}}"
+
 
 for flight_id, flight_info in flights.items():
 
@@ -121,7 +150,11 @@ for flight_id, flight_info in flights.items():
 
     flight_data.append(
         {
-            "Flight ID": flight_id,
+            "Flight ID": (
+                url_string(flight_id)
+                if flight_id not in ["HALO-20240822a"]
+                else flight_id
+            ),
             "Date": f"{month:02d}-{day:02d}",
             "Takeoff": f"{takeoff_time.strftime("%H:%M")} ({start_and_end_locations['takeoff']})",
             "Landing": f"{landing_time.strftime("%H:%M")} ({start_and_end_locations['landing']})",
@@ -129,9 +162,15 @@ for flight_id, flight_info in flights.items():
             #     str(flight_duration).split(".")[0][:-3] if flight_duration else None
             # ),
             "Coordination": ", ".join(
-                specified_events(flight_info, coordination_kinds)
+                count_events(
+                    abbreviate_kinds(specified_events(flight_info, coordination_kinds))
+                )
             ),
-            "Circles": ", ".join(specified_events(flight_info, ["circle"])),
+            "Circles": ", ".join(
+                count_events(
+                    abbreviate_kinds(specified_events(flight_info, ["circle"]))
+                )
+            ),
             # "Segments": ", ".join(s["name"] for s in flight_info["segments"]),
         }
     )
@@ -144,5 +183,10 @@ df = pd.DataFrame(flight_data)
 
 # Convert to LaTeX table
 latex_table = df.to_latex(index=False, caption="HALO Flights", label="tab:flights")
+latex_table = latex_table.replace(r"\toprule", "")
+latex_table = latex_table.replace(r"\bottomrule", "")
 print(latex_table)
+
+with open("./tables/flight_overview_table.tex", "w") as f:
+    f.write(latex_table)
 # %%
