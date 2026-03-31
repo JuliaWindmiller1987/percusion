@@ -16,6 +16,13 @@ import pandas as pd
 
 # %%
 
+import percusion
+from pathlib import Path
+
+PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
+
+# %%
+
 
 def close_path(lon, lat):
     """Close the path by appending the first point to the end."""
@@ -42,8 +49,8 @@ ds = ds.sel(time=slice(campaign_start, campaign_end))
 
 # %%
 
-tcwv_era5 = xr.open_dataset("./data/cwvEra520240809.nc")
-land_sea_mask_era5 = xr.open_dataset("./data/landSeaMaskEra520240809.nc")
+tcwv_era5 = xr.open_dataset(f"{PROJECT_ROOT}/data/cwvEra520240809.nc")
+land_sea_mask_era5 = xr.open_dataset(f"{PROJECT_ROOT}/data/landSeaMaskEra520240809.nc")
 
 tcwv_era5 = tcwv_era5.where(land_sea_mask_era5.lsm == 0, drop=True)
 
@@ -235,5 +242,5 @@ ax.set_title(" ")
 # ax.annotate("BARBADOS", (tbpb.lon + 0.5, tbpb.lat + 0.5))
 ax.spines[["right", "top"]].set_visible(False)
 
-plt.savefig("./figures/flight_overview.pdf", bbox_inches="tight")
+plt.savefig(f"{PROJECT_ROOT}/figures/flight_overview.pdf", bbox_inches="tight")
 # %%
