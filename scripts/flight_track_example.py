@@ -31,7 +31,7 @@ all_tracks = xr.open_dataset(
 
 # %%
 
-flight_name = "HALO-20240811a"  # "HALO-20240907a"  # "HALO-20240811a"
+flight_name = "HALO-20240903a"  # "HALO-20240907a"  # "HALO-20240811a"
 flight_date = flight_name[5:9] + "-" + flight_name[9:11] + "-" + flight_name[11:13]
 
 tracks = all_tracks.sel(time=flight_date)
@@ -81,7 +81,7 @@ tcwv_grid, lon_edges, lat_edges, _ = binned_statistic_2d(
 
 # %%
 
-fig, ax = base_map()
+fig, ax = base_map(coastline_kwargs={"color": "k"})
 
 plt.plot(plan.lon, plan.lat, "C1")
 # plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
