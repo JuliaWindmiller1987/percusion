@@ -16,6 +16,12 @@ import cartopy.crs as ccrs
 
 from percusion.utils import base_map, lon_min, lon_max, lat_min, lat_max
 
+import percusion
+from pathlib import Path
+
+PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
+
+
 sns.set_context("paper")
 
 # %%
@@ -42,7 +48,7 @@ flight_date_no_dash = flight_date.replace("-", "")
 # Integrated water vapor in atmospheric column (TCWV) in mm
 # https://nsidc.org/data/au_rain/versions/1
 
-files = glob(f"./data/AMSR_U2_L2_Rain_V02_{flight_date_no_dash}*.he5")
+files = glob(f"{PROJECT_ROOT}/data/AMSR_U2_L2_Rain_V02_{flight_date_no_dash}*.he5")
 if len(files) == 0:
     raise FileNotFoundError(
         f"No AMSR data files found. Please download data from "
@@ -102,5 +108,7 @@ plt.colorbar(
     shrink=0.5,
 )
 
-plt.savefig(f"./figures/{flight_name}_flight_track.pdf", bbox_inches="tight")
+plt.savefig(
+    f"{PROJECT_ROOT}/figures/{flight_name}_flight_track.pdf", bbox_inches="tight"
+)
 # %%
