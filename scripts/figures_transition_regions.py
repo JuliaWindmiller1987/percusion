@@ -53,9 +53,10 @@ transition_circles = np.where(
     (iwv_circle_min < cwv_threshold) & (iwv_circle_max > cwv_threshold)
 )[0]
 
-print(
-    f"Out of {len(ds_ds.circle_id)}, {len(transition_circles)} circles are transition circles."
-)
+smaller_cwv_circles = np.where(iwv_circle_max < cwv_threshold)[0]
+larger_cwv_circles = np.where(iwv_circle_min > cwv_threshold)[0]
+
+
 # %%
 
 x = np.arange(len(iwv_circle_min))
@@ -150,4 +151,11 @@ plt.savefig(
     f"{PROJECT_ROOT}/figures/transition_circles.pdf",
     bbox_inches="tight",
 )
+
+print(
+    f"Out of {len(ds_ds.circle_id)}: \n {len(transition_circles)} circles are transition circles, \n"
+    f" {len(smaller_cwv_circles)} circles have CWV always below {cwv_threshold} mm, \n"
+    f" {len(larger_cwv_circles)} circles have CWV always above {cwv_threshold} mm."
+)
+
 # %%
