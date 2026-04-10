@@ -69,17 +69,18 @@ col_ds, col_hamp = "C0", "C1"
 plt.sca(ax[0])
 
 scatter_kwargs = {"color": col_ds, "clip_on": False}
+hlines_kwargs = {"color": "k", "alpha": 0.5, "linewidth": 1, "linestyle": ":"}
 
 for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]):
 
-    alpha = 1.0  # if i_m == 0 else 0.35
-    marker = "o" if i_m == 0 else "x"
+    alpha = 1.0 if i_m == 0 else 0.35
+    marker = "o"  # if i_m == 0 else "x"
 
     plt.vlines(
         x[mask],
         iwv_circle_min[mask],
         iwv_circle_max[mask],
-        alpha=0.5,
+        alpha=alpha,
         linewidth=1,
         **scatter_kwargs,
     )
@@ -94,7 +95,7 @@ for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]
     )
 
 
-plt.axhline(48, color="k", alpha=0.5, linestyle="--")
+plt.axhline(48, **hlines_kwargs)
 
 plt.xlabel("circle number")
 plt.ylabel("CWV / mm")
@@ -105,37 +106,48 @@ plt.xlim(xmin=0)
 
 plt.sca(ax[1])
 
+bins = np.arange(30, 75, 0.8)
 
 hist_kwargs = {
     "density": True,
     "orientation": "horizontal",
-    "bins": np.arange(30, 75, 0.8),
+    "bins": bins,
 }
 
 for h_type in ["step"]:
     alpha = 1.0 if h_type == "step" else 0.25
-    ax[1].hist(
-        iwv_hamp_orcestra.values,
-        histtype=h_type,
-        color=col_hamp,
-        alpha=alpha,
-        **hist_kwargs,
-    )
+
     ax[1].hist(
         ds_ds.iwv.values,
         histtype=h_type,
         color=col_ds,
         alpha=alpha,
+        label="dropsondes",
         **hist_kwargs,
     )
 
-plt.axhline(48, color="k", alpha=0.5, linestyle="--")
+    ax[1].hist(
+        iwv_hamp_orcestra.values,
+        histtype=h_type,
+        color=col_hamp,
+        alpha=alpha,
+        label="HAMP",
+        **hist_kwargs,
+    )
+
+plt.axhline(48, **hlines_kwargs)
+plt.ylim(bins[0], bins[-1])
+plt.legend()
 
 ax[1].set_xlabel("PDF")
 
 for a in ax:
     a.spines["left"].set_position(("outward", 5))
 
-
 sns.despine()
+
+plt.savefig(
+    f"{PROJECT_ROOT}/figures/transition_circles.pdf",
+    bbox_inches="tight",
+)
 # %%
