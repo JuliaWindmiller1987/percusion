@@ -7,6 +7,8 @@ lon_max = -10
 lat_min = -2
 lat_max = 22
 
+campaign_start, campaign_end = "2024-08-11 11:59:00", "2024-09-28 20:02:00"
+
 
 def base_map(
     lon_min=lon_min,
