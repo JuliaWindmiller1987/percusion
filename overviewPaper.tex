@@ -67,7 +67,7 @@ More aggregated convection is typically associated with fewer high clouds and a 
 
 The PERCUSION campaign aimed not only to quantify the effects of mesoscale structures, but also to improve our understanding of the processes that drive them. Tropical convection has long been known to be organised by large-scale disturbances such as equatorial waves \citep[e.g.,][]{kiladisConvectivelyCoupledEquatorial2009} and the Madden-Julian Oscillation \citep{maddenDetection4050Day1971, maddenDescriptionGlobalScaleCirculation1972}. 
 In addition to these large-scale drivers, processes acting on smaller scales may also contribute to the organisation of convection.
-Idealised simulations show that initially randomly distributed clouds can spontaneously aggregate even in homogeneous environments \citep{Held1993, Bretherton2005}. Depending on the model configuration and the stage of aggregation, a variety of feedbacks have been proposed to drive this behaviour, including convection–humidity feedbacks mediated by detrainment, cloud–radiative feedbacks, and radiatively driven circulations that transport humidity up-gradient \citep[e.g.,][]{Wing2017}.
+Idealised simulations show that initially randomly distributed clouds can spontaneously aggregate even in homogeneous environments \citep{Held1993, Bretherton2005}. Depending on the model configuration and the stage of aggregation, a variety of feedbacks have been proposed to drive this behaviour, including convection-humidity feedbacks mediated by detrainment, cloud-radiative feedbacks, and radiatively driven circulations that transport humidity up-gradient \citep[e.g.,][]{Wing2017}.
 On yet smaller scales, clouds can trigger the formation of new convection through cold pools, linking successive generations of clouds and organising convection along gust fronts, notably in squall lines \citep{Rotunno1988, Weisman2004}, as well as along the edges of convectively active regions \citep{Nolan2016, windmillerConvectionEdge2019}.
 Other processes have also been argued to drive enhanced convection at the edges of the deep tropics \citep{masunagaEdgeIntensificationEastern2023}. Assessing the relative importance of these mechanisms in the real atmosphere remains an open challenge \citep{Bony2015, mullerSpontaneousAggregationConvective2022}.
 
@@ -81,9 +81,19 @@ The remainder of the paper describes the measurement strategy and data (Section 
 
 \section{Data}
 
-The goal of this section is to give a short overview of the data collected. 
-Data collected by HALO in an updated version of the cloud-observatory configuration, initially described by \cite{stevensHighAltitudeLongRangeAircraft2019}. 
-Here, we give a short summary of the data collected as described in \cite{stevensHighAltitudeLongRangeAircraft2019} and discuss all changes and additions to the initial configuration in detail. 
+The goal of this section is to provide a brief overview of the data collected during PERCUSION. HALO operated in an updated version of the “flying cloud observatory” configuration originally described by \cite{stevensHighAltitudeLongRangeAircraft2019}. This configuration combines active and passive remote-sensing instruments with in situ measurements from dropsondes, providing a comprehensive view of the atmospheric state, including the thermodynamic and dynamical environment as well as the microphysical properties of clouds and precipitation. In the following, we briefly summarise the measurements described by \cite{stevensHighAltitudeLongRangeAircraft2019} and discuss the modifications and additions implemented for ORCESTRA.
+
+The core remote-sensing configuration aboard HALO consists of a complementary suite of active and passive instruments designed to characterise the thermodynamic and dynamical structure of the tropical atmosphere, as well as its cloud and aerosol composition and radiative properties. A key component is the HALO Microwave Package (HAMP), which combines a suite of passive microwave radiometers with a cloud radar \citep{mechHAMPMicrowavePackage2014, ewaldCalibration35GHz2019}. The passive radiometers consist of three downward-looking modules with 26 frequencies in different bands between 22.24 and 183.31 $\pm$ 12.5 GHz that sample water vapour and oxygen absorption bands, as well as window channels. These measurements provide information on the different condensate phases of water, as well as on their vertically integrated quantities, such as column water vapour, liquid water path and ice water path. The nadir-pointing microwave cloud and precipitation radar operates at 35.5 GHz (Ka band) and is suitable for penetrating columns with heavy precipitation. It measures radar reflectivity, reflectivity-weighted Doppler velocity, and the linear-depolarization ratio to determine target shape.
+
+Additional active remote sensing is provided by WALES (Water Vapour Differential Absorption Lidar), which operates at four wavelengths near 935 nm to deliver high-resolution profiles of the water vapour mixing ratio below the aircraft \citep{wirthAirborneMultiwavelengthWater2009}. Its 532- and 1064-nm aerosol channels, which include depolarisation capabilities, also provide extinction measurements for aerosols and optically thin clouds. 
+
+Radiance and irradiance measurements are obtained using the Spectral Modular Airborne Radiation Measurement System (SMART), which is a suite of passive spectrometers that measure spectral irradiances and radiances in the visible, near-infrared, and shortwave infrared wavelength range (300-2200 nm) \citep{wendischAirborneSpectralAlbedometer2001, wendischACRIDICONCHUVACampaign2016}. These observations are used to infer cloud presence and determine microphysical characteristics, including optical depth and effective droplet radius. 
+The spectrometer of the Munich Aerosol Cloud Scanner (specMACS) complements these measurements by providing hyperspectral imaging in the visible/near-infrared (400 to 1000 nm), and shortwave infrared (1000 to 2500 nm) \citep{ewaldDesignCharacterizationSpecMACS2016} to characterize clouds, droplets, and optical thickness. 
+This imaging capability is extended into the thermal infrared by VELOX (Video airbornE Longwave Observations within siX channels), which captures high-resolution 2D fields of upward terrestrial radiance across six spectral bands between 7.7 and 12.5 $\mu$m, providing information on cloud top brightness temperature, cloud mask/fraction, and cloud top altitude \citep{schaferVELOXNewThermal2022}.
+To quantify the atmospheric energy budget, HALO utilises BACARDI (Broadband AirCrAft RaDiometer Instrumentation), two sets of pyranometers and pyrgeometers measuring upward and downward solar (0.3 to 3 $\mu$m) and thermal-infrared (3 to 100 $\mu$m) irradiances \citep{ehrlichNewAirborneBroadband2023}.
+
+In-situ observations are primarily obtained using dropsondes deployed with the Airborne Vertical Atmospheric Profiling System (AVAPS). Vaisala RD-94 dropsondes provide measurements of temperature, humidity and pressure throughout the atmospheric column. Additionally, for each circle, GPS-derived wind measurements enable horizontal wind profiles to be retrieved, providing area-averaged estimates of large-scale divergence, vorticity and vertical velocity within the sampled air masses \citep{bonyMeasuringAreaAveragedVertical2019}. 
+Additional in-situ measurements of temperature, humidity, and pressure at flight-level are provided by HALO's core instrument: BAHAMAS (BAsic HAlo Measurement And Sensor system) \citep{krautstrunkTransitionFALCONHALO2012}. 
 
 \begin{figure}
     \centering
@@ -92,14 +102,10 @@ Here, we give a short summary of the data collected as described in \cite{steven
     \label{fig:instrumentation}
 \end{figure}
 
-Platform and Instrumentation: 
-\begin{itemize} 
-    \item Summary of HALO/NARVAL paper 
-    \item Updates on VELOX, SpecMACS, dropsondes, new retrievals? \textbf{TODO: ask instrument teams for input}
-\end{itemize}
 
-Data handling:
-IPFS
+\textbf{Missing:}
+Updates on VELOX, SpecMACS, dropsondes, new retrievals?
+Data handling: IPFS
 
 \section{Campaign Design}
 
@@ -150,6 +156,10 @@ A summary of all flights is provided in Table~\ref{tab:flights}, which also cont
 \input{tables/flight_overview_table.tex}
 
 \section{Overview plots}
+
+To illustrate the data collected during the campaign, 
+we first show that we systematically sampled the structure of the ITCZ, including vertical profiles of vertical velocity, humidity and aerosols and its edges as defined by CWV. 
+
 
 We want to give a first overview of the data and show that our measurement strategy worked. 
 Overarching goal: we examine how mesoscale structures of clouds, precipitation, surface winds, humidity, and aerosols impact the energy ﬂows, both radiative and through the atmospheric circulation, in the deep tropics. 
