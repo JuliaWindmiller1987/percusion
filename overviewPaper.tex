@@ -27,9 +27,6 @@
 
 \end{abstract}
 
-\listoftodos
-
-% \subsection*{Goals of the paper} First, explain to the reader what we measured and why; Second, allow the reader to answer the question as to whether she or he can use our data to answer their research question by using our data
 
 \section{Introduction}
 The largest atmospheric field study in history \citep{zhangRelocationGATEPacific2022} was the Global Atmospheric Research Program (GARP) Atlantic Tropical Experiment (GATE) conducted in 1974, which set out to ``explore the mechanism by which solar heat stored in the tropical oceans drives the global circulation of the atmosphere, and to incorporate this mechanism into numerical models'' \citep{kuettnerGeneralDescriptionCentral1974}. 
@@ -39,8 +36,8 @@ The results revealed, that convective and large-scale processes are not well sep
 Despite these early insights, the assumption that small and large spatial scales can be cleanly separated has remained a central tenant of our theoretical understanding of tropical climate, as encapsulated by model parameterisations that neglect mesoscale processes governing convective organisation.
 While this framework has successfully captured many aspects of anthropogenic climate change, increasing regional discrepancies between observed and simulated changes have renewed attention on mesoscale processes and their coupling to both small- and large-scale processes \citep{shawOtherClimateCrisis2025}.
 
-Exactly fifty years after GATE, the ORCESTRA (Organized Convection and EarthCARE Studies over the Tropical Atlantic) campaign \citep{stevensORCESTRAOrganizedConvection2026} campaign returned to the tropical Altantic, focusing on mesoscale structures and the processes that govern their formation and evolution.
-Taking place from August to September 2024, the campaign combined three research aircraft, a research vessel (\textit{citeKlocke}) and two observatories, as well as coordinated measurements with the Earth Cloud Aerosol and Radiation Explorer (EarthCARE) satellite \citep{illingworthEarthCARESatelliteNext2015}, launched less than three months before the start of the campaign. 
+Exactly fifty years after GATE, the ORCESTRA (Organized Convection and EarthCARE Studies over the Tropical Atlantic) campaign \citep{stevensORCESTRAOrganizedConvection2026} returned to the tropical Altantic, focusing on mesoscale structures and the processes that govern their formation and evolution.
+Taking place from August to September 2024, the campaign combined three research aircraft (\textit{citeBony}), a research vessel (\textit{citeKlocke}) and two observatories, as well as coordinated measurements with the Earth Cloud Aerosol and Radiation Explorer (EarthCARE) satellite \citep{illingworthEarthCARESatelliteNext2015}, launched less than three months before the start of the campaign. 
 Together, these platforms sampled the Atlantic Intertropical Convergence Zone (ITCZ) and adjacent subsiding regions from the ocean floor to the top of the atmosphere. 
 
 ORCESTRA comprised eight sub-campaigns.
@@ -64,11 +61,11 @@ More recently, it has been suggested that the vertical motion profile of convect
 These differences may even reverse the sign of the net energy export by the circulation potentially helping to explain regional differences in energy export efficiency found in reanalysis data \citep{backGeographicVariabilityExport2006}. 
 Recent work on the doldrums further illustrates the uncertainty surrounding the vertical motion field in the ITCZ \citep{windmillerCalmVariableInner2024}: mesoscale regions of weak surface winds, traditionally interpreted as regions of ascent, may instead be associated with subsiding motion.
 
-Mesoscale structures also influences the thermodynamic properties of the atmosphere. Convective aggregation affects entrainment and detrainment \citep{beckerEstimatingBulkEntrainment2018}, thereby altering the vertical distribution of humidity and temperature \citep[e.g.,][]{singhInfluenceEntrainmentThermal2013}. 
+Mesoscale structures also influence the thermodynamic properties of the atmosphere. Convective aggregation affects entrainment and detrainment \citep{beckerEstimatingBulkEntrainment2018}, thereby altering the vertical distribution of humidity and temperature \citep[e.g.,][]{singhInfluenceEntrainmentThermal2013}. 
 Changes in aggregation are further linked to systematic changes in clouds and radiation. 
 More aggregated convection is typically associated with fewer high clouds and a drier troposphere, resulting in increased radiative cooling \citep[e.g.,][]{Tobin2012, bonyObservedModulationTropical2020}. In the tropical Atlantic, radiation is additionally influenced by aerosols transported within the Saharan Air Layer, whose dust and humidity modify radiative heating rates and may affect cloud formation \citep{gutlebenImpactsWaterVapor2019}.
 
-The PERCUSION campaign aimed not only to quantify the effects of mesoscale structures, but also to improve our understanding of the processes that drive them. Tropical convection has long been known to be organised by large-scale disturbances such as equatorial waves \citep[e.g.,][]{kiladisConvectivelyCoupledEquatorial2009} and the Madden–Julian Oscillation \citep{maddenDetection4050Day1971, maddenDescriptionGlobalScaleCirculation1972}. 
+The PERCUSION campaign aimed not only to quantify the effects of mesoscale structures, but also to improve our understanding of the processes that drive them. Tropical convection has long been known to be organised by large-scale disturbances such as equatorial waves \citep[e.g.,][]{kiladisConvectivelyCoupledEquatorial2009} and the Madden-Julian Oscillation \citep{maddenDetection4050Day1971, maddenDescriptionGlobalScaleCirculation1972}. 
 In addition to these large-scale drivers, processes acting on smaller scales may also contribute to the organisation of convection.
 Idealised simulations show that initially randomly distributed clouds can spontaneously aggregate even in homogeneous environments \citep{Held1993, Bretherton2005}. Depending on the model configuration and the stage of aggregation, a variety of feedbacks have been proposed to drive this behaviour, including convection–humidity feedbacks mediated by detrainment, cloud–radiative feedbacks, and radiatively driven circulations that transport humidity up-gradient \citep[e.g.,][]{Wing2017}.
 On yet smaller scales, clouds can trigger the formation of new convection through cold pools, linking successive generations of clouds and organising convection along gust fronts, notably in squall lines \citep{Rotunno1988, Weisman2004}, as well as along the edges of convectively active regions \citep{Nolan2016, windmillerConvectionEdge2019}.
@@ -106,61 +103,93 @@ IPFS
 
 \section{Campaign Design}
 
-% Flight strategy
-To study the impact and the drivers of mesoscale structures in the deep tropics and as part of the ORCESTRA campaign, PERCUSION used a largely generic flight strategy to sample the Atlantic ITCZ first in the eastern basin (close to Sal) and then in the western basin (close to Barbados). As noted in the introduction, there was also a third part of PERCUSION which focused on the calibration and validation of EarthCARE and which is not discussed here (see \cite{grossPersistentEarthCAREUnderflight2026} for details). 
-By generic flight pattern we mean that we had a set of objective rules that determined the flight planning. 
-Below a summary of these rules and an illustration based on one example flight, see Fig.~\ref{fig:generic_flight_east}:
+To study the impact and drivers of mesoscale structures in the deep tropics during the ORCESTRA campaign, PERCUSION employed a largely generic flight strategy to sample the Atlantic ITCZ, first in the eastern basin near Sal and subsequently in the western basin near Barbados. As noted in the introduction, PERCUSION also included a third component focused on the calibration and validation of the EarthCARE satellite, which is not discussed here (see \cite{grossPersistentEarthCAREUnderflight2026} for details).
+
+By a generic flight strategy, we mean that flight planning followed a set of objective rules that were applied consistently throughout the campaign. A summary of these rules, together with an example flight, is shown in Fig.~\ref{fig:generic_flight_east}. In particular:
 \begin{itemize}
-    \item on days when the EarthCARE satellite was within reach for an overpass
-    \item back and forth along the ground track of the EarthCARE satellite and at least twenty minutes on the track before and after the satellite overpass
-    \item to place dropsonde circles at the edges of the ITCZ as identified by either the 48 mm contour \citep{Mapes2018} or the strongest gradient in column water vapour (CWV)
-    \item to place a third dropsonde in the center of the ITCZ (identified as the mid-point between the two first circles) 
-    \item as high as possible (depending on the amount of fuel in the tank this varied) to fly, whenever possible, above the tropical high clouds
-    \item coordinated measurements with the other platforms whenever possible, including (but not limited to) overflights and circles around RV METEOR and RA ATR-42
+\item flights were scheduled on days when an EarthCARE overpass was within reach,
+\item HALO flew back and forth along the EarthCARE ground track, spending at least twenty minutes on the track before and after the satellite overpass,
+\item dropsonde circles were placed at the edges of the ITCZ, identified either by the 48 mm contour \citep{Mapes2018} or by the strongest gradient in column water vapour (CWV),
+\item a third dropsonde circle was placed in the centre of the ITCZ, defined as the midpoint between the two edge circles,
+\item whenever possible, HALO flew at the highest feasible altitude, ideally above the tropical high cloud layer,
+\item coordinated measurements with the other observing platforms were carried out whenever possible, including, but not limited to, overflights of and circles around RV METEOR and the SAFIRE ATR-42.
 \end{itemize}
 
 \begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{figures/HALO-20240903a_flight_track.pdf}
-    \caption{Example flight (flight ID HALO-20240903a) to illustrate the generic flight pattern. Flight track is shown in organge. GOES satellite image in the background. Column water vapour measurements from Advanced Microwave Scanning Radiometer (AMSR).}
-    \label{fig:generic_flight_east}
+\centering
+\includegraphics[width=1\linewidth]{figures/HALO-20240903a_flight_track.pdf}
+\caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR).}
+\label{fig:generic_flight_east}
 \end{figure}
-The motivation behind a generic flight pattern was to have a statistic representation of the mesoscale structure of the ITCZ during the period of the campaign. 
-The motivation for flying along the EarthCARE satellite were, as already mentioned in the introduction, to contribute to EarthCARE's calibration and validation as well as to help extrapolate our results to other regions and periods.
-It also has the advantage that, by flying back and forth along the same track, we end up with three cross-sections of the ITCZ at three different times of the day (one from EarthcARE and two from HALO). This can help to assess how much the mesoscale structure changed within the time-scale of a few hours. 
 
-The motivation to place the circles at the edges of the ITCZ as defined by column water vapour were to connect our observations as closely as possible to previous studies. 
-In particular, 48 mm has been identified as the transition between the deep tropics and the subsiding region and edge-intensification (if it occurs) has been identified as precipitation peaking near this edge. Having vertical velocity measurements there, therefore, allows us to compare our observations directly to \cite{Mapes2018, masunagaMechanismMaintenanceSharp2020, masunagaEdgeIntensificationEastern2023}.
-In addition, the moist margin marks the location where, if it exists, a horizontal upgradient transport of humidity by a shallow circulation \citep{Muller2012} should be most efficient. 
-Note that in the western basin, the strongest gradient in column water vapour was sometimes found in east-west direction and, at the same time, airspace restrictions made east-west oriented transects easier to execute. 
-In these cases, we placed the circles in the east-west direction.
+The motivation for adopting a generic flight strategy was to obtain a statistically representative sampling of the mesoscale structure of the ITCZ during the campaign period. Flying along the EarthCARE ground track served several purposes. First, as discussed in the introduction, it contributed to the calibration and validation of EarthCARE observations and facilitated the extrapolation of our results to other regions and periods. Second, the repeated back-and-forth pattern along the same track effectively produced three cross-sections of the ITCZ at different times of day: one from EarthCARE and two from HALO. This configuration provides a means of assessing how strongly the mesoscale structure evolves on timescales of a few hours.
+
+The placement of dropsonde circles at the edges of the ITCZ, as defined by column water vapour, was motivated by the desire to connect our observations as directly as possible to previous studies. In particular, the 48 mm CWV contour has been identified as a transition between the deep tropics and the surrounding subsiding regions, while edge intensification refers to precipitation maxima occurring preferentially near this boundary. Vertical velocity measurements in these regions therefore allow for a direct comparison with the mechanisms discussed by \cite{Mapes2018}, \cite{masunagaMechanismMaintenanceSharp2020}, and \cite{masunagaEdgeIntensificationEastern2023}. In addition, the moist margin marks the location where, if present, horizontal upgradient moisture transport by a shallow circulation \citep{Muller2012} is expected to be most efficient.
+
+%In the western basin, the strongest gradients in column water vapour were sometimes oriented predominantly in the east--west direction. At the same time, airspace restrictions made east--west-oriented transects easier to execute. In these cases, the dropsonde circles were therefore aligned in the east--west direction.
 
 \section{Implementation and Operational Details}
 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{figures/flight_overview.pdf}
-    \caption{Overview of flights.}
+    \caption{Overview of all research flights conducted during ORCESTRA. Flight tracks are shown in orange, with shaded regions indicating the areas over which vertical velocity profiles were inferred. Circles flown in coordination with the SAFIRE ATR-42 are highlighted in brown. Locations of EarthCARE underpasses are marked by green crosses, while RV METEOR overpasses are indicated by grey crosses. The blue contour shows the mean location of the 48mm column water vapour contour during the campaign period.}
     \label{fig:flight_overview}
 \end{figure}
 
-Figure~\ref{fig:flight_overview} shows the flight tracks of the 23 research flights conducted during ORCESTRA.
-Note that this excludes the transit flights to Sal and from Barbados, but includes the transit flight from Sal to Barbados as it includes targeted measurements of the ITCZ. 
-As described in the previous section, the focus of the campaign was on the Atlantic deep tropics, as defined by the 48 mm contour of column water vapour. 
-Out of these 23 flights, 21 included an EarthCARE underpass. 
-During these flights, a total of 93 circles were flown (with 87 of them having enough drops sonde measurements to infer vertical motion profiles \citet{gloecknerBEACHBarbadosEastern2025}). As decribed above, each vertical motion profile corresponds to the average vertical motion within the circle, highlighted by the shading in Fig.~\ref{fig:flight_overview}.
-In addition, coordinated measurements were conducted with the other platforms, including 16 METEOR overpasses, 14 coordination events with ATR-42, 2 BCO overpasses, 4 CVAO overpasses, and 2 PACE underpasses. 
-A summary of each flight is given in Table~\ref{tab:flights}, which also links to the individual flight reports on the campaign website. 
-The website was actively developed during the campaign and includes a wealth of information on each flight. This includes the flight plan, a movie of the actual flight track overlayed satellite images, a description of the overall weather condition, impressions during the flight, as well as an instrument status and quicklooks.
 
-TODO: describe the flight segmentation. Maybe go through flight reports and describe some challenges. 
+In total, 23 research flights focused on the Atlantic deep tropics were conducted during ORCESTRA and are shown in Fig.~\ref{fig:flight_overview}. Of these, 11 flights were conducted in the eastern basin near Sal and 11 in the western basin near Barbados, with one transfer flight connecting Sal and Barbados while carrying out targeted ITCZ measurements. Across all flights, 93 circles were flown, 87 of which contained sufficient dropsonde measurements to infer vertical velocity profiles \citep{gloecknerBEACHBarbadosEastern2025}. As described above, each vertical velocity profile represents the area-averaged vertical motion within an individual circle, indicated by the shading in Fig.~\ref{fig:flight_overview}.
+
+Of the 23 research flights, 21 included an EarthCARE underpass. In addition to coordination with EarthCARE, a defining feature of the HALO operations was the extensive coordination with other platforms. These included 16 overpasses of RV METEOR, 14 coordinated measurement events with the SAFIRE ATR-42, four overpasses of the Cape Verde Atmospheric Observatory (CVAO), two overpasses of the Barbados Cloud Observatory (BCO), and two underpasses of the PACE satellite.
+
+Throughout the campaign, systematic adaptations to the generic flight strategy were necessary. These included adjustments to enable coordinated measurements with other platforms, responses to weather conditions (e.g.~avoiding severe thunderstorms), airspace restrictions, technical issues, on-board instrument calibration and validation, and targeted manoeuvres to test new retrieval techniques. While these factors led primarily to minor adjustments in the eastern basin, more substantial modifications were required in the western Atlantic. In particular, the combination of stricter airspace restrictions and a more variable CWV field necessitated changes to the sampling strategy. In this region, the strongest CWV gradients were frequently oriented in an east--west direction. In some cases, these gradients were either not clearly identifiable or located too far east to be reachable within the available flight time. Consequently, dropsonde circles in the western Atlantic were often aligned either east--west or in mixed east--west and north--south configurations. Nevertheless, even in cases with predominantly east--west sampling, parts of the flight track remained aligned in the north--south direction in order to maintain sufficient overlap with the EarthCARE ground track for calibration and validation purposes.
+
+A summary of all flights is provided in Table~\ref{tab:flights}, which also contains links to the individual flight reports available on the campaign website. The website was actively maintained throughout the campaign and provides extensive additional information for each flight, including the flight plan, movies of the realised flight track overlaid on satellite imagery, descriptions of the overall weather situation, in-flight impressions, instrument status reports, and instrument quicklooks.
 
 
 \input{tables/flight_overview_table.tex}
 
 \section{Overview plots}
 
-One or two plot(s) per meso-topic — should highlight the different instruments, flight segmentation, a comparison with the simulations… 
+We want to give a first overview of the data and show that our measurement strategy worked. 
+Overarching goal: we examine how mesoscale structures of clouds, precipitation, surface winds, humidity, and aerosols impact the energy ﬂows, both radiative and through the atmospheric circulation, in the deep tropics. 
+
+First, show that we systematically sampled the ITCZ and its edges, 
+
+\textbf{mesoscale structures of clouds, precipitation, surface winds, humidity, and aerosols}
+Compare the edges with the center; measured different mesoscale structures (e.g. different types of cloud systems); different surface wind and aerosols conditions. (MCS, edge-intesification/CWV gradients, doldrums, Saharan Air Layer).
+Focus on measurements suitable to study the energy flows: 
+
+\textbf{impact the energy ﬂows, both radiative and through the atmospheric circulation}
+Radiation: show that we have the relevant radiation measurements. Show, in an example, how the observed clouds and humidity profiles relate to the observed radiation.
+Circulation: show that we have the relevant vertical motion and MSE profiles to study the circulation.
+
+\subsection{At the edges} 
+\begin{itemize} 
+    \item tbd
+    \item Out of 89 circles: all dropsondes in 2 circles have CWV below 48 mm and in 42 circles all dropsondes have CWV above 48 mm. This means that we have 45 circles with at least one dropsonde crossing the 48 mm contour.
+
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
+\label{fig:transition}
+\caption{ Transition regions and asymmetries. We want to show that our measurement strategy worked and that we have measurements inside and at the (sharp) edges of the ITCZ. \textbf{(top) \textbf{Mean profiles} of water vapour and aerosols from \textbf{WALES} for inside, north, and south of the moist tropics (or define ITCZ differently?)}, (bottom) show how many of the circles actually crossed the 48mm contour (\textbf{dropsondes}) and PDF of CWV caluclated from \textbf{HAMP --- passiv} and \textbf{dropsondes}. \textbf{HAMP IWV still preliminary.}}
+\end{figure}
+
+\subsection{Inside}
+\begin{itemize} 
+    \item Map that shows the sondes which measured low surface wind speeds 
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=
+\linewidth]{figures/doldrums.pdf}
+\label{fig:doldrums}
+\caption{HALO flight track (black line) and dropsonde locations (black circles) for the flight on the 7th of September 2024. The background shows the horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day. Dropsondes with near surface wind speeds less than 3 m/s are filled in white. \textbf{TODO: Would be nice to show some specMACS observations here: can we mark the part of the path with low wind speeds and / or show two images that highlight changes of the specular reflection inside and outside of the doldrums?}}
+\end{figure}
 
 \subsection{Radiation}
 \begin{itemize} 
@@ -186,33 +215,6 @@ One or two plot(s) per meso-topic — should highlight the different instruments
 \caption{ Overturning circulation and mean moist static energy profile.
 (left) mean area-averaged atmospheric vertical velocity profile from all dropsonde circles. Shaded area shows plus and minus one standard deviation.
 (right) corresponding mean moist static energy profile calculated from the circle averaged temperature and humidity profiles.}
-\end{figure}
-
-\subsection{Inside}
-\begin{itemize} 
-    \item Map that shows the sondes which measured low surface wind speeds 
-\end{itemize}
-
-\begin{figure}
-\centering
-\includegraphics[width=
-\linewidth]{figures/doldrums.pdf}
-\label{fig:doldrums}
-\caption{HALO flight track (black line) and dropsonde locations (black circles) for the flight on the 7th of September 2024. The background shows the horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day. Dropsondes with near surface wind speeds less than 3 m/s are filled in white. \textbf{TODO: Would be nice to show some specMACS observations here: can we mark the part of the path with low wind speeds and / or show two images that highlight changes of the specular reflection inside and outside of the doldrums?}}
-\end{figure}
-
-\subsection{At the edges} 
-\begin{itemize} 
-    \item tbd
-    \item Out of 89 circles: all dropsondes in 2 circles have CWV below 48 mm and in 42 circles all dropsondes have CWV above 48 mm. This means that we have 45 circles with at least one dropsonde crossing the 48 mm contour.
-
-\end{itemize}
-
-\begin{figure}
-\centering
-\includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
-\label{fig:transition}
-\caption{ Transition regions and asymmetries. We want to show that our measurement strategy worked and that we have measurements inside and at the (sharp) edges of the ITCZ. \textbf{(top) \textbf{Mean profiles} of water vapour and aerosols from \textbf{WALES} for inside, north, and south of the moist tropics (or define ITCZ differently?)}, (bottom) show how many of the circles actually crossed the 48mm contour (\textbf{dropsondes}) and PDF of CWV caluclated from \textbf{HAMP --- passiv} and \textbf{dropsondes}. \textbf{HAMP IWV still preliminary.}}
 \end{figure}
 
 
