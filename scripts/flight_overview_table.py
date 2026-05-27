@@ -11,6 +11,12 @@ import xarray as xr
 import copy
 
 # %%
+import percusion
+from pathlib import Path
+
+PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
+
+# %%
 dropsonde_lev4_id = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
 dropsonde_lev4 = xr.open_dataset(dropsonde_lev4_id, engine="zarr")
 
@@ -203,12 +209,20 @@ for flight_id, flight_info in flights.items():
 # Create DataFrame
 df = pd.DataFrame(flight_data)
 
+caption = (
+    "Overview of HALO flights during the campaign. "
+    "The \\textit{Coordination} column lists the platforms coordinated with during each flight. "
+    "Numbers in brackets indicate repeated coordination events with the same platform. "
+    "The \\textit{Circles} column shows how many circles were flown during the flight. "
+    "The number of circles for which vertical motion was calculated is given in brackets."
+)
+
 # Convert to LaTeX table
-latex_table = df.to_latex(index=False, caption="HALO Flights", label="tab:flights")
+latex_table = df.to_latex(index=False, caption=caption, label="tab:flights")
 latex_table = latex_table.replace(r"\toprule", "")
 latex_table = latex_table.replace(r"\bottomrule", "")
 print(latex_table)
 
-with open("./tables/flight_overview_table.tex", "w") as f:
+with open(PROJECT_ROOT / "tables" / "flight_overview_table.tex", "w") as f:
     f.write(latex_table)
 # %%
