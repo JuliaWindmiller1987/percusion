@@ -49,6 +49,12 @@ ds = ds.sel(time=slice(campaign_start, campaign_end))
 
 # %%
 
+cid4 = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
+ds_dropsonde_lev4 = xr.open_dataset(cid4, engine="zarr")
+
+
+# %%
+
 tcwv_era5 = xr.open_dataset(f"{PROJECT_ROOT}/data/cwvEra520240809.nc")
 land_sea_mask_era5 = xr.open_dataset(f"{PROJECT_ROOT}/data/landSeaMaskEra520240809.nc")
 
@@ -100,12 +106,12 @@ segment_kind_dic = {
     "circle": {
         "color": "#F2935C47",
         "alpha": 0.2,
-        "label": "Circle",
+        "label": r"Circle with $\omega$",
         "compound": {
             "kind": "atr_coordination",
             "color": "#B38970",
             "alpha": 0.5,
-            "label": "ATR circle",
+            "label": r"ATR circle with $\omega$",
         },
     },
 }
@@ -124,63 +130,75 @@ event_kinds_dic = {
     },
 }
 
+number_of_skipped_circles = 0
 
-for f in flight_ids:
-    for s in segments:
-        for segment_kind in segment_kind_dic.keys():
+for s in segments:
 
-            segment_props = segment_kind_dic[segment_kind]
-            compound_props = segment_props.get("compound", None)
+    if (
+        "circle" in s["kinds"]
+        and s["segment_id"] not in ds_dropsonde_lev4.circle_id.values
+    ):
+        number_of_skipped_circles += 1
+        print(
+            f"Skipping circle segment {s['segment_id']} for flight {s['flight_id']} as it is not in the dropsonde dataset."
+        )
+        continue
 
-            if segment_kind in s["kinds"] and f == s["flight_id"]:
-                t = slice(s["start"], s["end"])
+    for segment_kind in segment_kind_dic.keys():
 
-                lon, lat = ds.lon.sel(time=t), ds.lat.sel(time=t)
-                lon_closed, lat_closed = close_path(lon, lat)
+        segment_props = segment_kind_dic[segment_kind]
+        compound_props = segment_props.get("compound", None)
 
-                if compound_props["kind"] in s["kinds"]:
-                    ax.fill(
-                        lon_closed,
-                        lat_closed,
-                        color=compound_props["color"],
-                        edgecolor=None,
-                        alpha=compound_props["alpha"],
-                        label=compound_props["label"],
-                        zorder=9,
-                    )
+        if segment_kind in s["kinds"]:
+            t = slice(s["start"], s["end"])
 
-                else:
-                    ax.fill(
-                        lon_closed,
-                        lat_closed,
-                        color=segment_props["color"],
-                        edgecolor=None,
-                        alpha=segment_props["alpha"],
-                        label=segment_props["label"],
-                        zorder=10,
-                    )
+            lon, lat = ds.lon.sel(time=t), ds.lat.sel(time=t)
+            lon_closed, lat_closed = close_path(lon, lat)
 
-    for e in events:
-        for event_kind in event_kinds_dic.keys():
-
-            event_props = event_kinds_dic[event_kind]
-
-            if event_kind in e["kinds"] and f == e["flight_id"]:
-                t = e["time"]
-                lon, lat = ds.lon.sel(time=t, method="nearest"), ds.lat.sel(
-                    time=t, method="nearest"
+            if compound_props["kind"] in s["kinds"]:
+                ax.fill(
+                    lon_closed,
+                    lat_closed,
+                    color=compound_props["color"],
+                    edgecolor=None,
+                    alpha=compound_props["alpha"],
+                    label=compound_props["label"],
+                    zorder=9,
                 )
 
-                ax.scatter(
-                    lon,
-                    lat,
-                    color=event_props["color"],
-                    label=event_props["label"],
-                    marker=event_props["marker"],
-                    s=event_props["s"],
-                    zorder=11,
+            else:
+                ax.fill(
+                    lon_closed,
+                    lat_closed,
+                    color=segment_props["color"],
+                    edgecolor=None,
+                    alpha=segment_props["alpha"],
+                    label=segment_props["label"],
+                    zorder=10,
                 )
 
+for e in events:
+    for event_kind in event_kinds_dic.keys():
+
+        event_props = event_kinds_dic[event_kind]
+
+        if event_kind in e["kinds"]:
+            t = e["time"]
+            lon, lat = ds.lon.sel(time=t, method="nearest"), ds.lat.sel(
+                time=t, method="nearest"
+            )
+
+            ax.scatter(
+                lon,
+                lat,
+                color=event_props["color"],
+                label=event_props["label"],
+                marker=event_props["marker"],
+                s=event_props["s"],
+                zorder=11,
+            )
+
+print(f"Number of skipped circles: {number_of_skipped_circles}")
 
 # Create legend handles
 handles = []

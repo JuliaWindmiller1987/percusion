@@ -7,7 +7,12 @@ importlib.reload(percusion.utils)
 from percusion.utils import list_of_kinds, get_halo_position
 import pandas as pd
 import numpy as np
+import xarray as xr
+import copy
 
+# %%
+dropsonde_lev4_id = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
+dropsonde_lev4 = xr.open_dataset(dropsonde_lev4_id, engine="zarr")
 
 # %%
 
@@ -16,6 +21,23 @@ flights.pop("HALO-20240809b", None)
 flights.pop("HALO-20240929a", None)
 flight_ids = list(flights.keys())
 
+flights_ds_circles = copy.deepcopy(flights)
+
+for flight in flights.keys():
+
+    for i_seg, seg in enumerate(flights[flight]["segments"]):
+        if "circle" in seg["kinds"]:
+            if seg["segment_id"] in dropsonde_lev4.circle_id.values:
+                flights_ds_circles[flight]["segments"][i_seg]["kinds"] = seg[
+                    "kinds"
+                ] + ["omega_c"]
+            else:
+                print(
+                    f"Flight {flight} has circle segment {seg['segment_id']} not in dropsonde dataset."
+                )
+                print(f"Segment name: {seg['name']}, Remarks: {seg['remarks']}")
+
+flights = flights_ds_circles
 # %%
 
 events = [
@@ -114,6 +136,7 @@ def count_all_occurrences(flights, specified_kinds):
 
 print_occurrences = [
     "circle",
+    "omega_c",
     "ec_underpass",
     "bco_overpass",
     "cvao_overpass",
@@ -148,6 +171,9 @@ for flight_id, flight_info in flights.items():
 
     start_and_end_locations = get_takeoff_landing_location(flight_info, ds)
 
+    n_circles = len(specified_events(flight_info, ["circle"]))
+    n_ds_circles = len(specified_events(flight_info, ["omega_c"]))
+
     flight_data.append(
         {
             "Flight ID": (
@@ -166,11 +192,7 @@ for flight_id, flight_info in flights.items():
                     abbreviate_kinds(specified_events(flight_info, coordination_kinds))
                 )
             ),
-            "Circles": ", ".join(
-                count_events(
-                    abbreviate_kinds(specified_events(flight_info, ["circle"]))
-                )
-            ),
+            "Circles": f"{n_circles} ({n_ds_circles})",
             # "Segments": ", ".join(s["name"] for s in flight_info["segments"]),
         }
     )
