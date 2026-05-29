@@ -184,7 +184,11 @@ ful_binned_iwv = ful_bacardi.groupby_bins(iwv_bacardi_interpolated, bins=bins).m
 
 # %%
 fig, ax = plt.subplots(
-    2, 1, figsize=(6, 10), sharex=True, gridspec_kw={"height_ratios": [2, 2]}
+    1,
+    2,
+    figsize=(12, 4),
+    sharey=True,
+    gridspec_kw={"width_ratios": [2, 1], "wspace": 0.3},
 )
 
 cwv_xmin, cwv_xmax = 40, 67.5
@@ -199,15 +203,37 @@ cbar = cloud_mask_binned_iwv.sel(height=slice(50, 14e3)).plot.contourf(
     add_colorbar=False,
 )
 
-plt.colorbar(
+pos = ax[0].get_position()
+
+cax = fig.add_axes(
+    [
+        pos.x0 + 0.1 * pos.width,  # left
+        pos.y1 + 0.05,  # bottom
+        0.8 * pos.width,  # width
+        0.02,  # height
+    ]
+)
+
+cb = fig.colorbar(
     cbar,
-    ax=ax[0],
+    cax=cax,
     orientation="horizontal",
-    pad=0.1,
     label="frequency of Ze > 1e-3 / %",
-    location="top",
     shrink=0.75,
 )
+
+cb.ax.xaxis.set_label_position("top")
+cb.ax.xaxis.set_ticks_position("top")
+
+# plt.colorbar(
+#     cbar,
+#     ax=ax[0],
+#     #orientation="horizontal",
+#     pad=0.1,
+#     label="frequency of Ze > 1e-3 / %",
+#     #location="top",
+#     shrink=0.75,
+# )
 
 ax0_twin = ax[0].twinx()
 color_ful = "teal"
@@ -223,43 +249,40 @@ cbar_cwv = (
     .plot(y="altitude", ax=ax[1], add_colorbar=False, cmap="Blues", vmin=20, vmax=100)
 )
 
-ax[1].set_xlim(cwv_xmin, cwv_xmax)
-ax[1].set_ylim(0, 13e3)
-
-
-plt.colorbar(
-    cbar_cwv,
-    ax=ax[1],
-    orientation="horizontal",
-    pad=0.1,
-    label="RH / %",
-    location="top",
-    shrink=0.75,
-)
 
 ax[0].set_xlim(cwv_xmin, cwv_xmax)
 ax[0].set_ylim(ymin=0)
 ax[0].set_ylabel("height / m")
-ax[0].set_xlabel(" ")
+ax[0].set_xlabel(" IWV / mm")
 
+cols = ["#F2935C", "steelblue"]
 
-ax[1].set_xlabel(" IWV / mm")
+for i_bounds, bounds in enumerate([(0, 55), (55, 100)]):
 
-
-sns.despine()
-# %%
-
-for bounds in [(0, 55), (55, 100)]:
+    if bounds == (0, 55):
+        label = f"IWV < {bounds[1]} mm"
+    else:
+        label = f"IWV $\geq$ {bounds[0]} mm"
 
     ds_ds["wvel"].where(
         (ds_ds["iwv_mean"] >= bounds[0]) & (ds_ds["iwv_mean"] < bounds[1]), drop=True
     ).mean("circle_id").plot.line(
         y="altitude",
+        ax=ax[1],
+        label=label,
+        color=cols[i_bounds],
     )
 
-plt.axvline(0, color="k", alpha=0.5, linestyle=":")
-
-plt.xlim(-0.01, 0.03)
-plt.ylim(0, 12.5e3)
+ax[1].legend(frameon=False, loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=2)
+ax[1].axvline(0, color="k", alpha=0.5, linestyle=":")
+ax[1].set_xlim(-0.01, 0.03)
+ax[1].set_ylim(0, 12.5e3)
+ax[1].set_xlabel("vertical velocity / m s$^{-1}$")
+ax[1].set_ylabel(" ")
 sns.despine()
+
+plt.savefig(
+    f"{PROJECT_ROOT}/figures/itcz_cwv_space.pdf",
+    bbox_inches="tight",
+)
 # %%
