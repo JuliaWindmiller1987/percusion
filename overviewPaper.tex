@@ -178,27 +178,17 @@ A summary of all flights is provided in Table~\ref{tab:flights}, which also cont
 
 \section{Overview plots}
 
-To illustrate the data collected during the campaign, 
-we first show that we systematically sampled the structure of the ITCZ, including vertical profiles of vertical velocity, humidity and aerosols and its edges as defined by CWV. 
+Overview plots should show that we successfully sampled the mesoscale structure of the ITCZ. 
 
-We want to give a first overview of the data and show that our measurement strategy worked. 
-Overarching goal: we examine how mesoscale structures of clouds, precipitation, surface winds, humidity, and aerosols impact the energy ﬂows, both radiative and through the atmospheric circulation, in the deep tropics. 
 
-First, show that we systematically sampled the ITCZ and its edges, 
+\subsection{Sampling the ITCZ} 
 
-\textbf{mesoscale structures of clouds, precipitation, surface winds, humidity, and aerosols}
-Compare the edges with the center; measured different mesoscale structures (e.g. different types of cloud systems); different surface wind and aerosols conditions. (MCS, edge-intesification/CWV gradients, doldrums, Saharan Air Layer).
-Focus on measurements suitable to study the energy flows: 
+\subsubsection{Sampling in CWV space}
+First: we sampled at the edges and inside the ITCZ as defined by CWV. 
 
-\textbf{impact the energy ﬂows, both radiative and through the atmospheric circulation}
-Radiation: show that we have the relevant radiation measurements. Show, in an example, how the observed clouds and humidity profiles relate to the observed radiation.
-Circulation: show that we have the relevant vertical motion and MSE profiles to study the circulation.
-
-\subsection{At the edges} 
 \begin{itemize} 
-    \item tbd
+    \item Figure~\ref{fig:transition}: plot that shows that we placed circles at the edges (48mm) and in the center (larger than 48mm) (HAMP and dropsonde data). 
     \item Out of 89 circles: all dropsondes in 2 circles have CWV below 48 mm and in 42 circles all dropsondes have CWV above 48 mm. This means that we have 45 circles with at least one dropsonde crossing the 48 mm contour.
-
 \end{itemize}
 
 \begin{figure}
@@ -208,10 +198,43 @@ Circulation: show that we have the relevant vertical motion and MSE profiles to 
 \caption{ Transition regions and asymmetries. We want to show that our measurement strategy worked and that we have measurements inside and at the (sharp) edges of the ITCZ. \textbf{(top) \textbf{Mean profiles} of water vapour and aerosols from \textbf{WALES} for inside, north, and south of the moist tropics (or define ITCZ differently?)}, (bottom) show how many of the circles actually crossed the 48mm contour (\textbf{dropsondes}) and PDF of CWV caluclated from \textbf{HAMP --- passiv} and \textbf{dropsondes}. \textbf{HAMP IWV still preliminary.}}
 \end{figure}
 
-\subsection{Inside}
-\begin{itemize} 
-    \item Map that shows the sondes which measured low surface wind speeds 
+\subsubsection{The ITCZ in CWV space}
+\begin{itemize}
+    \item Figure B: Show that this successfully captures the transition between subsiding / dry / high OLR and ascending / moist / low OLR region (would be nice to include aerosol or humidity plot from WALRES in here!).
 \end{itemize}
+
+\subsection{Day to day variability of the ITCZ}
+
+Second: the mesoscale structure significantly changed from one day to the next.
+
+\subsubsection{Cloudy ITCZ}
+Figure A: with a lot of convective activity (3rd of September)
+Note: satellite image is already shown in Fig.~\ref{fig:generic_flight_east}.
+Show LAM with dropsondes.
+Show one dropsonde circle with ascending motion.
+Show measurements from HAMP, VELOX, specMACs (see Fig.~\ref{fig:mseRad}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/mse_radiation.pdf}
+\label{fig:mseRad}
+\caption{ MSE budget --- radiation. We want to show that we can reconstruct the observed radiation measurements. Figure shows a \textbf{case study} showing different radiation measurements and corresponding cloud profiles during an \textbf{EarthCARE underflight} and maybe also a \textbf{METEOR overflight}. (top panel) 2D brightness temperature from \textbf{VELOX}, (middle panel)  irradiance measurements from \textbf{BARCADI}, (bottom panel) cloud (\textbf{HAMP active}) and humidity profiles (\textbf{WALES}). If we chose a case with a METEOR overflight, we could also calculate the corresponding surface fluxes. Maybe we could also add cloud images from \textbf{specMACs} to match the brightness temperatures or cloud bows / the absence of cloud bows to illustrate glaciation.}
+\end{figure}
+
+\subsubsection{Wind still ITCZ}
+Figure B: with little convective activity (but low wind speeds) for the 7th of September. 
+Show satellite image (see Fig.~\ref{fig:doldrums_flight_west}).
+Show LAM with dropsondes (see Fig.~\ref{fig:doldrums}).
+Show one dropsonde circle with subsiding motion.
+Show measurements from WALES, specMACs, BACARDI. 
+
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{figures/HALO-20240907a_flight_track.pdf}
+\caption{As in Fig.~\ref{fig:generic_flight_east} but for flight ID HALO-20240907a.}
+\label{fig:doldrums_flight_west}
+\end{figure}
+
 
 \begin{figure}
 \centering
@@ -221,31 +244,20 @@ Circulation: show that we have the relevant vertical motion and MSE profiles to 
 \caption{HALO flight track (black line) and dropsonde locations (black circles) for the flight on the 7th of September 2024. The background shows the horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day. Dropsondes with near surface wind speeds less than 3 m/s are filled in white. \textbf{TODO: Would be nice to show some specMACS observations here: can we mark the part of the path with low wind speeds and / or show two images that highlight changes of the specular reflection inside and outside of the doldrums?}}
 \end{figure}
 
-\subsection{Radiation}
-\begin{itemize} 
-    \item tbd
-\end{itemize}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figures/mse_radiation.pdf}
-\label{fig:mseRad}
-\caption{ MSE budget --- radiation. We want to show that we can reconstruct the observed radiation measurements. Figure shows a \textbf{case study} showing different radiation measurements and corresponding cloud profiles during an \textbf{EarthCARE underflight} and maybe also a \textbf{METEOR overflight}. (top panel) 2D brightness temperature from \textbf{VELOX}, (middle panel)  irradiance measurements from \textbf{BARCADI}, (bottom panel) cloud (\textbf{HAMP active}) and humidity profiles (\textbf{WALES}). If we chose a case with a METEOR overflight, we could also calculate the corresponding surface fluxes. Maybe we could also add cloud images from \textbf{specMACs} to match the brightness temperatures or cloud bows / the absence of cloud bows to illustrate glaciation.}
-\end{figure}
+% \subsection{Circulation}
+% \begin{itemize} 
+%     \item tbd
+% \end{itemize}
 
-\subsection{Circulation}
-\begin{itemize} 
-    \item tbd
-\end{itemize}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figures/mse_dynamics.pdf}
-\label{fig:mseDyn}
-\caption{ Overturning circulation and mean moist static energy profile.
-(left) mean area-averaged atmospheric vertical velocity profile from all dropsonde circles. Shaded area shows plus and minus one standard deviation.
-(right) corresponding mean moist static energy profile calculated from the circle averaged temperature and humidity profiles.}
-\end{figure}
+% \begin{figure}
+% \centering
+% \includegraphics[width=\linewidth]{figures/mse_dynamics.pdf}
+% \label{fig:mseDyn}
+% \caption{ Overturning circulation and mean moist static energy profile.
+% (left) mean area-averaged atmospheric vertical velocity profile from all dropsonde circles. Shaded area shows plus and minus one standard deviation.
+% (right) corresponding mean moist static energy profile calculated from the circle averaged temperature and humidity profiles.}
+% \end{figure}
 
 
 \section{Conclusion}
