@@ -108,10 +108,12 @@ Additional in-situ measurements of temperature, humidity, and pressure at flight
 As part of the PERCUSION campaign, a decentralized data distribution strategy was introduced for HALO to ensure scientific datasets are openly accessible, verifiable, and resilient. Moving away from traditional central servers, this approach utilises the InterPlanetary File System (IPFS), which operates on two core principles:
 
 \begin{itemize}
-    \item Content Addressing: Datasets are identified by a unique, cryptographically secure Content Identifier (CID) derived from the file itself, acting as an immutable fingerprint. Unlike mutable filenames, any change to the data results in a new CID, guaranteeing strict reproducibility for data analysis. The additional option of embedding the CID within citable, permanent DOIs via systems such as DataCite ensures long-term data integrity and scholarly traceability.
-    \item Peer-to-Peer Networking: Rather than relying on a single server, every computer in the network can both request and serve data. When a user retrieves or pins a dataset locally, they help host it. Supported by dedicated infrastructure at DKRZ, GWDG, and partner labs, this distributed architecture ensures high redundancy and eliminates single points of failure.
+    \item Content Addressing: Datasets are identified by a unique, cryptographically secure Content Identifier (CID) derived from the content itself, acting as an immutable fingerprint. Unlike mutable filenames, any change to the data results in a new CID, guaranteeing strict reproducibility for data analysis.
+    \item Peer-to-Peer Networking: Rather than relying on a single server, every computer in the network can both request and serve data. When a user retrieves or pins a dataset locally, they help host it.
 \end{itemize}
 
+ The additional option of embedding the CID within citable, permanent DOIs via systems such as DataCite ensures long-term data integrity and scholarly traceability.
+ Supported by dedicated infrastructure at DKRZ, GWDG, and partner labs, this distributed architecture ensures high redundancy and eliminates single points of failure.
 Following its success during the PERCUSION campaign, this IPFS based way of sharing data was expanded to the entire ORCESTRA campaign. It also underlies the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), which dynamically fetches metadata and files directly from IPFS on-demand to ensure the user interface is always synchronized with the underlying data.
 
 \textbf{Missing:}
@@ -207,13 +209,13 @@ First: we sampled at the edges and inside the ITCZ as defined by CWV.
 
 \subsubsection{The ITCZ in CWV space}
 \begin{itemize}
-    \item Figure~\ref{fig:itcz_cwv}: Show that this successfully captures the transition between subsiding / dry / high OLR and ascending / moist / low OLR region (would be nice to include aerosol or humidity plot from WALRES in here!).
+    \item Figure~\ref{fig:itcz_cwv}: Show that this successfully captures the transition between subsiding / dry / high OLR and ascending / moist / low OLR region (would be nice to include aerosol or humidity plot from WALES in here!).
 \end{itemize}
 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{figures/itcz_cwv_space.pdf}
-    \caption{ITCZ in column water vapour space. (left) cloud occurrence frequency from HAMP and longwave radiation from BACARDI, (right) vertical velocity from dropsondes.}
+    \caption{ITCZ in column water vapour space. (left) cloud occurrence frequency from HAMP activ, IWP from HAMP passiv and longwave radiation from BACARDI, (right) vertical velocity from dropsondes.}
     \label{fig:itcz_cwv}
 \end{figure}
 
