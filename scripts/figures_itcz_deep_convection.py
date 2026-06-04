@@ -6,6 +6,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+from matplotlib.colors import TwoSlopeNorm
+
 import easygems.healpix as egh
 import seaborn as sns
 import cartopy.crs as ccrs
@@ -14,7 +16,7 @@ import importlib
 import percusion
 from pathlib import Path
 
-importlib.reload(percusion.utils)
+importlib.reload(percusion)
 from percusion.utils import base_map, kinds2color
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -181,6 +183,7 @@ ax_ds.set_ylabel("height / m")
 ax_ds.set_title(" ")
 ax_ds.set_yticklabels([])
 ax_ds.set_ylim(ymin=0, ymax=13e3)
+ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
 sns.despine()
 
