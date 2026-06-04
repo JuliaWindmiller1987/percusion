@@ -32,7 +32,7 @@ ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
 
 
 # %%
-# Cloud mask binned by IWV
+# Cloud mask
 ds_hamp_active = xr.open_dataset(
     "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
 )
@@ -41,9 +41,35 @@ ds_hamp_active = ds_hamp_active.sel(
     time=slice(utils.campaign_start, utils.campaign_end)
 )
 
-
 # %%
 cloud_mask = xr.where(ds_hamp_active["radar_reflectivity"] > 1e-5, 1, 0)
+
+
+# %%
+# WALES water vapor
+store = (
+    "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
+)
+ds_wales_wv = xr.open_dataset(store, engine="zarr")
+ds_wales_wv = ds_wales_wv.sel(time=slice(utils.campaign_start, utils.campaign_end))
+
+k_B = 1.380649e-23  # J/K
+
+T = ds_wales_wv["airtemperature"]  # K
+n_v = ds_wales_wv["wv"]  # molecules/m^3
+
+e = n_v * k_B * T  # Pa
+
+es = 611.2 * np.exp(
+    17.67 * (T - 273.15) / (T - 29.65)
+)  # Bolton formula for saturation vapor pressure over liquid water, in Pa
+
+ds_wales_wv["RH"] = 100 * e / es
+
+
+# %%
+# Cloud mask binned by IWV
+
 iwv_hamp_interpolated = iwv_hamp_orcestra.interp(time=ds_hamp_active.time)
 cloud_mask_binned_iwv = (
     cloud_mask.groupby_bins(iwv_hamp_interpolated, bins=bins).mean().compute()
@@ -67,6 +93,18 @@ iwv_bacardi_interpolated = iwv_hamp_orcestra.interp(time=ful_bacardi.TIME)
 ful_binned_iwv = ful_bacardi.groupby_bins(iwv_bacardi_interpolated, bins=bins).mean()
 
 # %%
+# WALES water vapor binned by IWV
+
+iwv_hamp_interpolated_wales = iwv_hamp_orcestra.interp(time=ds_wales_wv.time)
+
+wales_wv_binned_iwv = (
+    ds_wales_wv["RH"]
+    .groupby_bins(iwv_hamp_interpolated_wales, bins=bins)
+    .mean()
+    .compute()
+)
+
+# %%
 fig, ax = plt.subplots(
     1,
     2,
@@ -79,19 +117,52 @@ cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.1).values), float(
     iwv_hamp_orcestra.quantile(0.9).values
 )
 
-cbar = cloud_mask_binned_iwv.plot.contourf(
-    levels=np.arange(0.0, 0.51, 0.025),
+pos = ax[0].get_position()
+
+wv_plot = wales_wv_binned_iwv.plot.contourf(
+    y="altitude",
+    ax=ax[0],
+    levels=np.arange(0, 61, 3),
+    cmap="Blues",
+    alpha=0.9,
+    add_colorbar=False,
+)
+
+cax_wv = fig.add_axes(
+    [
+        pos.x0 + 0.1 * pos.width,  # left
+        pos.y1 + 0.22,  # bottom
+        0.8 * pos.width,  # width
+        0.02,  # height
+    ]
+)
+
+cb = fig.colorbar(
+    wv_plot,
+    cax=cax_wv,
+    orientation="horizontal",
+    label=r"RH / %",
+    shrink=0.75,
+)
+
+cb.ax.xaxis.set_label_position("top")
+cb.ax.xaxis.set_ticks_position("top")
+
+cmap = plt.get_cmap("pink_r").copy()
+cmap.set_under((1, 1, 1, 0))  # transparent
+
+cloud_mask_plot = cloud_mask_binned_iwv.plot.contourf(
+    levels=np.arange(0.05, 0.51, 0.025),
     y="altitude",
     ax=ax[0],
     label=f"IWV bin {bin}",
-    cmap="pink_r",
+    cmap=cmap,
     norm=colors.Normalize(vmin=0, vmax=0.3),
     add_colorbar=False,
 )
 
-pos = ax[0].get_position()
 
-cax = fig.add_axes(
+cax_cloud_mask = fig.add_axes(
     [
         pos.x0 + 0.1 * pos.width,  # left
         pos.y1 + 0.05,  # bottom
@@ -101,8 +172,8 @@ cax = fig.add_axes(
 )
 
 cb = fig.colorbar(
-    cbar,
-    cax=cax,
+    cloud_mask_plot,
+    cax=cax_cloud_mask,
     orientation="horizontal",
     label=r"frequency of (Z > $10^{-5}$ mm$^{6}$ m$^{-3}$) / %",
     shrink=0.75,
@@ -131,7 +202,7 @@ ax0_twin2.set_ylim(0, 0.7)
 
 
 ax[0].set_xlim(cwv_xmin, cwv_xmax)
-ax[0].set_ylim(ymin=0)
+ax[0].set_ylim(ymin=250, ymax=13e3)
 ax[0].set_ylabel("height / m")
 ax[0].set_xlabel(" IWV / mm")
 
@@ -142,7 +213,7 @@ norm = colors.Normalize(vmin=36, vmax=68)
 tcwv_levels = [48]
 tcwv_colors = [cmap(norm(level)) for level in tcwv_levels]
 
-cols = ["#736A65", tcwv_colors[0]]
+cols = ["#736A65", "C0"]
 
 for i_bounds, bounds in enumerate([(0, 50), (50, 100)]):
 
@@ -186,4 +257,5 @@ plt.savefig(
     f"{PROJECT_ROOT}/figures/itcz_cwv_space.pdf",
     bbox_inches="tight",
 )
+
 # %%
