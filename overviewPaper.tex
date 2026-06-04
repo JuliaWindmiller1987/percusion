@@ -109,13 +109,14 @@ As part of the PERCUSION campaign, a decentralized data distribution strategy wa
 
 \begin{itemize}
     \item Content Addressing: Datasets are identified by a unique, cryptographically secure Content Identifier (CID) derived from the content itself, acting as an immutable fingerprint. Unlike mutable filenames, any change to the data results in a new CID, guaranteeing strict reproducibility for data analysis.
-    \item Peer-to-Peer Networking: Rather than relying on a single server, every computer in the network can both request and serve data. When a user retrieves or pins a dataset locally, they help host it.
+    \item Peer-to-Peer Networking: Rather than relying on a single server, every computer in the network can both request and serve data.
 \end{itemize}
 
-We started using the peer-to-peer nature for on-site data sharing during the field campaign, and continue using it to avoid single point of failures on the server side
- The additional option of embedding the CID within citable, permanent DOIs via systems such as DataCite ensures long-term data integrity and scholarly traceability.
- Supported by dedicated infrastructure at DKRZ, GWDG, and partner labs, this distributed architecture ensures high redundancy and eliminates single points of failure.
-Following its success during the PERCUSION campaign, this IPFS based way of sharing data was expanded to the entire ORCESTRA campaign. It also underlies the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), which dynamically fetches metadata and files directly from IPFS on-demand to ensure the user interface is always synchronized with the underlying data.
+We started using the peer-to-peer nature for on-site data sharing during the field campaign, and continue using it as it allows to provide data from multiple independent server locations (currently DKRZ, GWDG and other partner labs), without a single point of failure.
+Furthermore, users can automatically cache and share retrieved datasets, providing faster access than on a remote cloud location.
+
+To make the data findable, we built the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), providing search and preview functionality for the datasets. Importantly, the browser dynamically extracts the original datasets metadata on-demand, directly from IPFS such that metadata  doesn't have to be entered repeatedly.
+To further enhance scholarly traceability, we can provide DOIs with embedded CID for each dataset.
 
 \textbf{Missing:}
 Updates on SpecMACS, new retrievals?
