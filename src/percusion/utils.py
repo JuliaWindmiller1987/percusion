@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import xarray as xr
+import warnings
 
 lon_min = -62
 lon_max = -10
@@ -18,13 +19,23 @@ def base_map(
     size=8,
     aspect=16 / 9,
     coastline_kwargs=None,
+    ax=None,
 ):
     map_extent = [lon_min, lon_max, lat_min, lat_max]
 
-    fig, ax = plt.subplots(
-        figsize=(size * aspect, size),
-        subplot_kw={"projection": ccrs.PlateCarree()},
-    )
+    if ax is None:
+        fig, ax = plt.subplots(
+            figsize=(size * aspect, size),
+            subplot_kw={"projection": ccrs.PlateCarree()},
+        )
+    else:
+        fig = ax.figure
+
+        if not isinstance(ax.projection, ccrs.PlateCarree):
+            warnings.warn(
+                f"Expected a PlateCarree projection, got {ax.projection!r}",
+                UserWarning,
+            )
 
     ax.set_extent(map_extent, crs=ccrs.PlateCarree())
 
@@ -66,3 +77,13 @@ def get_halo_position(freq="1s"):
         .mean()
         .load()
     )
+
+
+def kinds2color(kinds):
+    if "circle" and "atr_coordination" in kinds:
+        return "#e9c46a"
+    elif "circle" in kinds:
+        return "#2ec4b6"
+    elif "ec_track" in kinds:
+        return "#f4a261"
+    return "#e76f51"

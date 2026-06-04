@@ -32,7 +32,7 @@ ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
 
 
 # %%
-# Cloud mask
+# HAMP (active)
 ds_hamp_active = xr.open_dataset(
     "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
 )

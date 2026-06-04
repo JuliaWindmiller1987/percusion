@@ -143,7 +143,7 @@ In particular:
 \begin{figure}
 \centering
 \includegraphics[width=1\linewidth]{figures/HALO-20240903a_flight_track.pdf}
-\caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR).}
+\caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background (15:20 UTC) and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR).}
 \label{fig:generic_flight_east}
 \end{figure}
 
@@ -228,13 +228,13 @@ Figure A: with a lot of convective activity (3rd of September)
 Note: satellite image is already shown in Fig.~\ref{fig:generic_flight_east}.
 Show LAM with dropsondes.
 Show one dropsonde circle with ascending motion.
-Show measurements from HAMP, VELOX, specMACs (see Fig.~\ref{fig:mseRad}).
+Show measurements from HAMP, VELOX, specMACs (see Fig.~\ref{fig:deep_conv_itcz}).
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{figures/mse_radiation.pdf}
-\label{fig:mseRad}
-\caption{ MSE budget --- radiation. We want to show that we can reconstruct the observed radiation measurements. Figure shows a \textbf{case study} showing different radiation measurements and corresponding cloud profiles during an \textbf{EarthCARE underflight} and maybe also a \textbf{METEOR overflight}. (top panel) 2D brightness temperature from \textbf{VELOX}, (middle panel)  irradiance measurements from \textbf{BARCADI}, (bottom panel) cloud (\textbf{HAMP active}) and humidity profiles (\textbf{WALES}). If we chose a case with a METEOR overflight, we could also calculate the corresponding surface fluxes. Maybe we could also add cloud images from \textbf{specMACs} to match the brightness temperatures or cloud bows / the absence of cloud bows to illustrate glaciation.}
+\includegraphics[width=\linewidth]{figures/figures_itcz_deep_convection.png}
+\label{fig:deep_conv_itcz}
+\caption{ Example of a flight with deep convection in the center of the ITCZ (flight ID HALO-20240903a). Top panel, left: outgoing shortwave radiation from Limited Area Model (LAM) simulations, with elements of the flight as included in the flight segmentation shown in different colours (see legend). Top panel, right: vertical velocity profile for central ITCZ circle. Bottom panel: radar reflectivity from HAMP. \textbf{Include radiation measurements, for example snapshots from VELOX.}}
 \end{figure}
 
 \subsubsection{Wind still ITCZ}
@@ -287,31 +287,6 @@ Disadvantage: limited to a single region and season but our close link to EarthC
 \bibliographystyle{plainnat}
 \bibliography{library}
 
-\newpage
-
-\section*{Figure drafts}
-
-\begin{figure}[p]
-\centering
-\includegraphics[width=0.75\linewidth]{figures/mseRadiation.png}
-\label{fig:mseRad_draft}
-\caption{ MSE budget --- radiation. We want to show that we can reconstruct the observed radiation measurements. Figure shows a \textbf{case study} showing different radiation measurements and corresponding cloud profiles during an \textbf{EarthCARE underflight} and maybe also a \textbf{METEOR overflight}. (top panel) 2D brightness temperature from \textbf{VELOX}, (middle panel)  irradiance measurements from \textbf{BARCADI}, (bottom panel) cloud (\textbf{HAMP active}) and humidity profiles (\textbf{WALES}). If we chose a case with a METEOR overflight, we could also calculate the corresponding surface fluxes. Maybe we could also add cloud images from \textbf{specMACs} to match the brightness temperatures or cloud bows / the absence of cloud bows to illustrate glaciation.}
-\end{figure}
-
-\begin{figure}[]
-\centering
-\includegraphics[width=
-\linewidth]{figures/doldrums.png}
-\label{fig:doldrums_draft}
-\caption{HALO flight track (black line) and dropsonde locations (black circles) for the flight on the 7th of September 2024. The background shows the horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day. Dropsondes with near surface wind speeds less than 3 m/s are filled in white. \textbf{TODO: Would be nice to show some specMACS observations here: can we mark the part of the path with low wind speeds and / or show two images that highlight changes of the specular reflection inside and outside of the doldrums?}}
-\end{figure}
-
-\begin{figure}[p]
-\centering
-\includegraphics[width=1.0\linewidth]{figures/transitionsAsymmetries.png}
-\label{fig:transition_draft}
-\caption{ Transition regions and asymmetries. We want to show that our measurement strategy worked and that we have measurements inside and at the (sharp) edges of the ITCZ. \textbf{(top) \textbf{Mean profiles} of water vapour and aerosols from \textbf{WALES} for inside, north, and south of the moist tropics (or define ITCZ differently?)}, (bottom) show how many of the circles actually crossed the 48mm contour (\textbf{dropsondes}) and PDF of CWV caluclated from \textbf{HAMP --- passiv} and \textbf{dropsondes}. \textbf{HAMP IWV still preliminary.}}
-\end{figure}
 
 \end{document}
 
