@@ -2,6 +2,7 @@
 
 """Generate image with flight track superimposed on GOES visible image"""
 
+from orcestra import get_flight_segments
 from orcestra.flightplan import LatLon, path_preview, path_as_ds, plot_path
 from orcestra.weathermaps import goes_overlay
 import xarray as xr
@@ -14,7 +15,15 @@ import seaborn as sns
 from glob import glob
 import cartopy.crs as ccrs
 
-from percusion.utils import base_map, lon_min, lon_max, lat_min, lat_max
+from percusion.utils import (
+    base_map,
+    lon_min,
+    lon_max,
+    lat_min,
+    lat_max,
+    halo_plot_dic,
+    event_kinds_dic,
+)
 
 import percusion
 from pathlib import Path
@@ -31,8 +40,11 @@ all_tracks = xr.open_dataset(
 
 # %%
 
+flights = get_flight_segments()["HALO"]
+
 flight_name = "HALO-20240903a"  # "HALO-20240907a"  # "HALO-20240811a"
-flight_date = flight_name[5:9] + "-" + flight_name[9:11] + "-" + flight_name[11:13]
+flight = flights[flight_name]
+flight_date = flight["date"]
 
 tracks = all_tracks.sel(time=flight_date)
 plan = LatLon(lat=tracks["lat"], lon=tracks["lon"], label=flight_name)
@@ -43,6 +55,15 @@ loc_at_sat = tracks.assign_coords({"tid": tracks.time}).sel(
 )
 
 flight_date_no_dash = flight_date.replace("-", "")
+
+# %%
+
+events = {}
+events["meteor_overpass"] = [
+    e for e in flight["events"] if e["kinds"] == ["meteor_overpass"]
+]
+events["ec_underpass"] = [e for e in flight["events"] if e["kinds"] == ["ec_underpass"]]
+
 # %%
 # Advanced Microwave Scanning Radiometer (AMSR)
 # Integrated water vapor in atmospheric column (TCWV) in mm
@@ -83,8 +104,26 @@ tcwv_grid, lon_edges, lat_edges, _ = binned_statistic_2d(
 
 fig, ax = base_map(coastline_kwargs={"color": "k"})
 
-plt.plot(plan.lon, plan.lat, "C1")
+halo_plot_dic["alpha"] = 1.0
+
+plt.plot(plan.lon, plan.lat, **halo_plot_dic)
 # plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
+
+for key, event in events.items():
+    for e in event:
+        t = e["time"]
+        lon, lat = plan.lon.sel(time=t, method="nearest"), plan.lat.sel(
+            time=t, method="nearest"
+        )
+
+        plt.scatter(
+            lon,
+            lat,
+            **event_kinds_dic[key],
+            zorder=3,
+            linewidths=3,
+        )
+
 
 goes_overlay(sat_date_time, ax)
 

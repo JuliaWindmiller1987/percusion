@@ -11,7 +11,14 @@ import importlib
 import percusion.utils
 
 importlib.reload(percusion.utils)
-from percusion.utils import base_map, list_of_kinds, get_halo_position
+from percusion.utils import (
+    base_map,
+    list_of_kinds,
+    get_halo_position,
+    halo_plot_dic,
+    segment_kind_dic,
+    event_kinds_dic,
+)
 import pandas as pd
 
 # %%
@@ -93,42 +100,8 @@ tcwv_era5.mean("valid_time").tcwv.plot.contour(
     ax=ax, linewidths=4, levels=tcwv_levels, colors=tcwv_colors, zorder=1
 )
 
-halo_plot_dic = {
-    "color": "#F2935C",
-    "alpha": 0.75,
-    "linewidth": 1.5,
-    "label": "HALO track",
-    "zorder": 2,
-}
 plt.plot(ds.lon, ds.lat, **halo_plot_dic)
 
-segment_kind_dic = {
-    "circle": {
-        "color": "#F2935C47",
-        "alpha": 0.2,
-        "label": r"Circle with $\omega$",
-        "compound": {
-            "kind": "atr_coordination",
-            "color": "#B38970",
-            "alpha": 0.5,
-            "label": r"ATR circle with $\omega$",
-        },
-    },
-}
-event_kinds_dic = {
-    "ec_underpass": {
-        "marker": "x",
-        "s": 100,
-        "color": "#709D9D",
-        "label": "EC underpass",
-    },
-    "meteor_overpass": {
-        "marker": "x",
-        "s": 100,
-        "color": "#736A65",
-        "label": "METEOR overpass",
-    },
-}
 
 number_of_skipped_circles = 0
 
