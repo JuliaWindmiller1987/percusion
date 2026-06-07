@@ -2,7 +2,6 @@
 
 import xarray as xr
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import percusion
@@ -36,7 +35,6 @@ iwv_ds_orcestra = ds_ds["iwv_mean"].to_numpy()
 iwv_circle_min = np.empty(len(ds_ds.circle_id))
 iwv_circle_max = np.copy(iwv_circle_min)
 iwv_circle_mean = np.copy(iwv_circle_min)
-circle_days = np.copy(iwv_circle_min).astype(int)
 
 for i, circle_id in enumerate(ds_ds.circle_id.values):
     sonde_ids = circleUtils.get_sonde_serial_ids(ds_ds, circle_id)
@@ -48,16 +46,6 @@ for i, circle_id in enumerate(ds_ds.circle_id.values):
     iwv_circle_min[i] = iwv_circle_i.min().values
     iwv_circle_max[i] = iwv_circle_i.max().values
     iwv_circle_mean[i] = iwv_circle_i.mean().values
-
-    circle_days[i] = pd.Timestamp(
-        ds_ds.sel(circle_id=circle_id).circle_time.values
-    ).dayofyear
-
-circle_day_mapped, circle_unique_days = pd.factorize(np.array(circle_days))
-
-cmap = plt.get_cmap("viridis")
-
-circle_colors = [cmap(i / (len(circle_unique_days) - 1)) for i in circle_day_mapped]
 
 # %%
 cwv_threshold = 48
@@ -83,7 +71,7 @@ col_ds, col_hamp = "C0", "C1"
 
 plt.sca(ax[0])
 
-scatter_kwargs = {"clip_on": False}
+scatter_kwargs = {"color": col_ds, "clip_on": False}
 hlines_kwargs = {"color": "k", "alpha": 0.5, "linewidth": 1, "linestyle": ":"}
 
 for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]):
@@ -97,7 +85,6 @@ for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]
         iwv_circle_max[mask],
         alpha=alpha,
         linewidth=1,
-        colors=np.array(circle_colors)[mask],
         **scatter_kwargs,
     )
 
@@ -107,7 +94,6 @@ for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]
         s=15,
         marker=marker,
         alpha=alpha,
-        c=np.array(circle_colors)[mask],
         **scatter_kwargs,
     )
 
@@ -172,5 +158,3 @@ print(
     f" {len(smaller_cwv_circles)} circles have CWV entirely below {cwv_threshold} mm, \n"
     f" {len(larger_cwv_circles)} circles have CWV entirely above {cwv_threshold} mm."
 )
-
-# %%
