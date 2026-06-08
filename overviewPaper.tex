@@ -122,6 +122,7 @@ To further enhance scholarly traceability, we can provide DOIs with embedded CID
 Updates on SpecMACS, new retrievals?
 
 \section{Campaign Design}
+\label{sec:campaign_design}
 
 To study the impact and drivers of mesoscale structures in the deep tropics during the ORCESTRA campaign, PERCUSION employed a largely generic flight strategy to sample the Atlantic ITCZ, first in the eastern basin near Sal and subsequently in the western basin near Barbados. As noted in the introduction, PERCUSION also included a third component focused on the calibration and validation of the EarthCARE satellite, which is not discussed here (see \cite{grossPersistentEarthCAREUnderflight2026} for details).
 
@@ -133,7 +134,6 @@ In particular:
 \begin{itemize}
 \item flights were scheduled on days when an EarthCARE overpass was within operational reach,
 \item HALO flew along the EarthCARE ground track, remaining on track for at least twenty minutes before and after the satellite overpass,
-%\item dropsonde circles were positioned to sample along the strongest gradients in CWV,
 \item when the dominant CWV gradient was oriented north--south: dropsonde circles were placed at the southern and northern edges and in the centre of the ITCZ,
 \item when the dominant CWV gradient was oriented east--west (occasionally in the western basin): dropsonde circles were arranged along this gradient
 \item whenever possible, HALO operated at the highest feasible altitude, ideally above the tropical high-cloud layer,
@@ -187,17 +187,21 @@ Throughout the campaign, systematic adaptations to the generic flight strategy w
 
 \section{Overview plots}
 
-
+In the following, we present selected measurements collected during the 23 PERCUSION research flights. We first demonstrate that the observations sampled the Atlantic ITCZ, by examining the measurements in CWV space. We then illustrate the day-to-day variability of the ITCZ through two contrasting case studies: one flight characterised by deep convection, and another with little deep convection and weak surface winds near the centre of the ITCZ.
 
 \subsection{Sampling the ITCZ} 
 
-\subsubsection{Sampling in CWV space}
-First: we sampled at the edges and inside the ITCZ as defined by CWV. 
+We begin by demonstrating that the research flights sampled the Atlantic ITCZ, including its centre, edges and the adjacent subsiding regions. To this end, we examine the sampling relative to the moist margin, defined by the 48 mm CWV contour, and the interior of the ITCZ, defined by CWV values exceeding 48 mm. We then show that the observations capture the transition from subsiding to ascending conditions and from infrequent to frequent deep convection, corresponding to the transition from outside to inside the ITCZ.
 
-\begin{itemize} 
-    \item Figure~\ref{fig:transition}: plot that shows that we placed circles at the edges (48mm) and in the center (larger than 48mm) (HAMP and dropsonde data). 
-    \item Out of 89 circles: all dropsondes in 2 circles have CWV below 48 mm and in 42 circles all dropsondes have CWV above 48 mm. This means that we have 45 circles with at least one dropsonde crossing the 48 mm contour.
-\end{itemize}
+\subsubsection{Sampling in CWV space}
+
+As described in Section~\ref{sec:campaign_design}, the 48 mm CWV contour was used to guide the placement of dropsonde circles at the edges and within the ITCZ. Figure~\ref{fig:transition}a shows CWV calculated from the dropsondes released in these circles. Of the 89 dropsonde circles that can be used to calculate vertical motion profiles (see above), 45 contain at least one dropsonde with CWV below 48 mm and at least one with CWV above 48 mm, indicating that they sampled the 48 mm contour. Of the remaining 44 circles, 42 contain only dropsondes with CWV values above 48 mm and only two contain exclusively dropsondes with CWV below 48 mm.
+
+A comparison of the CWV ranges sampled during individual flights reveals a clear distinction between flights based in Sal and those based in Barbados. As described above, flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre. This pattern changes markedly in the western basin, where the flight strategy differed substantially. None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre. Thus, the western flights also sampled the ITCZ structure in CWV space, albeit less systematically than those in the east.
+
+The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transition}b) further highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57 mm, close to the peak at 55 mm reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50 mm. This differs from \cite{Mapes2018}, who found a local minimum around 48 mm. This reflects our targeted sampling of the 48 mm contour. Consistent with our objectives, the adjacent dry regions were sampled only sparsely. Although the observations include CWV values as low as 30 mm, only ten percent of measurements fall below 44 mm. Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
+
+In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the meridional ITCZ structure was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
 
 \begin{figure}
 \centering
@@ -251,7 +255,6 @@ Additional measurements from specMACs, BACARDI, SMART, VELOX?
 % \label{fig:weak_winds_flight_west}
 % \end{figure}
 
-
 \begin{figure}
 \centering
 \includegraphics[width=
@@ -264,28 +267,11 @@ Bottom panel: relative humidity from WALES (note: still preliminary!).
 \end{figure}
 
 
-% \subsection{Circulation}
-% \begin{itemize} 
-%     \item tbd
-% \end{itemize}
-
-% \begin{figure}
-% \centering
-% \includegraphics[width=\linewidth]{figures/mse_dynamics.pdf}
-% \label{fig:mseDyn}
-% \caption{ Overturning circulation and mean moist static energy profile.
-% (left) mean area-averaged atmospheric vertical velocity profile from all dropsonde circles. Shaded area shows plus and minus one standard deviation.
-% (right) corresponding mean moist static energy profile calculated from the circle averaged temperature and humidity profiles.}
-% \end{figure}
-
-
 \section{Conclusion}
 
 PERCUSION was a measurement campaign with very high resolution data in space and time. 
 Disadvantage: limited to a single region and season but our close link to EarthCARE, LAM and GSRM allows us to, in some degree, overcome the disadvantage of an intensive measurement period extrapolate our findings to different regions and seasons.
 
-
-\section*{Appendix} \begin{itemize} \item Data table with variables and data locations \item Flight segmentation description \end{itemize}
 
 \bibliographystyle{plainnat}
 \bibliography{library}
