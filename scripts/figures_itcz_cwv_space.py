@@ -204,7 +204,7 @@ ax0_twin2.set_ylim(0, 0.7)
 ax[0].set_xlim(cwv_xmin, cwv_xmax)
 ax[0].set_ylim(ymin=250, ymax=13e3)
 ax[0].set_ylabel("height / m")
-ax[0].set_xlabel(" IWV / mm")
+ax[0].set_xlabel(" CWV / mm")
 
 
 cmap = plt.get_cmap("Blues")
@@ -215,7 +215,7 @@ tcwv_colors = [cmap(norm(level)) for level in tcwv_levels]
 
 cols = ["#736A65", "C0"]
 
-for i_bounds, bounds in enumerate([(0, 50), (50, 100)]):
+for i_bounds, bounds in enumerate([(0, 48), (48, 100)]):
 
     iwv_i = ds_ds["wvel"].where(
         (ds_ds["iwv_mean"] >= bounds[0]) & (ds_ds["iwv_mean"] < bounds[1]), drop=True
@@ -224,13 +224,13 @@ for i_bounds, bounds in enumerate([(0, 50), (50, 100)]):
     num_circles_i = len(iwv_i.circle_id)
 
     if bounds[0] == 0:
-        label = f"IWV < {bounds[1]} mm ({num_circles_i} circles)"
+        label = f"CWV < {bounds[1]} mm ({num_circles_i} circles)"
 
     elif bounds[1] == 100:
-        label = f"IWV $\geq$ {bounds[0]} mm ({num_circles_i} circles)"
+        label = f"CWV $\geq$ {bounds[0]} mm ({num_circles_i} circles)"
 
     else:
-        label = f"{bounds[0]} mm $\leq$ IWV < {bounds[1]} mm ({num_circles_i} circles)"
+        label = f"{bounds[0]} mm $\leq$ CWV < {bounds[1]} mm ({num_circles_i} circles)"
 
     iwv_mean_i = iwv_i.mean("circle_id")
     iwv_mean_i = iwv_mean_i.sel(altitude=slice(0, 12.5e3))
