@@ -2,6 +2,7 @@
 
 import xarray as xr
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import percusion
@@ -47,6 +48,7 @@ for i, circle_id in enumerate(ds_ds.circle_id.values):
     iwv_circle_max[i] = iwv_circle_i.max().values
     iwv_circle_mean[i] = iwv_circle_i.mean().values
 
+
 # %%
 cwv_threshold = 48
 bins = np.arange(30, 75, 1.0)
@@ -58,10 +60,32 @@ transition_circles = np.where(
 smaller_cwv_circles = np.where(iwv_circle_max < cwv_threshold)[0]
 larger_cwv_circles = np.where(iwv_circle_min > cwv_threshold)[0]
 
+# %%
+
+circle_dates_str = pd.to_datetime(ds_ds.circle_time.values).strftime("%m-%d")
+circles_day_mapped, circle_unique_days = pd.factorize(circle_dates_str)
+
+x = np.copy(iwv_circle_min)
+x[0] = 0
+
+xticks = [0]
+xticks_labels = [circle_unique_days[0]]
+
+for i_doy, doy in enumerate(circles_day_mapped[1:], start=1):
+
+    if doy != circles_day_mapped[i_doy - 1]:
+        x[i_doy] = circles_day_mapped[i_doy] * 2
+        xticks.append(x[i_doy])
+        xticks_labels.append(circle_unique_days[doy])
+
+    else:
+        x[i_doy] = x[i_doy - 1] + 0.25
+
 
 # %%
 
-x = np.arange(len(iwv_circle_min))
+circle_numbers = np.arange(len(iwv_circle_min))
+
 
 fig, ax = plt.subplots(
     1, 2, figsize=(10, 4), sharey=True, gridspec_kw={"width_ratios": [3, 1]}
@@ -74,7 +98,9 @@ plt.sca(ax[0])
 scatter_kwargs = {"color": col_ds, "clip_on": False}
 hlines_kwargs = {"color": "k", "alpha": 0.5, "linewidth": 1, "linestyle": ":"}
 
-for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]):
+for i_m, mask in enumerate(
+    [transition_circles, ~np.isin(circle_numbers, transition_circles)]
+):
 
     alpha = 1.0 if i_m == 0 else 0.35
     marker = "o"  # if i_m == 0 else "x"
@@ -100,11 +126,20 @@ for i_m, mask in enumerate([transition_circles, ~np.isin(x, transition_circles)]
 
 plt.axhline(48, **hlines_kwargs)
 
-plt.xlabel("circle number")
+plt.xticks(xticks, xticks_labels, rotation=45)
+
+plt.xlabel("flight date / MM-DD")
 plt.ylabel("CWV / mm")
 
 plt.tight_layout()
-plt.xlim(xmin=0)
+plt.xlim(0, x[-1] + 0.5)
+plt.scatter(
+    xticks[np.where(np.array(xticks_labels) == "09-06")[0][0]],
+    bins[0],
+    marker=10,
+    color=hlines_kwargs["color"],
+    alpha=hlines_kwargs["alpha"],
+)
 
 
 plt.sca(ax[1])
@@ -117,7 +152,7 @@ hist_kwargs = {
 }
 
 for h_type in ["step"]:
-    alpha = 1.0 if h_type == "step" else 0.25
+    alpha = 1.0 if h_type == "step" else 0.3
 
     ax[1].hist(
         ds_ds.iwv.values,
@@ -158,3 +193,5 @@ print(
     f" {len(smaller_cwv_circles)} circles have CWV entirely below {cwv_threshold} mm, \n"
     f" {len(larger_cwv_circles)} circles have CWV entirely above {cwv_threshold} mm."
 )
+
+# %%
