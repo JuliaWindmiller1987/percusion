@@ -21,14 +21,18 @@ from percusion.utils import base_map, kinds2color
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
-
 # %%
+
 flights = get_flight_segments()["HALO"]
 flight_id = "HALO-20240903a"
 flight = flights[flight_id]
 
 flight_start, flight_end = flight["takeoff"], flight["landing"]
 flight_date = flight["date"]
+
+segment_for_plot = [s for s in flight["segments"] if s["name"] == "circle_mid"][0]
+segment_start = np.datetime64(segment_for_plot["start"])
+segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
@@ -113,6 +117,7 @@ for s in flight["segments"]:
         tracks.lat.sel(time=t),
         c=kinds2color(s["kinds"]),
         linestyle=linestyle,
+        linewidth=3.0,
     )  # , label=s["name"])
 
 for k in ["circle", "straight_leg", "ec_track", "atr_coordination"]:
@@ -175,15 +180,24 @@ for event in meteor_overpass_events:
 
 ax_hamp.set_ylim(ymin=0)
 
-circles_flight_day.sel(circle_id="HALO-20240903a_c30f").wvel.plot(
+circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color=kinds2color("circle")
 )
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
 ax_ds.set_ylabel("height / m")
 ax_ds.set_title(" ")
-ax_ds.set_yticklabels([])
 ax_ds.set_ylim(ymin=0, ymax=13e3)
 ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
+
+cwv_circle_in_segment = circles_flight_day.sel(
+    circle_id=segment_for_plot["segment_id"]
+).iwv_mean.values
+
+cwv_circle_in_segment = circles_flight_day.sel(
+    circle_id=segment_for_plot["segment_id"]
+).iwv_mean.values
+
+print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
 
 sns.despine()
 

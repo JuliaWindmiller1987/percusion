@@ -48,9 +48,8 @@ sondes_ds = xr.open_dataset(
     "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
 )
 
-circles_flight_day = sondes_ds.sel(circle_time=flight_date)
-
 sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+circles_flight_day = sondes_ds.sel(circle_time=flight_date)
 
 wsp_crit = 3.0  # m/s
 wsp_sfc = sondes_ds.wspd.sel(altitude=slice(0, 100)).mean("altitude")
@@ -211,10 +210,16 @@ circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color="k"
 )
 
+cwv_circle_in_segment = circles_flight_day.sel(
+    circle_id=segment_for_plot["segment_id"]
+).iwv_mean.values
+
+print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
+
+
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
 ax_ds.set_ylabel("height / m")
 ax_ds.set_title(" ")
-ax_ds.set_yticklabels([])
 ax_ds.set_ylim(ymin=0, ymax=13e3)
 ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
