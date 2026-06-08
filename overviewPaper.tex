@@ -165,7 +165,9 @@ More generally, defining the ITCZ in terms of CWV provides a natural connection 
     \label{fig:flight_overview}
 \end{figure}
 
-In total, 23 research flights focused on the Atlantic deep tropics were conducted during ORCESTRA and are shown in Fig.~\ref{fig:flight_overview} and summarised in table~\ref{tab:flights}. Of these, 11 flights were conducted in the eastern basin near Sal and 11 in the western basin near Barbados, with one transfer flight connecting Sal and Barbados while carrying out targeted ITCZ measurements.
+A total of 23 HALO flights were carried out as part of the ORCESTRA campaign, focusing on the deep tropics of the Atlantic. These flights are shown in Fig.~\ref{fig:flight_overview} and summarised in Table~\ref{tab:flights}. Eleven of these flights took place in the eastern basin near Sal and eleven in the western basin near Barbados, with an additional transfer flight between the two locations. While a brief overview of these research flights is provided below, more detailed information on each flight can be found in the respective flight reports, which are available on the campaign website. These reports are also referenced in Table~\ref{tab:flights}. They provide information on each flight, including the flight plan, videos of the actual flight route superimposed on satellite imagery, descriptions of the general weather conditions, impressions during the flight, status reports on the instruments and quicklooks. The website was actively developed throughout the campaign. 
+
+\input{tables/flight_overview_table.tex}
 
 Of the 23 research flights, 21 included an EarthCARE underpass. The two exceptions 
 (\href{https://orcestra-campaign.org/reports/HALO-20240821a.html}{HALO-20240821a} and 
@@ -179,17 +181,12 @@ The remaining three circles served other purposes. Two circles during flight
 \href{https://orcestra-campaign.org/reports/HALO-20240818a.html}{HALO-20240818a} were used to encircle an individual convective system identified during the flight. This deviation from the otherwise standard flight pattern was motivated by the testing and development of new specMACS retrievals. %Should we add more?
 The remaining circle was flown to gain altitude. 
 
+To enable an easy and reproducible analysis of the key elements of the flights, a flight segmentation system was developed. Based on that system, the individual flights were categorised manually. The system distinguishes between segments and events. Segments are defined by start and end timestamps (e.g. the flight along the EarthCARE ground track), while events are defined as specific occurrences during a flight (e.g. the time of the EarthCARE underpass) and marked by a single timestamp. Both segments and events are categorised according to their 'kind'. They are organised hierarchically and are not mutually exclusive. The results of the flight segmentation are provided in YAML format, which is both human- and machine-readable and can be easily accessed via the Python package \textit{pyorcestra}.
+
 Throughout the campaign, systematic adaptations to the generic flight strategy were necessary. These included adjustments to enable coordinated measurements with other platforms, responses to weather conditions (e.g.~avoiding severe thunderstorms), airspace restrictions, technical issues, on-board instrument calibration and validation, and targeted manoeuvres to test new retrieval techniques. While these factors led primarily to minor adjustments in the eastern basin, more substantial modifications were required in the western Atlantic. In particular, the combination of stricter airspace restrictions and a more variable CWV field necessitated changes to the sampling strategy. In this region, the strongest CWV gradients were frequently oriented in an east--west direction. In some cases, these gradients were either not clearly identifiable or located too far east to be reachable within the available flight time. Consequently, dropsonde circles in the western Atlantic were often aligned either east--west or in mixed east--west and north--south configurations. Nevertheless, even in cases with predominantly east--west sampling, parts of the flight track remained aligned in the north--south direction in order to maintain sufficient overlap with the EarthCARE ground track for calibration and validation purposes.
-
-\input{tables/flight_overview_table.tex}
-
-A summary of all flights is provided in Table~\ref{tab:flights}, which also contains links to the individual flight reports available on the campaign website. The website was actively maintained throughout the campaign and provides extensive additional information for each flight, including the flight plan, movies of the realised flight track overlaid on satellite imagery, descriptions of the overall weather situation, in-flight impressions, instrument status reports, and instrument quicklooks.
-
-\textbf{Missing: Want to say something about the flight segmentation in this section.}
 
 \section{Overview plots}
 
-Overview plots should show that we successfully sampled the mesoscale structure of the ITCZ. 
 
 
 \subsection{Sampling the ITCZ} 
