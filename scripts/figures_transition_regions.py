@@ -16,6 +16,10 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
 
+bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
+
+# %%
+
 hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
 ds_hamp = xr.open_dataset(hamp_path_v2)
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
@@ -154,7 +158,7 @@ hist_kwargs = {
 for h_type in ["step"]:
     alpha = 1.0 if h_type == "step" else 0.3
 
-    ax[1].hist(
+    pdf_values_ds, bins_cwv_ds, _ = ax[1].hist(
         ds_ds.iwv.values,
         histtype=h_type,
         color=col_ds,
@@ -163,7 +167,7 @@ for h_type in ["step"]:
         **hist_kwargs,
     )
 
-    ax[1].hist(
+    pdf_values_hamp, bins_cwv_hamp, _ = ax[1].hist(
         iwv_hamp_orcestra.values,
         histtype=h_type,
         color=col_hamp,
@@ -194,4 +198,43 @@ print(
     f" {len(larger_cwv_circles)} circles have CWV entirely above {cwv_threshold} mm."
 )
 
+cwv_pdf_max_ds = bin_to_center(bins_cwv_ds)[np.argmax(pdf_values_ds)]
+cwv_pdf_max_hamp = bin_to_center(bins_cwv_hamp)[np.argmax(pdf_values_hamp)]
+
+print(f"Maximum PDF value for dropsondes: {cwv_pdf_max_ds}")
+print(f"Maximum PDF value for HAMP: {cwv_pdf_max_hamp}")
+
 # %%
+## Use below to analyse how successful a given flight sampled the edges and the center of the ITCZ
+# date = "09-28"
+# circle_ids_on_date = np.arange(len(ds_ds.circle_id))[circle_dates_str == date]
+# iwv_circle_min_on_date = iwv_circle_min[circle_ids_on_date]
+# iwv_circle_max_on_date = iwv_circle_max[circle_ids_on_date]
+
+# ds_on_date = ds_ds.isel(circle_id=circle_ids_on_date)
+
+# fig, ax = utils.base_map(coastline_kwargs={"color": "k"})
+
+# for i_circle, circle_id in enumerate(ds_on_date.circle_id.values):
+
+#     ds_circle = ds_on_date.sel(circle_id=circle_id)
+
+#     iwv_min_circle_i = iwv_circle_min_on_date[i_circle]
+#     iwv_max_circle_i = iwv_circle_max_on_date[i_circle]
+
+#     if iwv_min_circle_i < cwv_threshold < iwv_max_circle_i:
+#         color = "deepskyblue"
+#     elif iwv_max_circle_i < cwv_threshold:
+#         color = "red"
+#     else:
+#         color = "navy"
+
+#     ax.scatter(
+#         ds_circle["circle_lon"].values,
+#         ds_circle["circle_lat"].values,
+#         color=color,
+#         s=100,
+#     )
+
+
+# # %%
