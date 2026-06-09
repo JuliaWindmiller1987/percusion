@@ -17,6 +17,7 @@
 \usepackage{natbib} 
 \usepackage{booktabs}
 \usepackage{textcomp}
+\usepackage{siunitx}
 
 \title{PERCUSION’s contribution to ORCESTRA}
 \author{PERCUSION crew}
@@ -201,16 +202,38 @@ A comparison of the CWV ranges sampled during individual flights reveals a clear
 
 The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transition}b) further highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57 mm, close to the peak at 55 mm reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50 mm. This differs from \cite{Mapes2018}, who found a local minimum around 48 mm. This reflects our targeted sampling of the 48 mm contour. Consistent with our objectives, the adjacent dry regions were sampled only sparsely. Although the observations include CWV values as low as 30 mm, only ten percent of measurements fall below 44 mm. Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
 
-In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the meridional ITCZ structure was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
+In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the moist margins was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
 
 \begin{figure}
 \centering
 \includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
 \label{fig:transition}
-\caption{Sampling of the ITCZ in column water vapour space. CWV equal to 48mm is shown as a dashed line. (Left) CWV measurements for each dropsonde circle is shown as the mean CWV for the circle, calculated from all dropsondes (dot), and the range of CWV values across the circle (line). Dark (light) blue indicates whether or not the circle crosses the 48mm CWV contour. The grey triangular marker indicates the day of the transfer flight from Sal to Barbados. (Right) Corresponding probability density functions of CWV from the dropsondes (blue) and HAMP (orange).}
+\caption{Sampling of the ITCZ in column water vapour space. CWV equal to 48mm is shown as a dashed line. (Left) CWV measurements for each dropsonde circle is shown as the mean CWV for the circle, calculated from all dropsondes (dot), and the range of CWV values across the circle (line). Dark (light) blue indicates whether or not the circle crosses the 48mm CWV contour. The grey triangular marker indicates the day of the transfer flight from Sal to Barbados. (Right) Corresponding probability density functions of CWV from the dropsondes (blue) and HAMP (orange). \textbf{It would be nice to add some cloud information from WALES or specMACS.}}
 \end{figure}
 
-\subsubsection{The ITCZ in CWV space}
+\subsubsection{ITCZ in CWV space}
+
+In the previous section we showed that our measurements were collected at the edges and within the region of high column water vapour. 
+Still open question: does that mean we successfully sampled the ITCZ, i.e. the transition between dry, subsiding region and moist, ascending region?
+To answer this question we will, in the following, show a subset of our measurements in CWV space. 
+We choose this representation rather than, e.g. averaging our measurements as a function of latitude, because, as shown by \cite{Mapes2018}, CWV provides a dynamic definition of the moist tropics. 
+This means that even when the ITCZ widens or narrows, moves north or south, or breaks up into more complicated structures, we still expect the deep convection to occur within the moistest regions. 
+
+Figure~\ref{fig:itcz_cwv} shows that our measurements successfully sampled the ITCZ. 
+In particular, Fig.~\ref{fig:itcz_cwv} (left) shows a simple estimate of cloud occurrence frequency based on the HAMP radar, the profile of relative humidity based on measurements from WALES, together with the upwelling longwave radiative flux measured by BACARDI and the the ice water path (IWP) as calculated from the HAMP radiometers. 
+The very basic estimate of cloud occurrence frequency shown here is calculated as the frequency of the equivalent reflectivity factor being larger than \SI{1e-5}{\milli\meter\tothe{6}\per\meter\cubed}.
+All these are binned and averaged by the CWV measurements from HAMP into \SI{1}{\milli\meter} wide bins, ranging from \SI{44}{\milli\meter} to \SI{61}{\milli\meter}, the 10th and 90th percentile of CWV measurements respectively. 
+
+shows that as CWV increases, there is is a transition from a mostly cloud-free free-troposphere (apart from frequent high clouds) to a region of almost 50 $\%$ cloud occurrence frequency throughout the column.
+Note that the small fraction of trade wind clouds for CWV less than \SI{50}{\milli\meter} might be due to the fact that the radar can only detect large enough droplets, that form as clouds deepen,. 
+% Maybe include some measure from the lidar here.
+
+
+
+
+Plotting our measurements in CWV space is reminiscent of self-aggregation studies which often analyse the overturning circulation based on rank-sorted measures of vertically integrated humidity. 
+  
+
 \begin{itemize}
     \item Figure~\ref{fig:itcz_cwv}: Show that this successfully captures the transition between subsiding / dry / high OLR and ascending / moist / low OLR region (would be nice to include aerosol or humidity plot from WALES in here!).
 \end{itemize}
