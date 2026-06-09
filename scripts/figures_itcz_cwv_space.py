@@ -14,14 +14,22 @@ from pathlib import Path
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
-bins = np.arange(30, 75, 1.0)
-# %%
 # HAMP (passive)
 hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
 ds_hamp = xr.open_dataset(hamp_path_v2)
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
 
 iwv_hamp_orcestra = hamp_orcestra["IWV"]
+cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.1).values), float(
+    iwv_hamp_orcestra.quantile(0.9).values
+)
+
+cwv_xmin, cwv_xmax = np.round([cwv_xmin, cwv_xmax], 0)
+
+# %%
+
+bins = np.arange(cwv_xmin, cwv_xmax + 1, 1.0)
+bin_centers = (bins[:-1] + bins[1:]) / 2
 
 # %%
 # Dropsondes
@@ -113,9 +121,6 @@ fig, ax = plt.subplots(
     gridspec_kw={"width_ratios": [2, 1], "wspace": 0.4},
 )
 
-cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.1).values), float(
-    iwv_hamp_orcestra.quantile(0.9).values
-)
 
 pos = ax[0].get_position()
 
@@ -201,7 +206,7 @@ ax0_twin2.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
 ax0_twin2.set_ylim(0, 0.7)
 
 
-ax[0].set_xlim(cwv_xmin, cwv_xmax)
+ax[0].set_xlim(bin_centers[0], bin_centers[-1])
 ax[0].set_ylim(ymin=250, ymax=13e3)
 ax[0].set_ylabel("height / m")
 ax[0].set_xlabel(" CWV / mm")
