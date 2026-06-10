@@ -83,6 +83,7 @@ store = (
 )
 ds_wales_wv = xr.open_dataset(store, engine="zarr")
 ds_wales_wv = ds_wales_wv.sel(time=slice(flight_start, flight_end))
+ds_wales_wv = ds_wales_wv.where(ds_wales_wv.wv_flags == 0)
 
 k_B = 1.380649e-23  # J/K
 
@@ -97,6 +98,12 @@ es = 611.2 * np.exp(
 
 ds_wales_wv["RH"] = 100 * e / es
 
+# %%
+# HAMP dataset
+ds_hamp = xr.open_dataset(
+    "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
+)
+ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
 # %%
 # LAM dataset
@@ -152,7 +159,7 @@ ax_lam.scatter(
     sondes_flight_day.launch_lon,
     sondes_flight_day.launch_lat,
     facecolors="none",
-    label="Launch",
+    label="dropsonde",
     alpha=0.5,
     **scatter_kwargs,
 )
@@ -161,10 +168,10 @@ ax_lam.scatter(
     dol_sondes_flight_day.launch_lon,
     dol_sondes_flight_day.launch_lat,
     color=None,
-    label="Launch",
-    alpha=1.0,
+    label="doldrums dropsonde",
+    alpha=0.75,
     zorder=10,
-    facecolors="white",
+    facecolors="k",
     **scatter_kwargs,
 )
 
@@ -174,32 +181,63 @@ ax_lam.spines[["right", "top"]].set_visible(False)
 ax_lam.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
 ax_lam.set_title(flight_id)
 
+cmap_wales = plt.get_cmap("Blues").copy()
+cmap_wales.set_under((1, 1, 1, 0))  # transparent
 
 ds_wales_sel_segment = ds_wales_wv.sel(time=slice(segment_start, segment_end))
 im_wales = ds_wales_sel_segment["RH"].plot(
     alpha=0.9,
     x="time",
-    vmin=0,
-    vmax=100,
+    levels=np.arange(0, 81, 3),
     ax=ax_wales,
-    cmap="YlGnBu",
+    cmap=cmap_wales,
     add_colorbar=False,
 )
 
-pos = ax_wales.get_position()
+# HAMP radar reflectivity
 
-cax_wv = fig.add_axes(
-    [
-        pos.x0 + 0.25 * pos.width,  # left
-        pos.y1 - 0.38,  # bottom
-        0.5 * pos.width,  # width
-        0.015,  # height
-    ]
+cmap = plt.get_cmap("pink_r").copy()
+cmap.set_under((1, 1, 1, 0))  # transparent
+
+reflectivity_segment = ds_hamp_flight.radar_reflectivity.sel(
+    time=slice(segment_start, segment_end)
 )
 
+
+im_hamp = reflectivity_segment.plot(
+    y="altitude",
+    ax=ax_wales,
+    label=f"IWV bin {bin}",
+    cmap=cmap,
+    norm=colors.LogNorm(vmin=1e-5, vmax=1e5),
+    add_colorbar=False,
+)
+
+
+pos = ax_wales.get_position()
+
+cax_wv_positions = [
+    pos.x0 - 0.025,  # left
+    pos.y1 - 0.38,  # bottom
+    0.5 * pos.width,  # width
+    0.015,  # height
+]
+
+cax_wv = fig.add_axes(cax_wv_positions)
+cax_wales = fig.add_axes(cax_wv_positions + np.array([0.425, 0, 0, 0]))
+
+
 cb = fig.colorbar(
-    im_wales,
+    im_hamp,
     cax=cax_wv,
+    orientation="horizontal",
+    label=r"equivalent reflectivity factor / mm$^6$ m$^{-3}$",
+    shrink=0.75,
+)
+
+cb_wales = fig.colorbar(
+    im_wales,
+    cax=cax_wales,
     orientation="horizontal",
     label=r"RH / %",
     shrink=0.75,
@@ -216,15 +254,13 @@ cwv_circle_in_segment = circles_flight_day.sel(
 
 print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
 
-
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
 ax_ds.set_ylabel("height / m")
 ax_ds.set_title(" ")
 ax_ds.set_ylim(ymin=0, ymax=13e3)
 ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
-
-ax_wales.set_ylim(ymin=0, ymax=13e3)
+ax_wales.set_ylim(ymin=500, ymax=13e3)
 
 sns.despine()
 

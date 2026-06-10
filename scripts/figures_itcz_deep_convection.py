@@ -51,6 +51,28 @@ ds_hamp = xr.open_dataset(
 ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
 # %%
+# WALES dataset
+store = (
+    "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
+)
+ds_wales_wv = xr.open_dataset(store, engine="zarr")
+ds_wales_wv = ds_wales_wv.sel(time=slice(flight_start, flight_end))
+ds_wales_wv = ds_wales_wv.where(ds_wales_wv.wv_flags == 0)
+
+k_B = 1.380649e-23  # J/K
+
+T = ds_wales_wv["airtemperature"]  # K
+n_v = ds_wales_wv["wv"]  # molecules/m^3
+
+e = n_v * k_B * T  # Pa
+
+es = 611.2 * np.exp(
+    17.67 * (T - 273.15) / (T - 29.65)
+)  # Bolton formula for saturation vapor pressure over liquid water, in Pa
+
+ds_wales_wv["RH"] = 100 * e / es
+
+# %%
 # LAM dataset
 url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
 lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
@@ -130,36 +152,60 @@ ax_sat.spines[["right", "top"]].set_visible(False)
 ax_sat.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
 ax_sat.set_title(flight_id)
 
+cmap_wales = plt.get_cmap("Blues").copy()
+cmap_wales.set_under((1, 1, 1, 0))  # transparent
+
+ds_wales_sel_segment = ds_wales_wv.sel(time=slice(segment_start, segment_end))
+im_wales = ds_wales_sel_segment["RH"].plot(
+    alpha=0.9,
+    x="time",
+    levels=np.arange(0, 81, 3),
+    ax=ax_hamp,
+    cmap=cmap_wales,
+    add_colorbar=False,
+)
+
 ds_hamp_sel_segment = ds_hamp_flight.sel(
     time=slice(time_plot_hamp_start, time_plot_hamp_end)
 )
+
+cmap = plt.get_cmap("pink_r").copy()
+cmap.set_under((1, 1, 1, 0))  # transparent
+
 im_hamp = ds_hamp_sel_segment["radar_reflectivity"].plot(
-    norm=colors.LogNorm(),
-    alpha=0.9,
-    x="time",
-    vmin=1e-5,
-    vmax=1e5,
+    y="altitude",
     ax=ax_hamp,
-    cmap="YlGnBu",
+    label=f"IWV bin {bin}",
+    cmap=cmap,
+    norm=colors.LogNorm(vmin=1e-5, vmax=1e5),
     add_colorbar=False,
 )
 
 pos = ax_hamp.get_position()
 
-cax_wv = fig.add_axes(
-    [
-        pos.x0 + 0.25 * pos.width,  # left
-        pos.y1 - 0.38,  # bottom
-        0.5 * pos.width,  # width
-        0.015,  # height
-    ]
-)
+cax_wv_positions = [
+    pos.x0 - 0.025,  # left
+    pos.y1 - 0.38,  # bottom
+    0.5 * pos.width,  # width
+    0.015,  # height
+]
+
+cax_wv = fig.add_axes(cax_wv_positions)
+cax_wales = fig.add_axes(cax_wv_positions + np.array([0.425, 0, 0, 0]))
 
 cb = fig.colorbar(
     im_hamp,
     cax=cax_wv,
     orientation="horizontal",
     label=r"equivalent reflectivity factor / mm$^6$ m$^{-3}$",
+    shrink=0.75,
+)
+
+cb_wales = fig.colorbar(
+    im_wales,
+    cax=cax_wales,
+    orientation="horizontal",
+    label=r"RH / %",
     shrink=0.75,
 )
 
