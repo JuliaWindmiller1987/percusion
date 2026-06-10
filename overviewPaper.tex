@@ -196,6 +196,14 @@ We begin by demonstrating that the research flights sampled the Atlantic ITCZ, i
 
 \subsubsection{Sampling in CWV space}
 
+\begin{figure}
+\centering
+\includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
+\label{fig:transition}
+\caption{Sampling of the ITCZ in column water vapour space. CWV equal to 48mm is shown as a dashed line. (Left) CWV measurements for each dropsonde circle is shown as the mean CWV for the circle, calculated from all dropsondes (dot), and the range of CWV values across the circle (line). Dark (light) blue indicates whether or not the circle crosses the 48mm CWV contour. The grey triangular marker indicates the day of the transfer flight from Sal to Barbados. (Right) Corresponding probability density functions of CWV from the dropsondes (blue) and HAMP (orange). \textbf{It would be nice to add some cloud information from WALES or specMACS.}}
+\end{figure}
+
+
 As described in Section~\ref{sec:campaign_design}, the 48 mm CWV contour was used to guide the placement of dropsonde circles at the edges and within the ITCZ. Figure~\ref{fig:transition}a shows CWV calculated from the dropsondes released in these circles. Of the 89 dropsonde circles that can be used to calculate vertical motion profiles (see above), 45 contain at least one dropsonde with CWV below 48 mm and at least one with CWV above 48 mm, indicating that they sampled the 48 mm contour. Of the remaining 44 circles, 42 contain only dropsondes with CWV values above 48 mm and only two contain exclusively dropsondes with CWV below 48 mm.
 
 A comparison of the CWV ranges sampled during individual flights reveals a clear distinction between flights based in Sal and those based in Barbados. As described above, flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre. This pattern changes markedly in the western basin, where the flight strategy differed substantially. None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre. Thus, the western flights also sampled the ITCZ structure in CWV space, albeit less systematically than those in the east.
@@ -204,40 +212,8 @@ The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transit
 
 In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the moist margins was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
 
-\begin{figure}
-\centering
-\includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
-\label{fig:transition}
-\caption{Sampling of the ITCZ in column water vapour space. CWV equal to 48mm is shown as a dashed line. (Left) CWV measurements for each dropsonde circle is shown as the mean CWV for the circle, calculated from all dropsondes (dot), and the range of CWV values across the circle (line). Dark (light) blue indicates whether or not the circle crosses the 48mm CWV contour. The grey triangular marker indicates the day of the transfer flight from Sal to Barbados. (Right) Corresponding probability density functions of CWV from the dropsondes (blue) and HAMP (orange). \textbf{It would be nice to add some cloud information from WALES or specMACS.}}
-\end{figure}
 
 \subsubsection{ITCZ in CWV space}
-
-In the previous section we showed that our measurements were collected at the edges and within the region of high column water vapour. 
-Still open question: does that mean we successfully sampled the ITCZ, i.e. the transition between dry, subsiding region and moist, ascending region?
-To answer this question we will, in the following, show a subset of our measurements in CWV space. 
-We choose this representation rather than, e.g. averaging our measurements as a function of latitude, because, as shown by \cite{Mapes2018}, CWV provides a dynamic definition of the moist tropics. 
-This means that even when the ITCZ widens or narrows, moves north or south, or breaks up into more complicated structures, we still expect the deep convection to occur within the moistest regions. 
-
-Figure~\ref{fig:itcz_cwv} shows that our measurements successfully sampled the ITCZ. 
-In particular, Fig.~\ref{fig:itcz_cwv} (left) shows a simple estimate of cloud occurrence frequency based on the HAMP radar, the profile of relative humidity based on measurements from WALES, together with the upwelling longwave radiative flux measured by BACARDI and the the ice water path (IWP) as calculated from the HAMP radiometers. 
-All these are binned and averaged by the CWV measurements from HAMP into \SI{1}{\milli\meter} wide bins, ranging from \SI{44}{\milli\meter} to \SI{61}{\milli\meter}, the 10th and 90th percentile of CWV measurements respectively. 
-The very basic estimate of cloud occurrence frequency shown here is calculated as the frequency of the equivalent reflectivity factor being larger than \SI{1e-5}{\milli\meter\tothe{6}\per\meter\cubed}.
-As expected for the deep tropics clouds deepen and become more frequent as CWV increases. There is is a transition from a mostly cloud-free free-troposphere (apart from frequent high clouds) to a region of almost 50 $\%$ cloud occurrence frequency throughout the column. 
-A small but systematic peak in cloud occurrence frequency 
-Note that the small fraction of trade wind clouds for CWV less than \SI{50}{\milli\meter} might be due to the fact that the radar can only detect large enough droplets, that form as clouds deepen, for a more detailed discussion see \cite{konowEURECLtSup2021}. 
-% Maybe include some measure from the lidar here.
-
-
-
-
-
-Plotting our measurements in CWV space is reminiscent of self-aggregation studies which often analyse the overturning circulation based on rank-sorted measures of vertically integrated humidity. 
-  
-
-\begin{itemize}
-    \item Figure~\ref{fig:itcz_cwv}: Show that this successfully captures the transition between subsiding / dry / high OLR and ascending / moist / low OLR region (would be nice to include aerosol or humidity plot from WALES in here!).
-\end{itemize}
 
 \begin{figure}
     \centering
@@ -246,17 +222,29 @@ Plotting our measurements in CWV space is reminiscent of self-aggregation studie
     \label{fig:itcz_cwv}
 \end{figure}
 
+In the previous section, we showed that our measurements span a broad range of CWV values, from the relatively dry regions adjacent to the ITCZ, across its moist margins, and into its moist interior. An important remaining question is whether this CWV-based sampling corresponds to successful sampling of the ITCZ itself, that is, the transition between the dry, subsiding environment and the moist, ascending region.
+To address this question, we examine a subset of our measurements in CWV space. We choose this representation rather than averaging measurements by latitude because CWV provides a dynamical definition of the moist tropics. Consequently, even when the ITCZ widens or narrows, shifts meridionally, or breaks up into more complex structures, deep convection is expected to be limited to regions of high CWV. 
+
+Figure~\ref{fig:itcz_cwv} demonstrates that our measurements successfully sampled the transition into the ITCZ. Figure~\ref{fig:itcz_cwv} (left) shows a simple estimate of cloud occurrence frequency derived from the HAMP radar, profiles of relative humidity from WALES, together with upwelling longwave radiative flux measured by BACARDI and ice water path (IWP) retrieved from the HAMP radiometers. All quantities are binned and averaged according to the CWV measured by HAMP using \SI{1}{\milli\meter}-wide bins spanning \SI{44}{\milli\meter} to \SI{61}{\milli\meter}, corresponding to the 10th and 90th percentiles of the observed CWV distribution, respectively.
+
+Cloud occurrence frequency is estimated as the fraction of observations with an equivalent radar reflectivity factor exceeding \SI{1e-5}{\milli\meter\tothe{6}\per\meter\cubed}. As expected in the deep tropics, clouds become both deeper and more frequent with increasing CWV. Shallow trade-wind clouds first become detectable at around \SI{50}{\milli\meter}. The relatively low occurrence frequency below this threshold may partly reflect the limited sensitivity of the radar to the smallest cloud droplets, which become more readily detectable as clouds deepen \cite{konowEURECLtSup2021}.
+
+At the same time, the free troposphere transitions from being largely cloud-free, apart from frequent high clouds, to exhibiting cloud occurrence frequencies approaching 50,$\%$ throughout much of the atmospheric column. This transition accelerates for CWV values exceeding approximately \SI{56}{\milli\meter}. The rapid increase in deep convective cloud occurrence at higher CWV is consistent with the increase in precipitation rates with column water vapour \cite[e.g.][]{Bretherton2004, Peters2006}.
+
+In addition to the peaks in cloud occurrence associated with trade-wind clouds and deep convection, a third maximum is apparent near \SI{5500}{\meter}, reminiscent of the trimodal structure of tropical convection \cite{johnsonTrimodalCharacteristicsTropical1999}. Consistent with the increase in deep convection, upwelling longwave radiation decreases with increasing CWV, reflecting the growing influence of high, cold cloud tops. This decrease is closely mirrored by the increase in ice water path.
+
+While these quantities primarily characterize cloudiness, Fig.~\ref{fig:itcz_cwv} also shows the vertical profile of relative humidity outside of clouds. Relative humidity is calculated from the water-vapour molecular density measured by WALES, temperature from the meteorological analysis included in the WALES product, and the Bolton formulation for the saturation vapour pressure over liquid water.
+
+%Plotting our measurements in CWV space is reminiscent of self-aggregation studies which often analyse the overturning circulation based on rank-sorted measures of vertically integrated humidity. 
+  
+
+
+
 \subsection{Day to day variability of the ITCZ}
 
-Second: the mesoscale structure significantly changed from one day to the next.
+Above, we showed that our measurements successfully sampled the mean properties of the ITCZ. In the following, we use two case studies to illustrate the substantial day-to-day variability of its mesoscale structure. We contrast one day characterized by frequent deep convection in the centre of the ITCZ with another day exhibiting an almost complete absence of deep convection. The analysis focuses on the central dropsonde circle of each flight, both of which have CWV values of approximately \SI{60}{\milli\meter}. The comparison therefore highlights that markedly different convective states can occur at similar CWV, and thus differ substantially from the mean relationship shown in Fig.~\ref{fig:itcz_cwv}.
 
 \subsubsection{Cloudy ITCZ}
-Figure~\ref{fig:deep_conv_itcz}: with a lot of convective activity (3rd of September). CWV is high: 59.61 $kg/m^2$
-Note: satellite image is already shown in Fig.~\ref{fig:generic_flight_east}.
-Show LAM with flight segments.
-Show one dropsonde circle with mostly ascending motion.
-Show measurements from HAMP.
-Additional measurements from VELOX, specMACs?
 
 \begin{figure}
 \centering
@@ -264,6 +252,30 @@ Additional measurements from VELOX, specMACs?
 \label{fig:deep_conv_itcz}
 \caption{ Example of a flight with deep convection in the center of the ITCZ (flight ID HALO-20240903a). Top panel, left: outgoing shortwave radiation from Limited Area Model (LAM) simulations, with elements of the flight as included in the flight segmentation shown in different colours (see legend). Top panel, right: vertical velocity profile for central ITCZ circle. Bottom panel: radar reflectivity from HAMP. \textbf{Include radiation measurements, for example snapshots from VELOX.}}
 \end{figure}
+
+Figure~\ref{fig:deep_conv_itcz} gives an overview over flight \textit{HALO-
+20240903}, the same flight that is also shown in Fig.~\ref{fig:generic_flight_east}. As already apparent from the satellite image in Fig.~\ref{fig:generic_flight_east}, this was a flight with high convective activity within the moist region.
+
+Figure~\ref{fig:deep_conv_itcz}a shows a snapshot of outgoing shortwave radiation from the limited area model simulations that were run in parallel to the campaign.  
+The simulations are described in detail in \cite{fievetTropicalConvectionStormresolving2026} and used the ICON storm-resolving model at 1.25 km resolution. 
+During the campaign, overlapping 48-hour simulations were run, forced by IFS forecasts.
+Superimposed, the flight path is shown in terms of the corresponding segments identified in the flight segmentation. 
+As can be seen, the flight consisted of a mostly straight connection (straight$\_$leg) between Sal and the EarthCARE ground path (ec$\_$track), three circles (circles) placed at the margins and the center of the ITCZ as well as a coordination circle with the ATR (atr$\_$coordination). 
+
+Figure~\ref{fig:deep_conv_itcz}b and c show measurements collected during the central ITCZ circle. 
+Figure~\ref{fig:deep_conv_itcz}b shows the area mean vertical velocity calculated from the dropsondes. Air within this circle is, on average, ascending.
+
+ This was also 
+
+
+Figure~\ref{fig:deep_conv_itcz}: with a lot of convective activity (3rd of September). CWV is high: 59.61 $kg/m^2$
+Note: satellite image is already shown in Fig.~\ref{fig:generic_flight_east}.
+Show LAM with flight segments.
+Show one dropsonde circle with mostly ascending motion.
+Show measurements from HAMP.
+Additional measurements from VELOX, specMACs?
+
+
 
 \subsubsection{Wind still ITCZ}
 Figure~\ref{fig:weak_winds}: with little convective activity (but low wind speeds) for the 7th of September. CWV is still high: 60.16 $kg/m^2$
