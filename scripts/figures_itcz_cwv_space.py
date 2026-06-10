@@ -264,3 +264,19 @@ plt.savefig(
 )
 
 # %%
+
+ds_sorted = ds_ds.sortby("iwv_mean")
+ds_sorted.wvel.plot.pcolormesh(y="altitude", vmin=-0.075, vmax=0.075, cmap="bwr")
+
+n = 5
+
+current_ax = plt.gca()
+tick_positions = np.arange(len(ds_sorted.circle_id))[::n]
+tick_labels = [f"{val:.1f}" for val in ds_sorted["iwv_mean"].values[::n]]
+current_ax.set_xticks(tick_positions)
+current_ax.set_xticklabels(tick_labels, rotation=45)
+current_ax.set_xlabel("CWV (mm)")
+
+current_ax.set_ylim(ymin=250, ymax=13e3)
+sns.despine()
+# %%
