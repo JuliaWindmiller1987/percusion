@@ -215,12 +215,18 @@ im_wales = ds_wales_sel_segment["bsrg"].plot(
     ax=ax_wales,
     cmap=cmap_wales,
     norm=colors.LogNorm(
-        vmin=max(float(ds_wales_sel_segment["bsrg"].where(ds_wales_sel_segment["bsrg"] > 0).min()), 1e-6),
+        vmin=max(
+            float(
+                ds_wales_sel_segment["bsrg"]
+                .where(ds_wales_sel_segment["bsrg"] > 0)
+                .min()
+            ),
+            1e-6,
+        ),
         vmax=float(ds_wales_sel_segment["bsrg"].max()),
     ),
     add_colorbar=False,
 )
-
 
 
 # HAMP radar reflectivity
@@ -293,7 +299,7 @@ ax_wales.set_ylim(ymin=500, ymax=13e3)
 
 sns.despine()
 
-plt.savefig(f"{PROJECT_ROOT}/figures/figures_itcz_doldrums.png", bbox_inches="tight")
+plt.savefig(f"{PROJECT_ROOT}/figures/figures_itcz_outside.png", bbox_inches="tight")
 
 # %%
 
