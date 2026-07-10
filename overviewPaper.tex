@@ -90,7 +90,8 @@ The core remote-sensing configuration aboard HALO consists of a complementary su
 Additional active remote sensing is provided by the lidar system WALES (for WAter vapor Lidar Experiment in Space) which was originally developed as an airborne demonstrator for a mission proposal within ESAs Earth Explorer program. WALES operates at four wavelengths near 935~nm to deliver high-resolution profiles of the water vapour mixing ratio below the aircraft using the DIfferential Absorption Lidar (DIAL) technique \citep{wirthAirborneMultiwavelengthWater2009}. Additionally it has backscatter lidar channels at 532- and 1064~nm, where at 532~nm aerosol depolarisation and extinction can be retrieved using the High Spectral Resolution Lidar method (HSRL). At 1064 nm only attenuated backscatter measurements are possible. 
 
 Radiance and irradiance measurements are obtained using the Spectral Modular Airborne Radiation Measurement System (SMART), a suite of passive spectrometers measuring spectral irradiances and radiances within the visible, near-infrared, and shortwave infrared wavelength range (0.3--2.2~\textmu m) \citep{wendischAirborneSpectralAlbedometer2001, wendischACRIDICONCHUVACampaign2016}. The irradiance measurements allow to determine the spectral cloud top albedo, while the radiance measurements can be used to create a cloud flag and to determine microphysical properties, including optical depth and effective droplet radius. 
-The spectrometer of the Munich Aerosol Cloud Scanner (specMACS) complements these measurements by providing hyperspectral imaging in the visible/near-infrared (0.4--1.0~\textmu m), and shortwave infrared (1.0--2.5~\textmu m) \citep{ewaldDesignCharacterizationSpecMACS2016} to characterize clouds with respect to their cloud droplet effective radius, cloud droplet size distribution, and cloud optical depth.
+The spectrometer of the Munich Aerosol Cloud Scanner (specMACS) complements these measurements by providing hyperspectral imaging in the visible/near-infrared (0.4--1.0~\textmu m), and shortwave infrared (1.0--2.5~\textmu m) \citep{ewaldDesignCharacterizationSpecMACS2016} combined with measurements of four 2D polarization resolving RGB cameras \citep{Weber2024specMACSPolarization}, two downward-looking and two newly installed sideward-facing, such that an overall across-track field of view of 220$^{\circ}$ is covered.
+The specMACS measurements allow the characterization of clouds with respect to their macroscopic geometry and their microphysical structure in terms of the cloud droplet size distribution, cloud optical depth and thermodynamic phase.
 %@specMACS team: please add something about the sideways looking cameras
 This imaging capability is extended into the thermal infrared by the Video airbornE Longwave Observations within siX channels (VELOX) instrument, which captures high-resolution 2D fields of upward terrestrial radiance across six spectral bands between 7.7 and 12.0~\textmu m, providing information on cloud top brightness temperature, cloud mask/fraction, and cloud top altitude \citep{schaferVELOXNewThermal2022}.
 To quantify the cloud radiative effect and the energy budget, HALO utilises the Broadband AirCrAft RaDiometer Instrumentation (BACARDI), which consists of two sets of pyranometers and pyrgeometers mounted to the upper and lower fuselage to measure upward and downward solar(0.3--3 \textmu m) and thermal-infrared (3--100 \textmu m) irradiances, respectively \citep{ehrlichNewAirborneBroadband2023}.
@@ -109,15 +110,18 @@ Additional in-situ measurements of temperature, humidity, and pressure at flight
 As part of the PERCUSION campaign, a decentralized data distribution strategy was introduced for HALO to ensure scientific datasets are openly accessible, verifiable, and resilient. Moving away from traditional central servers, this approach utilises the InterPlanetary File System (IPFS), which operates on two core principles:
 
 \begin{itemize}
-    \item Content Addressing: Datasets are identified by a unique, cryptographically secure Content Identifier (CID) derived from the content itself, acting as an immutable fingerprint. Unlike mutable filenames, any change to the data results in a new CID, guaranteeing strict reproducibility for data analysis.
-    \item Peer-to-Peer Networking: Rather than relying on a single server, every computer in the network can both request and serve data.
+    \item Content Addressing: Datasets are identified and referenced by a unique, cryptographically secure Content Identifier (CID) derived from the content itself, acting as an immutable fingerprint. As a consequence, any change to data results in a new CID, guaranteeing strict reproducibility for data analysis.
+    \item Data lookup by CID in a peer-to-peer network: IPFS provides protocols to find and exchange data in a network. As the CID is sufficient to identify and verify correctness of the data, any computer can serve the data. 
 \end{itemize}
 
-We started using the peer-to-peer nature for on-site data sharing during the field campaign, and continue using it as it allows to provide data from multiple independent server locations (currently DKRZ, GWDG and other partner labs), without a single point of failure.
+We started using the peer-to-peer nature for on-site data sharing during the field campaign.
+To increase retrievability and ensure long-term availability, we continue using IPFS with multiple independent, well-connected server locations (currently DKRZ, GWDG and other partner labs), without a single point of failure.
 Furthermore, users can automatically cache and share retrieved datasets, providing fast access for repeated usage.
 
-To make the data findable, we built the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), providing search and preview functionality for the datasets. Importantly, the browser dynamically extracts the original datasets metadata on-demand, directly from IPFS such that metadata  doesn't have to be entered repeatedly.
+To make the data findable, we built the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), providing search and preview functionality for the datasets. Importantly, the browser dynamically extracts the original datasets metadata on-demand, directly from IPFS, such that metadata  doesn't have to be entered repeatedly.
 To further enhance scholarly traceability, we can provide DOIs with embedded CID for each dataset.
+
+% maybe link to the IPFS / ORCESTRA case study: https://docs.ipfs.tech/case-studies/orcestra/
 
 \textbf{Missing:}
 Updates on SpecMACS, new retrievals?
@@ -243,6 +247,12 @@ While these quantities primarily characterize cloudiness, Fig.~\ref{fig:itcz_cwv
 \subsection{Day to day variability of the ITCZ}
 
 Above, we showed that our measurements successfully sampled the mean properties of the ITCZ. In the following, we use two case studies to illustrate the substantial day-to-day variability of its mesoscale structure. We contrast one day characterized by frequent deep convection in the centre of the ITCZ with another day exhibiting an almost complete absence of deep convection. The analysis focuses on the central dropsonde circle of each flight, both of which have CWV values of approximately \SI{60}{\milli\meter}. The comparison therefore highlights that markedly different convective states can occur at similar CWV, and thus differ substantially from the mean relationship shown in Fig.~\ref{fig:itcz_cwv}.
+
+\subsubsection{Outside the ITCZ}
+
+Example flight outside the ITCZ. Focus of PERCUSION was on sampling the ITCZ and adjacent subsiding region. 
+In the east, subsiding (and partially cases at the ITCZ edge) were sampled in coordination with the ATR. 
+one example is shown in Fig. TODO. 
 
 \subsubsection{Cloudy ITCZ}
 
