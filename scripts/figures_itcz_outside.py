@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
+from matplotlib.ticker import FixedLocator
 
 import easygems.healpix as egh
 import seaborn as sns
@@ -204,8 +205,23 @@ ax_lam.spines[["right", "top"]].set_visible(False)
 ax_lam.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
 ax_lam.set_title(flight_id)
 
-cmap_wales = plt.get_cmap("Blues").copy()
+# cmap_wales = plt.get_cmap("Blues").copy()
+# cmap_wales.set_under((1, 1, 1, 0))  # transparent
+
+from matplotlib.colors import LinearSegmentedColormap
+
+cmap_wales = LinearSegmentedColormap.from_list(
+    "WALES_BSR",
+    """#cce5ff
+    #99ccff #7399ff #4d66ff #264cd9 #0033b3 #005993 #008073 #008c39 #009900 #20a620 #40b340
+    #81cd43 #c2e847 #e0f323 #ffff00 #ffef00 #ffe000 #ffc426 #ffa84d #ff8833 #ff691a #f2470d
+    #e62600 #d21300 #bf0000 #ac0000 #990000 #4c0000""".split(),
+)
 cmap_wales.set_under((1, 1, 1, 0))  # transparent
+
+cmap_wales_ticklocator = FixedLocator(
+    [1, 1.2, 1.4, 1.6, 1.8, 2.0, 4.0, 6.0, 8.0, 10.0, 30.0, 50.0, 70.0, 90.0]
+)
 
 ds_wales_sel_segment = ds_wales_no_wv.sel(time=slice(segment_start, segment_end))
 im_wales = ds_wales_sel_segment["bsrg"].plot(
@@ -214,17 +230,7 @@ im_wales = ds_wales_sel_segment["bsrg"].plot(
     #    levels=np.arange(0, 81, 3),
     ax=ax_wales,
     cmap=cmap_wales,
-    norm=colors.LogNorm(
-        vmin=max(
-            float(
-                ds_wales_sel_segment["bsrg"]
-                .where(ds_wales_sel_segment["bsrg"] > 0)
-                .min()
-            ),
-            1e-6,
-        ),
-        vmax=float(ds_wales_sel_segment["bsrg"].max()),
-    ),
+    norm=colors.LogNorm(vmin=1, vmax=100),
     add_colorbar=False,
 )
 
@@ -274,10 +280,9 @@ cb_wales = fig.colorbar(
     im_wales,
     cax=cax_wales,
     orientation="horizontal",
-    label=r"RH / %",
+    label=r"total backscatter ratio / ",
     shrink=0.75,
 )
-
 
 circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color="k"
