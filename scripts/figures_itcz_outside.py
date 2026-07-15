@@ -196,11 +196,12 @@ cb = fig.colorbar(
 
 mask = (tracks.time >= segment_start) & (tracks.time <= segment_end)
 
-ax_lam.scatter(
+ax_lam.plot(
     ds_hamp_passiv_flight.lon,
     ds_hamp_passiv_flight.lat,
     c="k",
-    s=25,
+    linewidth=8,
+    zorder=30,
 )
 
 ax_lam.scatter(
@@ -210,6 +211,7 @@ ax_lam.scatter(
     cmap=cmap,
     norm=norm,
     s=10,
+    zorder=31,
 )
 
 
@@ -220,18 +222,19 @@ ax_lam.scatter(
 #     alpha=0.5,
 # )
 
-# ax_lam.plot(
-#     tracks.lon.where(mask),
-#     tracks.lat.where(mask),
-#     color="k",
-# )
+ax_lam.plot(
+    tracks.lon.where(mask),
+    tracks.lat.where(mask),
+    color="C1",
+    zorder=32,
+)
 
 
 ax_lam.set_xlabel("longitude / °")
 ax_lam.set_ylabel("latitude / °")
 ax_lam.spines[["right", "top"]].set_visible(False)
 ax_lam.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
-ax_lam.set_title(" ")
+ax_lam.set_title(flight_id)
 
 # cmap_wales = plt.get_cmap("Blues").copy()
 # cmap_wales.set_under((1, 1, 1, 0))  # transparent
@@ -313,7 +316,7 @@ cb_wales = fig.colorbar(
 )
 
 circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
-    y="altitude", ax=ax_ds, label="Vertical velocity", color="k"
+    y="altitude", ax=ax_ds, label="Vertical velocity", color="C1"
 )
 
 cwv_circle_in_segment = circles_flight_day.sel(
@@ -330,7 +333,7 @@ ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
 ax_wales.set_ylim(ymin=500, ymax=13e3)
 
-plt.suptitle(flight_id)
+# plt.suptitle(flight_id)
 
 sns.despine()
 
