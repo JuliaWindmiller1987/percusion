@@ -127,6 +127,15 @@ ds_hamp = xr.open_dataset(
 )
 ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
+hamp_passiv_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
+ds_hamp_passiv = xr.open_dataset(hamp_passiv_path_v2)
+
+ds_hamp_passiv_flight = ds_hamp_passiv.sel(time=slice(flight_start, flight_end))
+ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_end))
+
+
+# %%
+
 # %%
 # LAM dataset
 url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
@@ -160,50 +169,69 @@ base_map(coastline_kwargs={"color": "k"}, ax=ax_lam)
 
 vmin, vmax, vcenter = 30, 70, 48
 norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
-cmap = plt.cm.Spectral_r
+cmap = plt.cm.Blues.copy()
 im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
+
+pos = ax_lam.get_position()
+
+width_scale = 0.8
+
+cax_lam_positions = [
+    pos.x0 + pos.width * (1 - width_scale) / 2,  # left
+    pos.y1 - 0.44,  # bottom
+    pos.width * width_scale,  # width
+    0.015,  # height
+]
+
+cax_lam = fig.add_axes(cax_lam_positions)
+
+cb = fig.colorbar(
+    im,
+    cax=cax_lam,
+    orientation="horizontal",
+    label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
+    shrink=0.75,
+)
+
 
 mask = (tracks.time >= segment_start) & (tracks.time <= segment_end)
 
-ax_lam.plot(
-    tracks.lon.where(~mask),
-    tracks.lat.where(~mask),
-    color="k",
-    alpha=0.5,
-)
-
-ax_lam.plot(
-    tracks.lon.where(mask),
-    tracks.lat.where(mask),
-    color="k",
-)
-
-
 ax_lam.scatter(
-    sondes_flight_day.launch_lon,
-    sondes_flight_day.launch_lat,
-    facecolors="none",
-    label="dropsonde",
-    alpha=0.5,
-    **scatter_kwargs,
+    ds_hamp_passiv_flight.lon,
+    ds_hamp_passiv_flight.lat,
+    c="k",
+    s=25,
 )
 
 ax_lam.scatter(
-    dol_sondes_flight_day.launch_lon,
-    dol_sondes_flight_day.launch_lat,
-    color=None,
-    label="doldrums dropsonde",
-    alpha=0.75,
-    zorder=10,
-    facecolors="k",
-    **scatter_kwargs,
+    ds_hamp_passiv_flight.lon,
+    ds_hamp_passiv_flight.lat,
+    c=ds_hamp_passiv_flight.IWV,
+    cmap=cmap,
+    norm=norm,
+    s=10,
 )
+
+
+# ax_lam.plot(
+#     tracks.lon.where(~mask),
+#     tracks.lat.where(~mask),
+#     color="k",
+#     alpha=0.5,
+# )
+
+# ax_lam.plot(
+#     tracks.lon.where(mask),
+#     tracks.lat.where(mask),
+#     color="k",
+# )
+
 
 ax_lam.set_xlabel("longitude / °")
 ax_lam.set_ylabel("latitude / °")
 ax_lam.spines[["right", "top"]].set_visible(False)
 ax_lam.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
-ax_lam.set_title(flight_id)
+ax_lam.set_title(" ")
 
 # cmap_wales = plt.get_cmap("Blues").copy()
 # cmap_wales.set_under((1, 1, 1, 0))  # transparent
@@ -302,19 +330,12 @@ ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
 ax_wales.set_ylim(ymin=500, ymax=13e3)
 
+plt.suptitle(flight_id)
+
 sns.despine()
 
 plt.savefig(f"{PROJECT_ROOT}/figures/figures_itcz_outside.png", bbox_inches="tight")
 
 # %%
-
-
-hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
-ds_hamp = xr.open_dataset(hamp_path_v2)
-hamp_orcestra = ds_hamp.sel(time=slice(segment_start, segment_end))
-
-iwv_hamp_orcestra = hamp_orcestra["IWV"]
-
-iwv_hamp_orcestra.plot()
 
 # %%
