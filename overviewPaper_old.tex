@@ -1,68 +1,36 @@
-%% Copernicus Publications Manuscript Preparation Template for LaTeX Submissions
-%% ---------------------------------
-%% This template should be used for copernicus.cls
-%% The class file and some style files are bundled in the Copernicus Latex Package, which can be downloaded from the different journal webpages.
-%% For further assistance please contact Copernicus Publications at: production@copernicus.org
-%% https://publications.copernicus.org/for_authors/manuscript_preparation.html
+\documentclass{article}
 
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
 
-%% Please use the following documentclass and journal abbreviations for preprints and final revised papers.
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
-%% 2-column papers and preprints
-\documentclass[acp, manuscript]{copernicus}
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
 
-
-
-\begin{document}
+\usepackage{natbib} 
+\usepackage{booktabs}
+\usepackage{textcomp}
+\usepackage{siunitx}
 
 \title{PERCUSION’s contribution to ORCESTRA}
+\author{PERCUSION crew}
 
-
-% \Author[affil]{given_name}{surname}
-%% TODO: Replace with the actual author list and affiliations before
-%% submission -- ACP requires named authors (given name + surname) with
-%% numbered affiliations, and a correspondence email for the corresponding
-%% author. The placeholder below only carries over the collective byline
-%% used in the draft ("PERCUSION crew").
-\Author[1][EMAIL]{}{PERCUSION crew} %% correspondence author
-
-\affil[1]{ADDRESS}
-
-%% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
-
-%% If an author is deceased, please add \deceased[$Deceased date if applicable$]{$Author number$} (e.g. \deceased[13 November 2015]{2}) at the end of the affiliations. The author number depends on the placement of the author in the author list, e.g. the third author has number 3.
-
-
-%% If authors contributed equally, please add \equalcontrib{$Author numbers$} (e.g. \equalcontrib{1,3}) at the end of the affiliations. The author number depends on the placement of the author in the author list, e.g. the third author has number 3.
-
-
-
-
-\runningtitle{PERCUSION’s contribution to ORCESTRA}
-
-\runningauthor{PERCUSION crew}
-
-\received{}
-\pubdiscuss{} %% only important for two-stage journals
-\revised{}
-\accepted{}
-\published{}
-
-%% These dates will be inserted by Copernicus Publications during the typesetting process.
-
-
-\firstpage{1}
-
+\begin{document}
 \maketitle
 
-
-
 \begin{abstract}
-%% TODO: abstract still to be written.
+
 \end{abstract}
 
 
-\introduction  %% \introduction[modified heading if necessary]
+\section{Introduction}
 
 % To do:
 % * include description of OTREC campaign and results
@@ -290,13 +258,13 @@ In summary, the observations successfully sampled both the moist peak and the ed
 In the previous section, we showed that our measurements span a broad range of CWV values, from the relatively dry regions adjacent to the ITCZ, across its moist margins, and into its moist interior. An important remaining question is whether this CWV-based sampling corresponds to successful sampling of the ITCZ itself, that is, the transition between the dry, subsiding environment and the moist, ascending region.
 To address this question, we examine a subset of our measurements in CWV space. We choose this representation rather than averaging measurements by latitude because CWV provides a dynamical definition of the moist tropics. Consequently, even when the ITCZ widens or narrows, shifts meridionally, or breaks up into more complex structures, deep convection is expected to be limited to regions of high CWV. 
 
-Figure~\ref{fig:itcz_cwv} demonstrates that our measurements successfully sampled the transition into the ITCZ. Figure~\ref{fig:itcz_cwv} (left) shows a simple estimate of cloud occurrence frequency derived from the HAMP radar, profiles of relative humidity from WALES, together with upwelling longwave radiative flux measured by BACARDI and ice water path (IWP) retrieved from the HAMP radiometers. All quantities are binned and averaged according to the CWV measured by HAMP using 1\,\unit{mm}-wide bins spanning 44\,\unit{mm} to 61\,\unit{mm}, corresponding to the 10th and 90th percentiles of the observed CWV distribution, respectively.
+Figure~\ref{fig:itcz_cwv} demonstrates that our measurements successfully sampled the transition into the ITCZ. Figure~\ref{fig:itcz_cwv} (left) shows a simple estimate of cloud occurrence frequency derived from the HAMP radar, profiles of relative humidity from WALES, together with upwelling longwave radiative flux measured by BACARDI and ice water path (IWP) retrieved from the HAMP radiometers. All quantities are binned and averaged according to the CWV measured by HAMP using \SI{1}{\milli\meter}-wide bins spanning \SI{44}{\milli\meter} to \SI{61}{\milli\meter}, corresponding to the 10th and 90th percentiles of the observed CWV distribution, respectively.
 
-Cloud occurrence frequency is estimated as the fraction of observations with an equivalent radar reflectivity factor exceeding $1\times10^{-5}\,$\unit{mm^{6}\,m^{-3}}. As expected in the deep tropics, clouds become both deeper and more frequent with increasing CWV. Shallow trade-wind clouds first become detectable at around 50\,\unit{mm}. The relatively low occurrence frequency below this threshold may partly reflect the limited sensitivity of the radar to the smallest cloud droplets, which become more readily detectable as clouds deepen \cite{konowEURECLtSup2021}.
+Cloud occurrence frequency is estimated as the fraction of observations with an equivalent radar reflectivity factor exceeding \SI{1e-5}{\milli\meter\tothe{6}\per\meter\cubed}. As expected in the deep tropics, clouds become both deeper and more frequent with increasing CWV. Shallow trade-wind clouds first become detectable at around \SI{50}{\milli\meter}. The relatively low occurrence frequency below this threshold may partly reflect the limited sensitivity of the radar to the smallest cloud droplets, which become more readily detectable as clouds deepen \cite{konowEURECLtSup2021}.
 
-At the same time, the free troposphere transitions from being largely cloud-free, apart from frequent high clouds, to exhibiting cloud occurrence frequencies approaching 50,$\%$ throughout much of the atmospheric column. This transition accelerates for CWV values exceeding approximately 56\,\unit{mm}. The rapid increase in deep convective cloud occurrence at higher CWV is consistent with the increase in precipitation rates with column water vapour \cite[e.g.][]{Bretherton2004, Peters2006}.
+At the same time, the free troposphere transitions from being largely cloud-free, apart from frequent high clouds, to exhibiting cloud occurrence frequencies approaching 50,$\%$ throughout much of the atmospheric column. This transition accelerates for CWV values exceeding approximately \SI{56}{\milli\meter}. The rapid increase in deep convective cloud occurrence at higher CWV is consistent with the increase in precipitation rates with column water vapour \cite[e.g.][]{Bretherton2004, Peters2006}.
 
-In addition to the peaks in cloud occurrence associated with trade-wind clouds and deep convection, a third maximum is apparent near 5500\,\unit{m}, reminiscent of the trimodal structure of tropical convection \cite{johnsonTrimodalCharacteristicsTropical1999}. Consistent with the increase in deep convection, upwelling longwave radiation decreases with increasing CWV, reflecting the growing influence of high, cold cloud tops. This decrease is closely mirrored by the increase in ice water path.
+In addition to the peaks in cloud occurrence associated with trade-wind clouds and deep convection, a third maximum is apparent near \SI{5500}{\meter}, reminiscent of the trimodal structure of tropical convection \cite{johnsonTrimodalCharacteristicsTropical1999}. Consistent with the increase in deep convection, upwelling longwave radiation decreases with increasing CWV, reflecting the growing influence of high, cold cloud tops. This decrease is closely mirrored by the increase in ice water path.
 
 While these quantities primarily characterize cloudiness, Fig.~\ref{fig:itcz_cwv} also shows the vertical profile of relative humidity outside of clouds. Relative humidity is calculated from the water-vapour molecular density measured by WALES, temperature from the meteorological analysis included in the WALES product, and the Bolton formulation for the saturation vapour pressure over liquid water.
 
@@ -314,7 +282,7 @@ While these quantities primarily characterize cloudiness, Fig.~\ref{fig:itcz_cwv
 % * write descriptions of days
 % * update Figure captions
 
-Above, we showed that our measurements successfully sampled the mean properties of the ITCZ. In the following, we use two case studies to illustrate the substantial day-to-day variability of its mesoscale structure. We contrast one day characterized by frequent deep convection in the centre of the ITCZ with another day exhibiting an almost complete absence of deep convection. The analysis focuses on the central dropsonde circle of each flight, both of which have CWV values of approximately 60\,\unit{mm}. The comparison therefore highlights that markedly different convective states can occur at similar CWV, and thus differ substantially from the mean relationship shown in Fig.~\ref{fig:itcz_cwv}.
+Above, we showed that our measurements successfully sampled the mean properties of the ITCZ. In the following, we use two case studies to illustrate the substantial day-to-day variability of its mesoscale structure. We contrast one day characterized by frequent deep convection in the centre of the ITCZ with another day exhibiting an almost complete absence of deep convection. The analysis focuses on the central dropsonde circle of each flight, both of which have CWV values of approximately \SI{60}{\milli\meter}. The comparison therefore highlights that markedly different convective states can occur at similar CWV, and thus differ substantially from the mean relationship shown in Fig.~\ref{fig:itcz_cwv}.
 
 \subsubsection{Cloudy ITCZ}
 
@@ -386,61 +354,15 @@ Note: edge sometimes with and sometimes without deep convection. One example is 
 \end{figure}
 
 
-\conclusions[Conclusion]  %% \conclusions[modified heading if necessary]
+\section{Conclusion}
 
 PERCUSION was a measurement campaign with very high resolution data in space and time. 
 Disadvantage: limited to a single region and season but our close link to EarthCARE, LAM and GSRM allows us to, in some degree, overcome the disadvantage of an intensive measurement period extrapolate our findings to different regions and seasons.
 
-%% The following commands are for the statements about the availability of data sets and/or software code corresponding to the manuscript.
-%% It is strongly recommended to make use of these sections in case data sets and/or software code have been part of your research the article is based on.
-%% TODO: PERCUSION data are distributed via IPFS and the ORCESTRA Data Browser
-%% (see Section 2) -- consider filling in \dataavailability{} (and/or
-%% \codeavailability{}/\codedataavailability{}) with a pointer to the
-%% Data Browser and the relevant DOIs once these are finalised.
 
-%\dataavailability{TEXT} %% use this section when having only data sets available
-
-
-\authorcontribution{TEXT} %% this section is mandatory
-
-\competinginterests{TEXT} %% this section is mandatory even if you declare that no competing interests are present
-
-\begin{acknowledgements}
-TEXT
-\end{acknowledgements}
-
-
-
-
-%% REFERENCES
-
-\bibliographystyle{copernicus}
+\bibliographystyle{plainnat}
 \bibliography{library}
 
 
-%% Since the Copernicus LaTeX package includes the BibTeX style file copernicus.bst,
-%% authors experienced with BibTeX only have to include the following two lines:
-%%
-%% \bibliographystyle{copernicus}
-%% \bibliography{example.bib}
-%%
-%% URLs and DOIs can be entered in your BibTeX file as:
-%%
-%% URL = {http://www.xyz.org/~jones/idx_g.htm}
-%% DOI = {10.5194/xyz}
-
-
-%% LITERATURE CITATIONS
-%%
-%% command                        & example result
-%% \citet{jones90}|               & Jones et al. (1990)
-%% \citep{jones90}|               & (Jones et al., 1990)
-%% \citep{jones90,jones93}|       & (Jones et al., 1990, 1993)
-%% \citep[p.~32]{jones90}|        & (Jones et al., 1990, p.~32)
-%% \citep[e.g.,][]{jones90}|      & (e.g., Jones et al., 1990)
-%% \citep[e.g.,][p.~32]{jones90}| & (e.g., Jones et al., 1990, p.~32)
-%% \citeauthor{jones90}|          & Jones et al.
-%% \citeyear{jones90}|            & 1990
-
-
 \end{document}
+
