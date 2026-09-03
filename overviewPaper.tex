@@ -116,9 +116,10 @@ A particular focus of PERCUSION was the measurement of quantities central to the
 Many of these measurements rely on retrieval techniques and analysis methods that were further developed during the campaign, and the resulting datasets are being distributed using new approaches designed to facilitate community access and cross-platform analysis.
 Together, these observations provide a unique opportunity to link the mesoscale “inner life” of the ITCZ--its clouds, humidity and aerosol structure, and vertical motion--to its influence on the large-scale circulation and radiation budget of the tropical atmosphere.
 
-The remainder of the paper describes the measurement strategy and data (Section 2), presents an overview of the observations (Section 3), and concludes with a discussion of their implications (Section 4).
+The remainder of the paper describes the instrumentation, the data collected, and their distribution (Section~\ref{sec:data}); the measurement strategy (Section~\ref{sec:campaign_design}); and its implementation (Section~\ref{sec:implementation}). Section~\ref{sec:overview_plots} demonstrates the success of this strategy and presents selected case studies from the collected data, before concluding in Section~\ref{sec:conclusion}.
 
 \section{Data}
+\label{sec:data}
 
 % To do:
 % * want to say something more about additional retrievals?
@@ -131,7 +132,7 @@ The core remote-sensing configuration aboard HALO consists of a complementary su
 Additional active remote sensing is provided by the lidar system WALES (for WAter vapor Lidar Experiment in Space) which was originally developed as an airborne demonstrator for a mission proposal within ESAs Earth Explorer program. WALES operates at four wavelengths near 935~nm to deliver high-resolution profiles of the water vapour mixing ratio below the aircraft using the DIfferential Absorption Lidar (DIAL) technique \citep{wirthAirborneMultiwavelengthWater2009}. Additionally it has backscatter lidar channels at 532- and 1064~nm, where at 532~nm aerosol depolarisation and extinction can be retrieved using the High Spectral Resolution Lidar method (HSRL). At 1064 nm only attenuated backscatter measurements are possible. 
 
 Radiance and irradiance measurements are obtained using the Spectral Modular Airborne Radiation Measurement System (SMART), a suite of passive spectrometers measuring spectral irradiances and radiances within the visible, near-infrared, and shortwave infrared wavelength range (0.3--2.2~\textmu m) \citep{wendischAirborneSpectralAlbedometer2001, wendischACRIDICONCHUVACampaign2016}. The irradiance measurements allow to determine the spectral cloud top albedo, while the radiance measurements can be used to create a cloud flag and to determine microphysical properties, including optical depth and effective droplet radius. 
-The spectrometer of the Munich Aerosol Cloud Scanner (specMACS) complements these measurements by providing hyperspectral imaging in the visible/near-infrared (0.4--1.0~\textmu m), and shortwave infrared (1.0--2.5~\textmu m) \citep{ewaldDesignCharacterizationSpecMACS2016} combined with measurements of four 2D polarization resolving RGB cameras \citep{Weber2024specMACSPolarization}, two downward-looking and two newly installed sideward-facing, such that an overall across-track field of view of 220$^{\circ}$ is covered.
+The spectrometer of the Munich Aerosol Cloud Scanner (specMACS) complements these measurements by providing hyperspectral imaging in the visible/near-infrared (0.4--1.0~\textmu m), and shortwave infrared (1.0--2.5~\textmu m) \citep{ewaldDesignCharacterizationSpecMACS2016} combined with measurements of four 2D polarization resolving RGB cameras \citep{weberPolarizationUpgradeSpecMACS2024}, two downward-looking and two newly installed sideward-facing, such that an overall across-track field of view of 220$^{\circ}$ is covered.
 The specMACS measurements allow the characterization of clouds with respect to their macroscopic geometry and their microphysical structure in terms of the cloud droplet size distribution, cloud optical depth and thermodynamic phase.
 %@specMACS team: please add something about the sideways looking cameras
 This imaging capability is extended into the thermal infrared by the Video airbornE Longwave Observations within siX channels (VELOX) instrument, which captures high-resolution 2D fields of upward terrestrial radiance across six spectral bands between 7.7 and 12.0~\textmu m, providing information on cloud top brightness temperature, cloud mask/fraction, and cloud top altitude \citep{schaferVELOXNewThermal2022}.
@@ -174,7 +175,7 @@ New retrievals?
 % * not clear whether this is "complete", i.e. do we want to add additional campaign goals, e.g. focus on the subtropics?
 % * maybe add a short description of the limitations in the west Atlantic already here
 
-To study the impact and drivers of mesoscale structures in the deep tropics during the ORCESTRA campaign, PERCUSION employed a largely generic flight strategy to sample the Atlantic ITCZ, first in the eastern basin near Sal and subsequently in the western basin near Barbados. As noted in the introduction, PERCUSION also included a third component focused on the calibration and validation of the EarthCARE satellite, which is not discussed here (see \cite{grossPersistentEarthCAREUnderflight2026} for details).
+To study the impact and drivers of mesoscale structures in the deep tropics during the ORCESTRA campaign, PERCUSION employed a largely generic flight strategy to sample the Atlantic ITCZ, first in the eastern basin near Sal and subsequently in the western basin near Barbados. As noted in the introduction, PERCUSION also sampled the extratropics with flights conducted from Oberpfaffenhofen (Germany) during the period from 4 to 19 November 2024. This part of the campaign was focused solely on the calibration and validation of the EarthCARE satellite and is not discussed here but described in detail in \cite{grossPersistentEarthCAREUnderflight2026}.
 
 By a generic flight strategy, we mean that flight planning followed a set of objective rules that were applied consistently throughout the campaign. The central idea was to sample the structure of the ITCZ in an ITCZ-based reference frame, i.e. to systematically sample the properties at the edges and in the centre of the ITCZ rather than, for example, targeting the locations of deepest convection. Following \cite{Mapes2018}, the ITCZ was primarily identified through its high column water vapour (CWV) content, with its edges defined either by the 48mm CWV contour or by the strongest CWV gradient. In cases where the CWV field was strongly perturbed, surface wind direction was additionally considered following \cite{windmillerInnerLifeAtlantic2024}.
 %The location and width of the Atlantic ITCZ can change by several degrees within the course of days \cite{Chen1982, Frank1983}. 
@@ -187,7 +188,7 @@ In particular:
 \item when the dominant CWV gradient was oriented north--south: dropsonde circles were placed at the southern and northern edges and in the centre of the ITCZ,
 \item when the dominant CWV gradient was oriented east--west (occasionally in the western basin): dropsonde circles were arranged along this gradient
 \item whenever possible, HALO operated at the highest feasible altitude, ideally above the tropical high-cloud layer,
-\item coordinated observations with other platforms were conducted whenever possible, including overflights of and circles around RV METEOR and the SAFIRE ATR-42 (the latter usually with a smaller radius).
+\item coordinated observations with other platforms were conducted whenever possible, including overflights of and circles around RV METEOR and the SAFIRE ATR-42 (the latter usually with a smaller radius), as well as overpasses of the Cape Verde Atmospheric Observatory (CVAO) and the Barbados Cloud Observatory (BCO)
 \end{itemize}
 
 %While deviations from the generic flight strategy are discussed in detail in Section~\ref{sec:implementation}, one systematic modification to the flight plan occurred in the western basin, where the strongest gradients in column water vapour were, at times, oriented primarily in the east-west direction. In these cases, the dropsonde circles were aligned east-west to sample along the strongest column water vapour gradients but without crossing the ITCZ.
@@ -239,6 +240,7 @@ To enable an easy and reproducible analysis of the key elements of the flights, 
 Throughout the campaign, systematic adaptations to the generic flight strategy were necessary. These included adjustments to enable coordinated measurements with other platforms, responses to weather conditions (e.g.~avoiding severe thunderstorms), airspace restrictions, technical issues, on-board instrument calibration and validation, and targeted manoeuvres to test new retrieval techniques. While these factors led primarily to minor adjustments in the eastern basin, more substantial modifications were required in the western Atlantic. In particular, the combination of stricter airspace restrictions and a more variable CWV field necessitated changes to the sampling strategy. In this region, the strongest CWV gradients were frequently oriented in an east--west direction. In some cases, these gradients were either not clearly identifiable or located too far east to be reachable within the available flight time. Consequently, dropsonde circles in the western Atlantic were often aligned either east--west or in mixed east--west and north--south configurations. Nevertheless, even in cases with predominantly east--west sampling, parts of the flight track remained aligned in the north--south direction in order to maintain sufficient overlap with the EarthCARE ground track for calibration and validation purposes.
 
 \section{Overview plots}
+\label{sec:overview_plots}
 
 % To Dos:
 % * give a bit more weight to our sampling of regions outside the ITCZ
@@ -386,7 +388,8 @@ Note: edge sometimes with and sometimes without deep convection. One example is 
 \end{figure}
 
 
-\conclusions[Conclusion]  %% \conclusions[modified heading if necessary]
+\conclusions
+\label{sec:sec:conclusion}
 
 PERCUSION was a measurement campaign with very high resolution data in space and time. 
 Disadvantage: limited to a single region and season but our close link to EarthCARE, LAM and GSRM allows us to, in some degree, overcome the disadvantage of an intensive measurement period extrapolate our findings to different regions and seasons.
