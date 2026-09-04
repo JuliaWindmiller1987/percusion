@@ -128,7 +128,7 @@ for i_m, mask in enumerate(
     )
 
 
-plt.axhline(48, **hlines_kwargs)
+plt.axhline(cwv_threshold, **hlines_kwargs)
 
 plt.xticks(xticks, xticks_labels, rotation=45)
 
@@ -176,7 +176,7 @@ for h_type in ["step"]:
         **hist_kwargs,
     )
 
-plt.axhline(48, **hlines_kwargs)
+plt.axhline(cwv_threshold, **hlines_kwargs)
 plt.ylim(bins[0], bins[-1])
 plt.legend()
 
@@ -203,6 +203,23 @@ cwv_pdf_max_hamp = bin_to_center(bins_cwv_hamp)[np.argmax(pdf_values_hamp)]
 
 print(f"Maximum PDF value for dropsondes: {cwv_pdf_max_ds}")
 print(f"Maximum PDF value for HAMP: {cwv_pdf_max_hamp}")
+
+# %%
+## Print what fraction of data points were sampled below given CWV threshold
+
+cwv_frac = cwv_threshold
+
+hamp_frac_below_crit_wvp = np.sum(
+    iwv_hamp_orcestra.dropna(dim="time") < cwv_frac
+) / len(iwv_hamp_orcestra.dropna(dim="time"))
+
+ds_frac_below_crit_wvp = np.sum(ds_ds.iwv.dropna(dim="sonde") < cwv_frac) / len(
+    ds_ds.iwv.dropna(dim="sonde")
+)
+
+print(
+    f"Fraction of values collected below {cwv_frac} mm: {hamp_frac_below_crit_wvp:.2f} (HAMP), {ds_frac_below_crit_wvp:.2f} (dropsondes)"
+)
 
 # %%
 ## Use below to analyse how successful a given flight sampled the edges and the center of the ITCZ

@@ -184,7 +184,7 @@ A summary of rules used for flight planning, together with an example flight, is
 In particular:
 \begin{itemize}
 \item flights were scheduled on days when an EarthCARE overpass was within operational reach,
-\item HALO flew along the EarthCARE ground track, remaining on track for at least twenty minutes before and after the satellite overpass,
+\item \item HALO took the most direct route to the EarthCARE ground track after takeoff and remained on it, often for the majority of the flight, always for at least twenty minutes before and after the satellite overpass,
 \item when the dominant CWV gradient was oriented north--south: dropsonde circles were placed at the southern and northern edges and in the centre of the ITCZ,
 \item when the dominant CWV gradient was oriented east--west (occasionally in the western basin): dropsonde circles were arranged along this gradient
 \item whenever possible, HALO operated at the highest feasible altitude, ideally above the tropical high-cloud layer,
@@ -200,7 +200,11 @@ In particular:
 \label{fig:generic_flight_east}
 \end{figure}
 
-The rationale behind the different elements of the flight strategy was as follows. Flying along the EarthCARE ground track served several purposes. First, as discussed in the introduction, it contributed to the calibration and validation of EarthCARE observations and facilitated the extrapolation of our results to other regions and periods. Second, the repeated back-and-forth pattern along the same track effectively produced three cross-sections of the ITCZ at different times of day: one from EarthCARE and two from HALO. This configuration provides a means of assessing how strongly the mesoscale structure evolves on timescales of a few hours.
+The rationale behind the different elements of the flight strategy was as follows. Flying along the EarthCARE ground track served several purposes. 
+First, as discussed in the introduction, it contributed to the calibration and validation of EarthCARE observations and facilitated the extrapolation of our results to other regions and periods. 
+Second, the repeated back-and-forth pattern along the same track effectively produced three cross-sections of the ITCZ at different times of day: one from EarthCARE and two from HALO. 
+This configuration provides a means of assessing how strongly the mesoscale structure evolves on timescales of a few hours.
+Third, flying directly to the EarthCARE ground track after takeoff, rather than taking the shortest route to the ITCZ edge, ensured that HALO also sampled the full transition from the subsiding region to the ITCZ centre.
 
 The placement of dropsonde circles at the ITCZ edges, or along the dominant CWV gradient, was motivated by the desire to connect the observations as directly as possible to previous studies. In particular, the 48mm CWV contour has been identified as a transition between the deep tropics and the surrounding subsiding regions, while edge intensification refers to precipitation maxima occurring preferentially near this boundary. Vertical velocity measurements in these regions therefore enable a direct comparison with the mechanisms discussed by \cite{Mapes2018}, \cite{masunagaMechanismMaintenanceSharp2020}, and \cite{masunagaEdgeIntensificationEastern2023}.
 
@@ -268,9 +272,10 @@ We begin by demonstrating that the research flights sampled the Atlantic ITCZ, i
 
 As described in Section~\ref{sec:campaign_design}, the 48 mm CWV contour was used to guide the placement of dropsonde circles at the edges and within the ITCZ. Figure~\ref{fig:transition}a shows CWV calculated from the dropsondes released in these circles. Of the 89 dropsonde circles that can be used to calculate vertical motion profiles (see above), 45 contain at least one dropsonde with CWV below 48 mm and at least one with CWV above 48 mm, indicating that they sampled the 48 mm contour. Of the remaining 44 circles, 42 contain only dropsondes with CWV values above 48 mm and only two contain exclusively dropsondes with CWV below 48 mm.
 
-A comparison of the CWV ranges sampled during individual flights reveals a clear distinction between flights based in Sal and those based in Barbados. As described above, flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre. This pattern changes markedly in the western basin, where the flight strategy differed substantially. None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre. Thus, the western flights also sampled the ITCZ structure in CWV space, albeit less systematically than those in the east.
+A comparison of the CWV ranges sampled during individual flights reveals a clear distinction between flights based in Sal and those based in Barbados. As described above, flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre. This pattern changes markedly in the western basin, where the flights differed substantially (see Section~\ref{sec:implementation}). None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre. Thus, the western flights also sampled the ITCZ structure in CWV space, albeit less systematically than those in the east.
 
-The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transition}b) further highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57 mm, close to the peak at 55 mm reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50 mm. This differs from \cite{Mapes2018}, who found a local minimum around 48 mm. This reflects our targeted sampling of the 48 mm contour. Consistent with our objectives, the adjacent dry regions were sampled only sparsely. Although the observations include CWV values as low as 30 mm, only ten percent of measurements fall below 44 mm. Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
+The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transition}b) further highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57 mm, close to the peak at 55 mm reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50 mm. This differs from \cite{Mapes2018}, who found a local minimum around 48 mm. This reflects our targeted sampling of the 48 mm contour. Consistent with our objectives, the majority of our observations were collected in the region of high CWV but also allow for analysis of the adjacent drier subtropical regions as our observations include CWV values as low as 30 mm and 24$\%$ of both the dropsonde and HAMP measurements fall below 48~mm.  
+Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
 
 In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the moist margins was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
 
@@ -317,6 +322,19 @@ While these quantities primarily characterize cloudiness, Fig.~\ref{fig:itcz_cwv
 % * update Figure captions
 
 Above, we showed that our measurements successfully sampled the mean properties of the ITCZ. In the following, we use two case studies to illustrate the substantial day-to-day variability of its mesoscale structure. We contrast one day characterized by frequent deep convection in the centre of the ITCZ with another day exhibiting an almost complete absence of deep convection. The analysis focuses on the central dropsonde circle of each flight, both of which have CWV values of approximately 60\,\unit{mm}. The comparison therefore highlights that markedly different convective states can occur at similar CWV, and thus differ substantially from the mean relationship shown in Fig.~\ref{fig:itcz_cwv}.
+
+\subsubsection{Outside the ITCZ/At the edge of the ITCZ}
+
+Example flight outside the ITCZ. Focus of PERCUSION was on sampling the ITCZ and adjacent subsiding region. 
+In the east, subsiding (and partially cases at the ITCZ edge) were sampled in coordination with the ATR. 
+Note: edge sometimes with and sometimes without deep convection. One example is shown in Fig.~\ref{fig:weak_winds_flight_west}. 
+
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{figures/figures_itcz_outside.png}
+\caption{Caption.}
+\label{fig:weak_winds_flight_west}
+\end{figure}
 
 \subsubsection{Cloudy ITCZ}
 
@@ -373,19 +391,6 @@ Bottom panel: relative humidity from WALES (note: still preliminary!).
 \label{fig:weak_winds}
 \end{figure}
 
-
-\subsubsection{Outside the ITCZ/At the edge of the ITCZ}
-
-Example flight outside the ITCZ. Focus of PERCUSION was on sampling the ITCZ and adjacent subsiding region. 
-In the east, subsiding (and partially cases at the ITCZ edge) were sampled in coordination with the ATR. 
-Note: edge sometimes with and sometimes without deep convection. One example is shown in Fig.~\ref{fig:weak_winds_flight_west}. 
-
-\begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{figures/figures_itcz_outside.png}
-\caption{Caption.}
-\label{fig:weak_winds_flight_west}
-\end{figure}
 
 
 \conclusions
