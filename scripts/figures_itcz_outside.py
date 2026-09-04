@@ -170,7 +170,7 @@ base_map(coastline_kwargs={"color": "k"}, ax=ax_lam)
 vmin, vmax, vcenter = 30, 70, 48
 norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
 cmap = plt.cm.Blues.copy()
-im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
+# im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
 
 pos = ax_lam.get_position()
 
@@ -185,13 +185,13 @@ cax_lam_positions = [
 
 cax_lam = fig.add_axes(cax_lam_positions)
 
-cb = fig.colorbar(
-    im,
-    cax=cax_lam,
-    orientation="horizontal",
-    label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
-    shrink=0.75,
-)
+# cb = fig.colorbar(
+#     im,
+#     cax=cax_lam,
+#     orientation="horizontal",
+#     label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
+#     shrink=0.75,
+# )
 
 
 mask = (tracks.time >= segment_start) & (tracks.time <= segment_end)
@@ -323,7 +323,6 @@ cwv_circle_in_segment = circles_flight_day.sel(
     circle_id=segment_for_plot["segment_id"]
 ).iwv_mean.values
 
-# print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
 
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
 ax_ds.set_ylabel("height / m")
@@ -341,4 +340,17 @@ plt.savefig(f"{PROJECT_ROOT}/figures/figures_itcz_outside.png", bbox_inches="tig
 
 # %%
 
+print(
+    f"Mean IWV in circle segment: {ds_hamp_passiv_segment.IWV.mean().values:.2f} kg/m^2"
+)
+print(
+    f"Min IWV in circle segment: {ds_hamp_passiv_segment.IWV.min().values:.2f} kg/m^2"
+)
+print(
+    f"Max IWV in circle segment: {ds_hamp_passiv_segment.IWV.max().values:.2f} kg/m^2"
+)
+
+(ds_hamp_passiv_segment.IWV.dropna(dim="time") < 50.00).sum() / len(
+    ds_hamp_passiv_segment.IWV.dropna(dim="time")
+)
 # %%
