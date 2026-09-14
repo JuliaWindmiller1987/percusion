@@ -121,8 +121,8 @@ wales_wv_binned_iwv = (
 #      width
 # --------------------------------------------------------------------------
 
-fig = plt.figure(figsize=(9, 8))
-gs = fig.add_gridspec(2, 5, height_ratios=[1, 1], wspace=0.75, hspace=0.25)
+fig = plt.figure(figsize=(9, 6))
+gs = fig.add_gridspec(2, 5, height_ratios=[1.5, 1], wspace=0.75, hspace=0.25)
 
 ax_cloud_mask = fig.add_subplot(gs[0, :3])  # 2/3 width
 ax_vertical_velocity = fig.add_subplot(gs[0, 3:5])  # 1/3 width
@@ -191,7 +191,7 @@ cb = fig.colorbar(
     cloud_mask_plot,
     cax=cax_bloud_mask,
     orientation="horizontal",
-    label=r"frequency of (Z > $10^{-5}$ mm$^{6}$ m$^{-3}$) / %",
+    label=r"freq. of Z > $10^{-5}$ mm$^{6}$ m$^{-3}$ / %",
     shrink=0.75,
 )
 
@@ -270,7 +270,7 @@ for i_bounds, bounds in enumerate([(0, 48), (48, 100)]):
     )
 
 ax_vertical_velocity.legend(
-    frameon=False, loc="lower center", bbox_to_anchor=(0.5, 1.1), ncol=1
+    frameon=False, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=1
 )
 ax_vertical_velocity.axvline(0, color="k", alpha=0.5, linestyle=":")
 ax_vertical_velocity.set_xlim(-1, 1.5)
@@ -283,10 +283,10 @@ ax_vertical_velocity.set_ylabel(" ")
 # ---------------------------------------------------------------------
 panel_labels = ["a)", "b)", "c)"]
 for a, lbl in zip([ax_cloud_mask, ax_vertical_velocity, ax_rad_flux], panel_labels):
-    offset = 0.00 if a == ax_cloud_mask else 0.05
+    offset = 0.00  # if a == ax_cloud_mask else 0.05
     a.text(
         -0.1 - offset,
-        1.1,
+        1.2,
         lbl,
         transform=a.transAxes,
         fontsize=12,
