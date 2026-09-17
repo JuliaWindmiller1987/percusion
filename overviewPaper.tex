@@ -11,7 +11,7 @@
 %% 2-column papers and preprints
 \documentclass[acp, manuscript]{copernicus}
 
-
+\newsavebox{\itczedgebox}
 
 \begin{document}
 
@@ -328,7 +328,9 @@ Each case study also shows a snapshot from the limited area model simulations th
 
 \begin{figure}
 \centering
-\includegraphics[width=1\linewidth]{figures/figures_itcz_outside.png}
+\sbox{\itczedgebox}{\includegraphics[width=\linewidth]{figures/figures_itcz_outside.png}}
+\usebox{\itczedgebox}\\[4pt]
+\includegraphics[width=\linewidth, height=0.333\ht\itczedgebox]{figures/PERCUSION_20240822_VELOX_Pushbroom_F1.png}
 \caption{HALO flight \textit{HALO-20240822a} on the 22nd of August 2024 based in Sal (Cabo Verde) with five dropsonde circles. (a) Along flight track measurements of CWV from HAMP are shown in colours (bounded by a black contour). Background colours show the LAM simulated CWV distribution at 16:00 UTC. The orange line shows the flight track during a dropsonde circle at the edge of the ITCZ and shown in more detail in (b), which shows the circle mean vertical velocity calculated from the dropsondes, and (c) which shows the total backscatter ration measured by WALES.
 To do: Include VELOX and/or specMACS observations?}
 \label{fig:at_edge_of_itcz}
@@ -363,15 +365,15 @@ The ITCZ sampled here fits well with the conventional picture of the ITCZ (see a
 
 \subsubsection{Wind still ITCZ}
 Figure~\ref{fig:weak_winds} shows the research flight on the 7th of September, flight \textit{HALO-20240907a} starting and ending in Barbados. 
-Similar to the flight discussed in the previous section, three large dropsonde circles were placed along the EarthCARE track to probe the meridional structure of the ITCZ, although the comperatively longer transit flight towards the EarthCARE track made it impossible to fly back and forth along the EarthCARE and so only one north south crossing was done. As the ATR remained in the eastern Atlantic for the entire campaign, there was also no additional coordination circle. 
+Similar to the previous section's flight, three large dropsonde circles were placed along the EarthCARE track to probe the ITCZ's structure, although the comparatively longer transit flight to the EarthCARE track meant it was impossible to fly back and forth along it. Therefore, only one north-south crossing was performed. As the ATR remained in the eastern Atlantic for the entire campaign, no additional coordination circle was used.
 
 
 
-: with little convective activity (but low wind speeds) for the 7th of September. CWV is still high: 60.16\,\unit{mm}.
-Show LAM with dropsondes.
-Show one dropsonde circle with weak vertical motion.
-Show measurements from WALES.
-Additional measurements from specMACs, BACARDI, SMART, VELOX? 
+% : with little convective activity (but low wind speeds) for the 7th of September. CWV is still high: 60.16\,\unit{mm}.
+% Show LAM with dropsondes.
+% Show one dropsonde circle with weak vertical motion.
+% Show measurements from WALES.
+% Additional measurements from specMACs, BACARDI, SMART, VELOX? 
 
 % \begin{figure}
 % \centering
