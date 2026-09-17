@@ -28,19 +28,16 @@ iwv_hamp_orcestra = hamp_orcestra["IWV"]
 # %%
 
 ds_ds = xr.open_dataset(
-    "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
+    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
+
 ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
 ds_ds = ds_ds.dropna(dim="circle_id", subset=["iwv_mean"])
 
 iwv_ds_orcestra = ds_ds["iwv_mean"]
-iwv_ds_orcestra_np = iwv_ds_orcestra.to_numpy()
-
-# %%
 
 iwv_circle_min = np.empty(len(ds_ds.circle_id))
-iwv_circle_max = np.copy(iwv_circle_min)
-iwv_circle_mean = np.copy(iwv_circle_min)
+iwv_circle_max = np.empty(len(ds_ds.circle_id))
 
 for i, circle_id in enumerate(ds_ds.circle_id.values):
     sonde_ids = circleUtils.get_sonde_serial_ids(ds_ds, circle_id)
@@ -51,7 +48,13 @@ for i, circle_id in enumerate(ds_ds.circle_id.values):
 
     iwv_circle_min[i] = iwv_circle_i.min().values
     iwv_circle_max[i] = iwv_circle_i.max().values
-    iwv_circle_mean[i] = iwv_circle_i.mean().values
+
+ds_ds["iwv_circle_min"] = (("circle_id"), iwv_circle_min)
+ds_ds["iwv_circle_max"] = (("circle_id"), iwv_circle_max)
+
+
+ds_iwv = ds_ds[["iwv_circle_min", "iwv_circle_max", "iwv_mean"]]
+ds_iwv["circle_time_pd"] = pd.DatetimeIndex(ds_ds["circle_time"])
 
 
 # WALES water vapor
@@ -108,92 +111,98 @@ print(
     f"{np.sum(wales_mask >= crit_data_fraction)/len(wales_mask)*100:.2f}%"
 )
 
+# %%
+# Plotting
 
 cwv_threshold = 48
 bins = np.arange(0, 75, 1.0)
 
-transition_circles = np.where(
-    (iwv_circle_min < cwv_threshold) & (iwv_circle_max > cwv_threshold)
-)[0]
+x_values = np.empty(len(ds_iwv["circle_time_pd"]))
+x_values[0] = 0
 
-smaller_cwv_circles = np.where(iwv_circle_max < cwv_threshold)[0]
-larger_cwv_circles = np.where(iwv_circle_min > cwv_threshold)[0]
+x_ticks = []
+x_ticks.append(0)
+x_labels = []
+x_labels.append(ds_iwv["circle_time_pd"][0].dt.strftime("%m-%d").values)
 
-# %%
+for i, t in enumerate(ds_iwv["circle_time_pd"][1:], start=1):
+    if t.dt.dayofyear != ds_iwv["circle_time_pd"][i - 1].dt.dayofyear:
+        x_values[i] = x_values[i - 1] + 2
 
-circle_dates_str = pd.to_datetime(ds_ds.circle_time.values).strftime("%m-%d")
-circles_day_mapped, circle_unique_days = pd.factorize(circle_dates_str)
-
-x = np.copy(iwv_circle_min)
-x[0] = 0
-
-xticks = [0]
-xticks_labels = [circle_unique_days[0]]
-
-for i_doy, doy in enumerate(circles_day_mapped[1:], start=1):
-
-    if doy != circles_day_mapped[i_doy - 1]:
-        x[i_doy] = circles_day_mapped[i_doy] * 2
-        xticks.append(x[i_doy])
-        xticks_labels.append(circle_unique_days[doy])
-
+        x_ticks.append(x_values[i])
+        x_labels.append(t.dt.strftime("%m-%d").values)
     else:
-        x[i_doy] = x[i_doy - 1] + 0.25
+        x_values[i] = x_values[i - 1] + 0.25
 
 
 # %%
-
-circle_numbers = np.arange(len(iwv_circle_min))
-
 
 fig, ax = plt.subplots(
     1, 2, figsize=(10, 4), sharey=True, gridspec_kw={"width_ratios": [3, 1]}
 )
 
 col_ds, col_hamp = "C0", "C1"
+marker = "o"
 
 plt.sca(ax[0])
 
 scatter_kwargs = {"color": col_ds, "clip_on": False}
 hlines_kwargs = {"color": "k", "alpha": 0.5, "linewidth": 1, "linestyle": ":"}
 
-for i_m, mask in enumerate(
-    [transition_circles, ~np.isin(circle_numbers, transition_circles)]
-):
+num_circles = len(ds_iwv["circle_time_pd"])
+num_transition_circles = 0
+num_smaller_cwv_circles = 0
+num_larger_cwv_circles = 0
 
-    alpha = 1.0 if i_m == 0 else 0.35
-    marker = "o"  # if i_m == 0 else "x"
+for i in range(num_circles):
+
+    iwv_min_circle_i = ds_iwv["iwv_circle_min"][i]
+    iwv_max_circle_i = ds_iwv["iwv_circle_max"][i]
+
+    if iwv_min_circle_i < cwv_threshold < iwv_max_circle_i:
+        alpha = 1.0
+        num_transition_circles += 1
+    elif iwv_max_circle_i < cwv_threshold:
+        alpha = 0.35
+        num_smaller_cwv_circles += 1
+    elif iwv_min_circle_i > cwv_threshold:
+        alpha = 0.35
+        num_larger_cwv_circles += 1
 
     plt.vlines(
-        x[mask],
-        iwv_circle_min[mask],
-        iwv_circle_max[mask],
+        x_values[i],
+        ds_iwv["iwv_circle_min"][i],
+        ds_iwv["iwv_circle_max"][i],
         alpha=alpha,
         linewidth=1,
         **scatter_kwargs,
     )
-
     plt.scatter(
-        x[mask],
-        iwv_circle_mean[mask],
+        x_values[i],
+        ds_iwv["iwv_mean"][i],
         s=15,
         marker=marker,
         alpha=alpha,
         **scatter_kwargs,
     )
 
+print(
+    f"Out of {len(ds_ds.circle_id)}: \n {num_transition_circles} circles are transition circles, \n"
+    f" {num_smaller_cwv_circles} circles have CWV entirely below {cwv_threshold} mm, \n"
+    f" {num_larger_cwv_circles} circles have CWV entirely above {cwv_threshold} mm."
+)
 
 plt.axhline(cwv_threshold, **hlines_kwargs)
 
-plt.xticks(xticks, xticks_labels, rotation=45)
+plt.xticks(x_ticks, x_labels, rotation=45)
 
 plt.xlabel("flight date / MM-DD")
 plt.ylabel("CWV / mm")
 
 plt.tight_layout()
-plt.xlim(0, x[-1] + 0.5)
+plt.xlim(0, x_ticks[-1] + 0.5)
 plt.scatter(
-    xticks[np.where(np.array(xticks_labels) == "09-06")[0][0]],
+    x_ticks[np.where(np.array(x_labels) == "09-06")[0][0]],
     bins[0],
     marker=10,
     color=hlines_kwargs["color"],
@@ -273,11 +282,6 @@ plt.savefig(
     bbox_inches="tight",
 )
 
-print(
-    f"Out of {len(ds_ds.circle_id)}: \n {len(transition_circles)} circles are transition circles, \n"
-    f" {len(smaller_cwv_circles)} circles have CWV entirely below {cwv_threshold} mm, \n"
-    f" {len(larger_cwv_circles)} circles have CWV entirely above {cwv_threshold} mm."
-)
 
 cwv_pdf_max_ds = bin_to_center(bins_cwv_ds)[np.argmax(pdf_values_ds)]
 cwv_pdf_max_hamp = bin_to_center(bins_cwv_hamp)[np.argmax(pdf_values_hamp)]
@@ -336,8 +340,3 @@ print(
 #         color=color,
 #         s=100,
 #     )
-
-
-# # %%
-
-# %%
