@@ -23,7 +23,7 @@ bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
 hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
 ds_hamp = xr.open_dataset(hamp_path_v2)
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
-
+hamp_orcestra = hamp_orcestra.dropna(dim="time", subset=["IWV"])
 iwv_hamp_orcestra = hamp_orcestra["IWV"]
 # %%
 
@@ -31,11 +31,12 @@ ds_ds = xr.open_dataset(
     "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
 )
 ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
+ds_ds = ds_ds.dropna(dim="circle_id", subset=["iwv_mean"])
 
+iwv_ds_orcestra = ds_ds["iwv_mean"]
+iwv_ds_orcestra_np = iwv_ds_orcestra.to_numpy()
 
 # %%
-
-iwv_ds_orcestra = ds_ds["iwv_mean"].to_numpy()
 
 iwv_circle_min = np.empty(len(ds_ds.circle_id))
 iwv_circle_max = np.copy(iwv_circle_min)
@@ -59,20 +60,14 @@ store = (
 )
 ds_wales_wv = xr.open_dataset(store, engine="zarr")
 ds_wales_wv = ds_wales_wv.sel(time=slice(utils.campaign_start, utils.campaign_end))
-
+ds_wales_wv = ds_wales_wv.dropna(dim="time", how="all", subset=["wv"])
 # %%
 # CWV from number of water molucles per unit volumn
+
 wv_flags = ds_wales_wv["wv_flags"]
-
-n_v = ds_wales_wv["wv"]  # molecules/m^3
-n_v = n_v.where(wv_flags == 0)
-
 below_aircraft = ds_wales_wv.altitude <= ds_wales_wv.flight_altitude
 
-valid = xr.where(wv_flags == 0, 1, 0).where(below_aircraft)
-wales_mask = valid.mean(
-    "altitude", skipna=True
-)  # fraction valid, of available data only
+n_v = ds_wales_wv["wv"].where((wv_flags == 0) & below_aircraft)  # molecules/m^3
 
 vertical_resolution_wales = (
     ds_wales_wv.altitude[1:].values - ds_wales_wv.altitude[:-1].values
@@ -96,6 +91,11 @@ cwv_wales = (
 
 # %%
 
+valid = xr.where(wv_flags == 0, 1, 0).where(below_aircraft)
+wales_mask = valid.mean(
+    "altitude", skipna=True
+)  # fraction valid, of available data only
+
 crit_data_fraction = 0.90  # fraction of valid data points
 cwv_wales_filtered = xr.where(
     (wales_mask >= crit_data_fraction),
@@ -105,7 +105,7 @@ cwv_wales_filtered = xr.where(
 
 print(
     f"Fraction of WALES data points with more than {crit_data_fraction*100:.0f}% valid data: "
-    f"{np.sum(wales_mask > crit_data_fraction)/len(wales_mask)*100:.2f}%"
+    f"{np.sum(wales_mask >= crit_data_fraction)/len(wales_mask)*100:.2f}%"
 )
 
 
