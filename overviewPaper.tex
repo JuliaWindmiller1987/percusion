@@ -258,9 +258,6 @@ We begin by demonstrating that the research flights sampled the Atlantic ITCZ, i
 
 \subsubsection{Sampling in CWV space}
 
-% To dos:
-% Include clear sky CWV from WALES
-
 \begin{figure}
 \centering
 \includegraphics[width=1.0\linewidth]{figures/transition_circles.pdf}
@@ -276,7 +273,9 @@ A comparison of the CWV ranges sampled during individual flights reveals a clear
 The PDF of CWV values measured by the dropsondes and HAMP (Fig.~\ref{fig:transition}b) further highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57\,\unit{mm}, close to the peak at 55\,\unit{mm} reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50\,\unit{mm}. This differs from \cite{Mapes2018}, who found a local minimum around 48\,\unit{mm}. This reflects our targeted sampling of the 48\,\unit{mm} contour. Consistent with our objectives, the majority of our observations were collected in the region of high CWV but also allow for analysis of the adjacent drier subtropical regions as our observations include CWV values as low as 30\,\unit{mm} and 24$\%$ of both the dropsonde and HAMP measurements fall below 48\,\unit{mm}.  
 Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
 
-In summary, the observations successfully sampled both the moist peak and the edge of the tropical CWV distribution, while including a smaller number of measurements in the adjacent dry regions. Systematic sampling of the moist margins was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
+In addition to the dropsonde and HAMP measurements, Fig.~\ref{fig:transition}b also shows the CWV distribution derived from WALES. We include only measurements for which at least 90\% of the profile below the aircraft contains valid data, a criterion met by about 22\% of the WALES observations. This relatively low yield is unsurprising, as WALES is a nadir-pointing lidar, and cloud presence frequently prevents retrieval of water vapour profiles below cloud tops. Excluded profiles are assigned a nominal value of zero and the distribution is normalized over the full set of measurements, so that its amplitude reflects both the underlying CWV distribution and the fraction of usable retrievals. Its shape and peak location remain meaningful and comparable to the other distributions. The resulting distribution can be interpreted as representing clear-sky conditions: it agrees well with the dropsonde and HAMP distributions at low CWV values, but its peak is shifted to substantially lower CWV, near 45\,\unit{mm}, with increasingly few data points at higher CWV.
+
+In summary, the observations successfully sampled the moist peak, the edge of the tropical CWV distribution and the adjacent dry regions. Systematic sampling of the moist margins was particularly successful in the eastern basin, while observations in the western basin nevertheless captured much of the transition between dry and moist regions.
 
 
 \subsubsection{ITCZ in CWV space}
@@ -326,21 +325,22 @@ Each case study also shows a snapshot from the limited area model simulations th
 \subsubsection{At the edge of the ITCZ}
 
 
-As described above, the focus of PERCUSION was on sampling the ITCZ, the adjacent subsiding region, and the transition between the two. 
-Figure~\ref{fig:weak_winds_flight_west} shows flight \textit{HALO-20240822a}, which shows flight track that largely follows the generic flight strategy outlined in section
-In the east, the subsiding regions and the ITCZ edge were often sampled in coordination with the ATR. 
-Here we show flight \textit{HALO-20240822a} with a circle flown around the ATR at the edge of the ITCZ, see Fig.. 
-Despite the small circle radius of 60\,\unit{km} rather than 130\,\unit{km}, CWV varies between a minimum value of 46.9\,\unit{mm} in the northern part of the circle and a maximum value of 58.6\,\unit{mm} in the southern part of the circle.
-While sharp gradient in CWV are often marked by deep convection, we here show an example where convective activity was limited to a height of about 2\,\unit{km}. In addition to the cloud field, Fig.~\ref{fig:weak_winds_flight_west} shows the vertical distribution of aerosols whose interaction with clouds is a key focus of PERCUSION.
-
-
 \begin{figure}
 \centering
 \includegraphics[width=1\linewidth]{figures/figures_itcz_outside.png}
 \caption{HALO flight \textit{HALO-20240822a} on the 22nd of August 2024 based in Sal (Cabo Verde) with five dropsonde circles. (a) Along flight track measurements of CWV from HAMP are shown in colours (bounded by a black contour). Background colours show the LAM simulated CWV distribution at 16:00 UTC. The orange line shows the flight track during a dropsonde circle at the edge of the ITCZ and shown in more detail in (b), which shows the circle mean vertical velocity calculated from the dropsondes, and (c) which shows the total backscatter ration measured by WALES.
 To do: Include VELOX and/or specMACS observations?}
-\label{fig:weak_winds_flight_west}
+\label{fig:at_edge_of_itcz}
 \end{figure}
+ 
+Figure~\ref{fig:at_edge_of_itcz}a shows flight \textit{HALO-20240822a}, whose track largely follows the generic strategy outlined in section~\ref{sec:campaign_design}: three large dropsonde circles placed at or near the edges of the high-CWV region, and two (rather than one) smaller circles flown in coordination with the ATR. The overall CWV field, during that day was more complex than a single band of high CWV. In the west, the LAM simulations suggest a narrow region of low CWV embedded within an otherwise well-defined band of high CWV (also supported by satellite imagery, not shown), while in the east -- where the flight took place -- both HAMP and the LAM simulations show two distinct regions of high CWV: one associated with the ITCZ, and one further north. An additional region of high CWV north of the ITCZ was a common occurrence during the campaign and appeared to be related to African easterly waves.
+
+Figures~\ref{fig:at_edge_of_itcz}b and c focus on the dropsonde circle flown at the ITCZ edge in coordination with the ATR. Despite its smaller radius (60\,\unit{km} rather than the standard 130\,\unit{km}), CWV within the circle varied from 46.9\,\unit{mm} in the north to 58.6\,\unit{mm} in the south. Such sharp CWV gradients are often associated with deep convection; here, however, vertical motion was weak throughout the circle (Fig.~\ref{fig:at_edge_of_itcz}b), and the little convective activity present was confined to below about 2\,\unit{km} (Fig.~\ref{fig:at_edge_of_itcz}c). In addition to the HAMP cloud measurements, Fig.~\ref{fig:at_edge_of_itcz}c also shows the total backscatter ratio measured by WALES.
+
+Together, the vertical velocity, cloud, and aerosol distributions point to an intriguing three-layer structure of the atmosphere: a roughly 2\,\unit{km} deep layer of near-zero vertical motion, topped by a layer of ascent extending to about 4\,\unit{km}, and above that a layer of descent up to about 7\,\unit{km}. The aerosol distribution appears to track this structure closely, itself organised into two layers: a lower layer extending to about 2\,\unit{km} -- the height of weak vertical motion, and in some places capped by a thin layer of cloud -- and a second aerosol layer extending to about 4\,\unit{km}, coinciding with the height at which vertical motion changes sign, above which the air is clear. We do not attempt to establish causality here, but this case illustrates the kind of data PERCUSION collected to study the interaction between vertical motion, clouds, and aerosols in the ITCZ. It also shows that, while sometimes associated with deep convection, the ITCZ edge can equally be marked by weak vertical motion and limited convective activity.
+
+
+
 
 \subsubsection{Cloudy ITCZ}
 
@@ -351,23 +351,13 @@ To do: Include VELOX and/or specMACS observations?}
 \label{fig:deep_conv_itcz}
 \end{figure}
 
-Figure~\ref{fig:deep_conv_itcz} gives an overview over flight \textit{HALO-
-20240903}, the same flight that is shown in Fig.~\ref{fig:generic_flight_east}. As already apparent from the satellite image in Fig.~\ref{fig:generic_flight_east}, this was a flight with high convective activity within the moist region.
 
-Figure~\ref{fig:deep_conv_itcz}a shows a snapshot of outgoing shortwave radiation from the LAM simulations.
-Superimposed, the flight path is shown in terms of the corresponding segments identified in the flight segmentation. 
-As can be seen, the flight consisted of a mostly straight connection (straight$\_$leg) between Sal and the EarthCARE ground path (ec$\_$track), three circles (circles) placed at the margins and the center of the ITCZ as well as a coordination circle with the ATR (atr$\_$coordination). 
+Focusing on the center rather than the edge of the ITCZ, Fig.~\ref{fig:deep_conv_itcz} shows some of the measurements collected during flight \textit{HALO-20240903a}, based in Sal, on 3 September 2024. Here, we focus in particular on the dropsonde circle flown in the center of the region of high column water vapour (solid turquoise line in Fig.~\ref{fig:deep_conv_itcz}a). The mean CWV for this circle is high, at 59.61\,\unit{mm}. The flight track in Fig.~\ref{fig:deep_conv_itcz}a is coloured by flight segment (straight legs, circles, and the EarthCARE ground track, which are not mutually exclusive -- see Section~\ref{sec:campaign_design}). It consisted of a mostly straight connection (straight\_leg) between Sal and the EarthCARE ground track (ec\_track), three circles (circles) placed at the margins and center of the ITCZ, and a coordination circle with the ATR (atr\_coordination).
 
-Figure~\ref{fig:deep_conv_itcz}b and c show measurements collected during the central ITCZ circle. 
-Figure~\ref{fig:deep_conv_itcz}b shows the area mean vertical velocity calculated from the dropsondes. Air within this circle is, on average, ascending. Mean CWV for this circle is high: 59.61\,\unit{mm}.
+Flight \textit{HALO-20240903a} is the same flight shown in Fig.~\ref{fig:generic_flight_east}, whose satellite image already shows signs of high convective activity, especially near the center of the ITCZ. This is well captured by the LAM simulation, which shows a region of high outgoing shortwave radiation at the center of the ITCZ, indicating the presence of convective clouds (Fig.~\ref{fig:deep_conv_itcz}a). The high convective activity is also apparent in the radar measurements, which show deep convective activity throughout the central ITCZ circle (Fig.~\ref{fig:deep_conv_itcz}c). While the frequent presence of deep convection significantly limited how much of the vertical structure could be observed by WALES, the measurements that were possible above cloud top show what appears to be an imprint of the convective activity on the humidity field (see, for example, the moist layer and its relation to the underlying cloud at around 15:25 UTC in Fig.~\ref{fig:deep_conv_itcz}c).
 
-
-% Figure~\ref{fig:deep_conv_itcz}: with a lot of convective activity (3rd of September). 
-% Note: satellite image is already shown in Fig.~\ref{fig:generic_flight_east}.
-% Show LAM with flight segments.
-% Show one dropsonde circle with mostly ascending motion.
-% Show measurements from HAMP.
-% Additional measurements from VELOX, specMACs?
+As might be expected, the vertical velocity profile derived from the dropsondes shows that air within this circle is, on average, ascending (Fig.~\ref{fig:deep_conv_itcz}b). The strongest ascent is observed at around 10\,\unit{km} altitude, with a maximum exceeding 5\,\unit{cm/s} -- significantly higher than the maximum ascent rate observed at the ITCZ edge in Fig.~\ref{fig:at_edge_of_itcz}b. While the top-heaviness of the profile is consistent with the presence of deep convection, it also shows a layer of near-zero vertical velocity between 4 and 6\,\unit{km}, and a further layer of ascending motion reaching up to 4\,\unit{km} altitude, consistent with convection in different stages of development within the circle.
+The ITCZ sampled here fits well with the conventional picture of the ITCZ (see also Fig.~\ref{fig:itcz_cwv}): high CWV, frequent deep convection in different stages of its lifecycle, and strong ascent at the center. In the next section, we show that this is not always the case, and that the ITCZ can also exhibit high CWV alongside little convective activity at its center.
 
 
 \subsubsection{Wind still ITCZ}
