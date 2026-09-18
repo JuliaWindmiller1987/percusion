@@ -340,13 +340,15 @@ Together, the vertical velocity, cloud, and aerosol distributions point to an in
 
 
 \subsubsection{Cloudy ITCZ}
+\label{sec:cloudy_itcz}
 
 \begin{figure}
 \centering
 \sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_deep_convection.png}}
 \usebox{\itczedgebox}\\[4pt]
 \includegraphics[width=0.8\linewidth]{figures/PERCUSION_20240903_VELOX_Pushbroom_F1_1510_1520_cut.png}
-\caption{Example of a flight with deep convection in the centre of the ITCZ (flight ID HALO-20240903a). (a) Outgoing shortwave radiation from Limited Area Model (LAM) simulations, with flight-segmentation elements shown in different colours (see legend). For the central ITCZ circle: (b) vertical velocity profile; (c) radar reflectivity from HAMP and relative humidity profiles from WALES. (d) Ten-minute inset of two-dimensional brightness temperature measured by VELOX in the 7.7--12.0\,\unit{\mu m} channel.}
+\caption{Example of a flight with deep convection in the centre of the ITCZ (flight ID HALO-20240903a). (a) Outgoing shortwave radiation from Limited Area Model (LAM) simulations, with flight-segmentation elements shown in different colours (see legend). For the central ITCZ circle: (b) vertical velocity profile; (c) radar reflectivity from HAMP and relative humidity profiles from WALES.
+Light grey line indicates the time period showing VELOX measurements in (d). (d) Ten-minute inset of two-dimensional brightness temperature measured by VELOX in the 7.7--12.0\,\unit{\mu m} channel.}
 \label{fig:deep_conv_itcz}
 \end{figure}
 
@@ -360,10 +362,16 @@ The ITCZ sampled here fits well with the conventional picture of the ITCZ (see a
 
 
 \subsubsection{Wind still ITCZ}
-Figure~\ref{fig:weak_winds} shows the research flight on the 7th of September, flight \textit{HALO-20240907a} starting and ending in Barbados. 
-Similar to the previous section's flight, three large dropsonde circles were placed along the EarthCARE track to probe the ITCZ's structure, although the comparatively longer transit flight to the EarthCARE track meant it was impossible to fly back and forth along it. Therefore, only one north-south crossing was performed. As the ATR remained in the eastern Atlantic for the entire campaign, no additional coordination circle was used.
+Figure~\ref{fig:weak_winds} shows flight \textit{HALO-20240907a} on 7 September, based in Barbados. As in the previous case, three large dropsonde circles were placed along the EarthCARE track to sample the ITCZ's structure; however, the longer transit to the track meant that only a single north--south crossing could be flown. No coordination circle was flown, as the ATR remained in the eastern Atlantic throughout the campaign and the RV METEOR was not yet within reach.
 
+As in Section~\ref{sec:cloudy_itcz}, we here focus on the dropsonde circle flown in the centre of the ITCZ. CWV in this circle is comparably high, at 60.16\,\unit{mm}, yet both the vertical velocity profile -- close to zero up to about 5\,\unit{km} -- and the radar reflectivity indicate very little convective activity: no convection extended throughout the column, and what did occur remained largely confined below about 7\,\unit{km}.
 
+Rather than deep convection, the centre of the ITCZ on this flight was characterised by an extended region of low surface winds, consistent with doldrums conditions. The dropsonde-derived mean wind speed in the lowest 100\,\unit{m} is 2.5\,\unit{m/s}, below the commonly used doldrums threshold of 3\,\unit{m/s}; indeed, 9 of the 13 dropsondes released in the circle measured near-surface wind speeds below this threshold. This is also consistent with the LAM simulation, which shows extended regions of low wind speed across the ITCZ on that day. 
+
+Low surface wind speeds were also evident in the specMACS measurements. Using a newly developed retrieval, specMACS can, under suitable conditions, estimate surface wind speed from the specular reflection of sunlight on the ocean surface: lower wind speeds produce a smoother sea surface and thus a more pronounced specular reflection. This is illustrated by the two near-cloud-free specMACS images in Fig.~\ref{fig:weak_winds}d: the image taken at 16:06:29 UTC shows comparatively weak specular reflection, corresponding to a retrieved wind speed of 3.5\,\unit{m/s}, while the image at 16:56:29 UTC shows a far more pronounced reflection, corresponding to a retrieved wind speed below 1.0\,\unit{m/s}.
+
+Convective activity in the centre of the ITCZ was limited but not absent. A further specMACS RGB image, taken at 16:16:03 UTC, shows one of the convective clouds that reached up to about 7\,\unit{km} altitude; the accompanying specMACS retrievals in Fig.~\ref{fig:weak_winds}d illustrate its macro- and microphysical properties of the cloud. 
+Contrasting the case studies shown in Fig.~\ref{fig:deep_conv_itcz} and \ref{fig:weak_winds} highlight the day-to-day variability of the ITCZ and that our measurements succesfully captured this variability. 
 
 % : with little convective activity (but low wind speeds) for the 7th of September. CWV is still high: 60.16\,\unit{mm}.
 % Show LAM with dropsondes.
@@ -383,7 +391,13 @@ Similar to the previous section's flight, three large dropsonde circles were pla
 \sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_doldrums.png}}
 \usebox{\itczedgebox}\\[4pt]
 \includegraphics[width=0.7\linewidth]{figures/specMACS_20240907a.png}
-\caption{Example of a flight with wind-still conditions in the centre of the ITCZ (flight ID HALO-20240907a). (a) HALO flight track (black line) and dropsonde locations (black circles) for the flight on 7 September 2024. The background shows horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day; dropsondes with near-surface wind speeds below 3 m/s are filled in black. For the central ITCZ circle: (b) vertical velocity profile; (c) relative humidity from WALES and radar reflectivity from HAMP. (d) Three specMACS images from the central ITCZ circle: two under near-cloud-free conditions, illustrating differences in specular reflection with surface wind speed, and one under high cloud cover, showcasing different microphysical retrievals.}
+\caption{Example of a flight with wind-still conditions in the centre of the ITCZ (flight ID HALO-20240907a). 
+(a) HALO flight track (black line) and dropsonde locations (black circles) for the flight on 7 September 2024. 
+The background shows horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day; 
+dropsondes with near-surface wind speeds below 3 m/s are filled in black. 
+For the central ITCZ circle: (b) vertical velocity profile; (c) relative humidity from WALES and radar reflectivity from HAMP. 
+Three vertical lines mark the times of the three specMACS images shown in panel (d). 
+(d) Three specMACS images from the central ITCZ circle: two under near-cloud-free conditions, illustrating differences in specular reflection with surface wind speed, and one under high cloud cover, showcasing different microphysical retrievals.}
 \label{fig:weak_winds}
 \end{figure}
 

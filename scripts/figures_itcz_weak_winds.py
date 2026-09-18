@@ -248,11 +248,20 @@ circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color="k"
 )
 
-cwv_circle_in_segment = circles_flight_day.sel(
-    circle_id=segment_for_plot["segment_id"]
-).iwv_mean.values
+circle_in_segment = circles_flight_day.sel(circle_id=segment_for_plot["segment_id"])
+
+cwv_circle_in_segment = circle_in_segment.iwv_mean.values
+wspd_100m_in_segment = circle_in_segment.wspd_mean.sel(altitude=slice(0, 100)).mean()
+
 
 print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
+print(f"Mean wind speed in circle segment: {wspd_100m_in_segment:.2f} m/s")
+print(
+    f"Min wind speed in circle segment: {circle_in_segment.wspd_mean.sel(altitude=slice(0, 100)).min().values:.2f} m/s"
+)
+print(
+    f"Max wind speed in circle segment: {circle_in_segment.wspd_mean.sel(altitude=slice(0, 100)).max().values:.2f} m/s"
+)
 
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
 ax_ds.set_ylabel("height / m")
