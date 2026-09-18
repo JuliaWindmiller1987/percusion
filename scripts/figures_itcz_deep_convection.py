@@ -243,6 +243,20 @@ cwv_circle_in_segment = circles_flight_day.sel(
     circle_id=segment_for_plot["segment_id"]
 ).iwv_mean.values
 
+velox_start_time = np.datetime64("2024-09-03T15:10:00")
+velox_end_time = np.datetime64("2024-09-03T15:20:00")
+
+ax_hamp.axvspan(
+    velox_start_time,
+    velox_end_time,
+    -0.025,
+    0.025,
+    color="k",
+    alpha=0.25,
+    clip_on=False,
+)
+
+
 print(f"Mean IWV in circle segment: {cwv_circle_in_segment:.2f} kg/m^2")
 
 sns.despine()

@@ -262,6 +262,23 @@ ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
 ax_wales.set_ylim(ymin=500, ymax=13e3)
 
+specMACS_start_times = [
+    np.datetime64("2024-09-07T16:06:29"),
+    np.datetime64("2024-09-07T16:16:03"),
+    np.datetime64("2024-09-07T16:56:29"),
+]
+
+for t in specMACS_start_times:
+    ax_wales.axvline(
+        t,
+        -0.1,
+        0.0,
+        color="k",
+        alpha=0.25,
+        linewidth=2.0,
+        clip_on=False,
+    )
+
 sns.despine()
 
 plt.savefig(f"{PROJECT_ROOT}/figures/figures_itcz_doldrums.png", bbox_inches="tight")
