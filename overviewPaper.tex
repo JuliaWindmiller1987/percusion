@@ -281,15 +281,10 @@ In summary, the observations successfully sampled the moist peak, the edge of th
 
 \subsubsection{ITCZ in CWV space}
 
-% To Dos
-% * do we actually want this part?
-% * include (low) cloud frequency from specMACS (see Lea's email)
-% * split 5a into a plot with lines and a plot with RH and cloud frequency
-
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{figures/itcz_cwv_space.pdf}
-    \caption{ITCZ in column water vapour space. (a) cloud occurrence frequency from HAMP radar and relative humidity from WALES, (b) vertical velocity from dropsondes, and (c) CWV from HAMP passiv and longwave radiation from BACARDI. \textbf{To do: include specMACS.}}
+    \caption{ITCZ in column water vapour space. (a) cloud occurrence frequency from HAMP radar (yellow to brown colours) and relative humidity from WALES (blue colours) as well as frequency of stereographically derived cloud top heights from specMACS (black contours: dotted 0.01\%, dashed 0.02\%, solid 0.04\%), (b) vertical velocity from dropsondes, and (c) CWV from HAMP passiv and longwave radiation from BACARDI.}
     \label{fig:itcz_cwv}
 \end{figure}
 
@@ -328,9 +323,9 @@ Each case study also shows a snapshot from the limited area model simulations th
 
 \begin{figure}
 \centering
-\sbox{\itczedgebox}{\includegraphics[width=\linewidth]{figures/figures_itcz_outside.png}}
+\sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_outside.png}}
 \usebox{\itczedgebox}\\[4pt]
-\includegraphics[width=0.9\linewidth]{figures/PERCUSION_20240822_VELOX_Pushbroom_F1_cut.png}
+\includegraphics[width=0.8\linewidth]{figures/PERCUSION_20240822_VELOX_Pushbroom_F1_cut.png}
 \caption{HALO flight \textit{HALO-20240822a} on the 22nd of August 2024 based in Sal (Cabo Verde) with five dropsonde circles. (a) Along flight track measurements of CWV from HAMP are shown in colours (bounded by a black contour). Background colours show the LAM simulated CWV distribution at 16:00 UTC. The orange line shows the flight track during a dropsonde circle at the edge of the ITCZ and shown in more detail in (b), which shows the circle mean vertical velocity calculated from the dropsondes, (c) which shows the total backscatter ration measured by WALES, and (d) which shows 2D brightness temperature in the 7.7 to 12.0\,\unit{\mu m} channel measured by VELOX.}
 \label{fig:at_edge_of_itcz}
 \end{figure}
@@ -348,9 +343,9 @@ Together, the vertical velocity, cloud, and aerosol distributions point to an in
 
 \begin{figure}
 \centering
-\sbox{\itczedgebox}{\includegraphics[width=\linewidth]{figures/figures_itcz_deep_convection.png}}
+\sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_deep_convection.png}}
 \usebox{\itczedgebox}\\[4pt]
-\includegraphics[width=0.9\linewidth]{figures/PERCUSION_20240903_VELOX_Pushbroom_F1_1510_1520_cut.png}
+\includegraphics[width=0.8\linewidth]{figures/PERCUSION_20240903_VELOX_Pushbroom_F1_1510_1520_cut.png}
 \caption{Example of a flight with deep convection in the centre of the ITCZ (flight ID HALO-20240903a). (a) Outgoing shortwave radiation from Limited Area Model (LAM) simulations, with flight-segmentation elements shown in different colours (see legend). For the central ITCZ circle: (b) vertical velocity profile; (c) radar reflectivity from HAMP and relative humidity profiles from WALES. (d) Ten-minute inset of two-dimensional brightness temperature measured by VELOX in the 7.7--12.0\,\unit{\mu m} channel.}
 \label{fig:deep_conv_itcz}
 \end{figure}
@@ -385,12 +380,10 @@ Similar to the previous section's flight, three large dropsonde circles were pla
 
 \begin{figure}
 \centering
-\includegraphics[width=
-\linewidth]{figures/figures_itcz_doldrums.png}
-\caption{Example of a flight with wind still conditions in the center of the ITCZ (flight ID HALO-20240907a). Top panel, left: HALO flight track (black line) and dropsonde locations (black circles) for the flight on the 7th of September 2024. The background shows the horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day. Dropsondes with near surface wind speeds less than 3 m/s are filled in white. 
-Top panel, right: vertical velocity profile for central ITCZ circle.
-Bottom panel: relative humidity from WALES (note: still preliminary!). 
-\textbf{TODO: Would be nice to show some specMACS observations here: can we mark the part of the path with low wind speeds and / or show two images that highlight changes of the specular reflection inside and outside of the doldrums?}}
+\sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_doldrums.png}}
+\usebox{\itczedgebox}\\[4pt]
+\includegraphics[width=0.7\linewidth]{figures/specMACS_20240907a.png}
+\caption{Example of a flight with wind-still conditions in the centre of the ITCZ (flight ID HALO-20240907a). (a) HALO flight track (black line) and dropsonde locations (black circles) for the flight on 7 September 2024. The background shows horizontal surface wind speed from the limited area model simulations at 16:00 UTC on the same day; dropsondes with near-surface wind speeds below 3 m/s are filled in black. For the central ITCZ circle: (b) vertical velocity profile; (c) relative humidity from WALES and radar reflectivity from HAMP. (d) Three specMACS images from the central ITCZ circle: two under near-cloud-free conditions, illustrating differences in specular reflection with surface wind speed, and one under high cloud cover, showcasing different microphysical retrievals.}
 \label{fig:weak_winds}
 \end{figure}
 

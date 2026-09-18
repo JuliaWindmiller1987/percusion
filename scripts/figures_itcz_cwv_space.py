@@ -8,6 +8,7 @@ import percusion
 from percusion import utils
 from doldrumsVerticalMotion import circleUtils
 import matplotlib.colors as colors
+import pandas as pd
 
 from pathlib import Path
 
@@ -74,7 +75,22 @@ es = 611.2 * np.exp(
 
 ds_wales_wv["RH"] = 100 * e / es
 
+# %%
+# specMACS stereo heights
 
+specmacs_stereo_heights = xr.open_dataset(
+    PROJECT_ROOT / "data" / "stereo_height_vs_CWV_hist.nc"
+)
+
+specmacs_stereo_heights["frequency"] = (
+    100 * specmacs_stereo_heights.histogram / specmacs_stereo_heights.ntot
+)
+specmacs_stereo_heights["frequency"].attrs["units"] = "%"
+
+iwv_bins = pd.IntervalIndex(pd.cut(specmacs_stereo_heights.cwv.values, bins=bins))
+specmacs_stereo_heights = specmacs_stereo_heights.assign_coords(
+    IWV_bins=(specmacs_stereo_heights.cwv.dims, iwv_bins)
+)
 # %%
 # Cloud mask binned by IWV
 
@@ -195,13 +211,24 @@ cb = fig.colorbar(
     shrink=0.75,
 )
 
+
 cb.ax.xaxis.set_label_position("top")
 cb.ax.xaxis.set_ticks_position("top")
+
+specmacs_stereo_heights.frequency.plot.contour(
+    levels=[0.01, 0.02, 0.04],
+    y="height",
+    ax=ax_cloud_mask,
+    colors="k",
+    linewidths=1,
+    linestyles=[":", "--", "-"],
+)
 
 ax_cloud_mask.set_xlim(bin_centers[0], bin_centers[-1])
 ax_cloud_mask.set_ylim(ymin=250, ymax=13e3)
 ax_cloud_mask.set_ylabel("height / m")
 ax_cloud_mask.set_xlabel(" ")
+
 
 # ---------------------------------------------------------------------
 # Panel b) longwave radiation flux (left axis) and IWP (right, twin axis)
