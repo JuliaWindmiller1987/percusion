@@ -16,8 +16,10 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
 # HAMP (passive)
-hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
-ds_hamp = xr.open_dataset(hamp_path_v2)
+
+ds_hamp = xr.open_dataset(
+    "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
+)
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
 
 iwv_hamp_orcestra = hamp_orcestra["IWV"]
