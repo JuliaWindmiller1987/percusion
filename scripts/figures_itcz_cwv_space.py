@@ -108,6 +108,23 @@ hamp_orcestra_binned_iwv = hamp_orcestra.groupby_bins(
     iwv_hamp_orcestra, bins=bins
 ).mean()
 
+lat_threshold = 12
+
+hamp_orcestra_low_lat = hamp_orcestra.where(
+    hamp_orcestra.lat <= lat_threshold, drop=True
+)
+hamp_orcestra_high_lat = hamp_orcestra.where(
+    hamp_orcestra.lat > lat_threshold, drop=True
+)
+
+hamp_orcestra_low_lat_binned_iwv = hamp_orcestra_low_lat.groupby_bins(
+    hamp_orcestra_low_lat.IWV, bins=bins
+).mean()
+
+hamp_orcestra_high_lat_binned_iwv = hamp_orcestra_high_lat.groupby_bins(
+    hamp_orcestra_high_lat.IWV, bins=bins
+).mean()
+
 # %%
 # Upwelling longwave radiation binned by IWV
 ds_bacardi = xr.open_dataset(
@@ -115,8 +132,31 @@ ds_bacardi = xr.open_dataset(
 )
 
 ful_bacardi = ds_bacardi["FUL"]
-iwv_bacardi_interpolated = iwv_hamp_orcestra.interp(time=ful_bacardi.TIME)
-ful_binned_iwv = ful_bacardi.groupby_bins(iwv_bacardi_interpolated, bins=bins).mean()
+hamp_bacardi_interpolated = hamp_orcestra[["IWV", "lat"]].interp(time=ful_bacardi.TIME)
+ful_binned_iwv = ful_bacardi.groupby_bins(
+    hamp_bacardi_interpolated.IWV, bins=bins
+).mean()
+
+ful_bacardi_low_lat = ful_bacardi.where(
+    hamp_bacardi_interpolated.lat <= lat_threshold, drop=True
+)
+ful_bacardi_high_lat = ful_bacardi.where(
+    hamp_bacardi_interpolated.lat > lat_threshold, drop=True
+)
+
+ful_bacardi_low_lat_binned_iwv = ful_bacardi_low_lat.groupby_bins(
+    hamp_bacardi_interpolated.IWV.where(
+        hamp_bacardi_interpolated.lat <= lat_threshold, drop=True
+    ),
+    bins=bins,
+).mean()
+
+ful_bacardi_high_lat_binned_iwv = ful_bacardi_high_lat.groupby_bins(
+    hamp_bacardi_interpolated.IWV.where(
+        hamp_bacardi_interpolated.lat > lat_threshold, drop=True
+    ),
+    bins=bins,
+).mean()
 
 # %%
 # WALES water vapor binned by IWV
@@ -238,6 +278,9 @@ ax_cloud_mask.set_xlabel(" ")
 # ---------------------------------------------------------------------
 color_ful = "teal"
 ful_binned_iwv.plot(ax=ax_rad_flux, color=color_ful)
+ful_bacardi_low_lat_binned_iwv.plot(ax=ax_rad_flux, color=color_ful, linestyle="--")
+ful_bacardi_high_lat_binned_iwv.plot(ax=ax_rad_flux, color=color_ful, linestyle=":")
+
 ax_rad_flux.set_ylabel("longwave radiation flux / W m$^{-2}$", color=color_ful)
 ax_rad_flux.tick_params(axis="y", colors=color_ful)
 ax_rad_flux.set_ylim(200, 300)
@@ -249,6 +292,14 @@ ax_rad_flux.set_title("")
 ax1_twin = ax_rad_flux.twinx()
 color_iwp = "#F2935C"
 (hamp_orcestra_binned_iwv.IWP / 1e3).plot.line(ax=ax1_twin, color=color_iwp)
+(hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(
+    ax=ax1_twin, color=color_iwp, linestyle="--"
+)
+(hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(
+    ax=ax1_twin, color=color_iwp, linestyle=":"
+)
+
+
 ax1_twin.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
 ax1_twin.tick_params(axis="y", colors=color_iwp)
 ax1_twin.set_ylim(0, 0.7)
@@ -262,41 +313,55 @@ ax1_twin.set_title("")
 cmap = plt.get_cmap("Blues")
 norm = colors.Normalize(vmin=36, vmax=68)
 
-tcwv_levels = [48]
+cwv_threshold = 48  # mm
+tcwv_levels = [cwv_threshold]
 tcwv_colors = [cmap(norm(level)) for level in tcwv_levels]
 
 cols = ["#736A65", "C0"]
+line_styles = ["-", "--", ":"]
 
-for i_bounds, bounds in enumerate([(0, 48), (48, 100)]):
+for i_bounds, bounds in enumerate([(0, cwv_threshold), (cwv_threshold, 100)]):
 
-    iwv_i = (
-        ds_ds["wvel"].where(
-            (ds_ds["iwv_mean"] >= bounds[0]) & (ds_ds["iwv_mean"] < bounds[1]),
-            drop=True,
-        )
-        * 100
-    )  # convert to cm/s
-
-    num_circles_i = len(iwv_i.circle_id)
-
-    if bounds[0] == 0:
-        label = f"CWV < {bounds[1]} mm ({num_circles_i} circles)"
-
-    elif bounds[1] == 100:
-        label = f"CWV $\geq$ {bounds[0]} mm ({num_circles_i} circles)"
-
+    if bounds == (cwv_threshold, 100):
+        lat_bounds_array = [(-10, 30), (-10, 12), (12, 30)]
     else:
-        label = f"{bounds[0]} mm $\leq$ CWV < {bounds[1]} mm ({num_circles_i} circles)"
+        lat_bounds_array = [(-10, 30)]
 
-    iwv_mean_i = iwv_i.mean("circle_id")
-    iwv_mean_i = iwv_mean_i.sel(altitude=slice(0, 12.5e3))
+    for i_lat, lat_bounds in enumerate(lat_bounds_array):
+        iwv_i = (
+            ds_ds["wvel"].where(
+                (ds_ds["iwv_mean"] >= bounds[0])
+                & (ds_ds["iwv_mean"] < bounds[1])
+                & (ds_ds["circle_lat"] >= lat_bounds[0])
+                & (ds_ds["circle_lat"] < lat_bounds[1]),
+                drop=True,
+            )
+            * 100
+        )  # convert to cm/s
 
-    iwv_mean_i.plot.line(
-        y="altitude",
-        ax=ax_vertical_velocity,
-        label=label,
-        color=cols[i_bounds],
-    )
+        num_circles_i = len(iwv_i.circle_id)
+
+        if bounds[0] == 0:
+            label = f"CWV < {bounds[1]} mm ({num_circles_i} circles)"
+
+        elif bounds[1] == 100:
+            label = f"CWV $\geq$ {bounds[0]} mm ({num_circles_i} circles)"
+
+        else:
+            label = (
+                f"{bounds[0]} mm $\leq$ CWV < {bounds[1]} mm ({num_circles_i} circles)"
+            )
+
+        iwv_mean_i = iwv_i.mean("circle_id")
+        iwv_mean_i = iwv_mean_i.sel(altitude=slice(0, 12.5e3))
+
+        iwv_mean_i.plot.line(
+            y="altitude",
+            ax=ax_vertical_velocity,
+            label=label,
+            color=cols[i_bounds],
+            linestyle=line_styles[i_lat],
+        )
 
 ax_vertical_velocity.legend(
     frameon=False, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=1
