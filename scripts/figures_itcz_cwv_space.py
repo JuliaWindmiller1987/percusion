@@ -9,6 +9,7 @@ from percusion import utils
 from doldrumsVerticalMotion import circleUtils
 import matplotlib.colors as colors
 import pandas as pd
+import scipy.ndimage
 
 from pathlib import Path
 
@@ -420,4 +421,145 @@ current_ax.set_xlabel("CWV (mm)")
 
 current_ax.set_ylim(ymin=250, ymax=13e3)
 sns.despine()
+# %%
+
+from metpy.calc import density, mixing_ratio_from_specific_humidity, moist_static_energy
+from metpy.units import units
+
+
+def calc_circle_density(ds_ds):
+    """Density (circle_id, altitude) from the circle-mean profiles."""
+    r_mean = mixing_ratio_from_specific_humidity(ds_ds.q_mean * units("kg/kg"))
+    rho = density(ds_ds.p_mean * units.Pa, ds_ds.ta_mean * units.K, r_mean)
+    return rho
+
+
+def calc_mse(ds_ds):
+    """Moist static energy h = cp*T + g*z + Lv*q, in J kg-1."""
+    h = moist_static_energy(
+        ds_ds.altitude * units.m,
+        ds_ds.ta * units.K,
+        ds_ds.q * units("kg/kg"),
+    )
+    return h.metpy.convert_units("kJ/kg").metpy.dequantify()
+
+
+# Calculate streamfunction
+
+# %%
+
+ds_iwv_space = (
+    ds_ds.sel(circle_id=ds_ds.circle_id.notnull())  # drop circles without an ID
+    .dropna(dim="circle_id", subset=["iwv_mean"])  # drop circles without CWV
+    .dropna(dim="sonde", subset=["iwv"])
+    .sortby("iwv_mean", ascending=False)  # moist -> dry
+    .sortby("iwv")
+    .swap_dims(circle_id="iwv_mean")  # iwv_mean becomes the dimension
+    .swap_dims(sonde="iwv")
+)
+
+ds_iwv_space["rho"] = calc_circle_density(ds_iwv_space).metpy.dequantify()
+ds_iwv_space["mse"] = calc_mse(ds_iwv_space).metpy.dequantify()
+
+# %%
+
+n_missing = ds_iwv_space.wvel.isnull().sum("iwv_mean")
+n_missing.plot(y="altitude")
+plt.xlabel("number of missing vertical velocity measurements")
+plt.xlim(xmin=0)
+# %%
+
+campaign_periods = {
+    "all": ("2024-08-11", "2024-09-29"),
+    "east (Sal)": ("2024-08-11", "2024-09-06"),
+    "west (Barbados)": ("2024-09-07", "2024-09-29"),
+}
+
+fig, axes = plt.subplots(
+    len(campaign_periods),
+    1,
+    figsize=(6, 2.5 * len(campaign_periods)),
+    sharex=True,
+    sharey=True,
+    constrained_layout=True,
+)
+
+for i, (period, (start, end)) in enumerate(campaign_periods.items()):
+
+    plt.sca(axes[i])
+
+    t_circle = ds_iwv_space.circle_time
+    t_sonde = ds_iwv_space.launch_time
+    t0 = np.datetime64(start)
+    t1 = np.datetime64(end) + np.timedelta64(1, "D")
+
+    ds_iwv_space_period = ds_iwv_space.sel(
+        iwv_mean=(t_circle >= t0) & (t_circle < t1),
+        iwv=(t_sonde >= t0) & (t_sonde < t1),
+    )
+
+    rho_ref = ds_iwv_space_period.rho.mean("iwv_mean")
+    psi = (rho_ref * ds_iwv_space_period.wvel).cumsum(
+        dim="iwv_mean"
+    ) / ds_iwv_space_period.sizes["iwv_mean"]
+
+    psi.attrs["long_name"] = "streamfunction"
+    psi.attrs["units"] = "kg m$^{-2}$ s$^{-1}$"
+
+    sigma = {"iwv_mean": 3, "altitude": 10}  # iwv_mean corresponds to number of circles
+    psi_filtered = psi.copy(
+        data=scipy.ndimage.gaussian_filter(
+            psi.values, sigma=[sigma[d] for d in psi.dims]
+        )
+    )
+
+    psi_lim = 0.008  # kg m^-2 s^-1
+
+    # psi_lim = np.abs(psi_filtered).quantile(0.99).values
+    # print(f"period {period}: psi_lim = {psi_lim:.3f} kg m^-2 s^-1")
+
+    psi_filtered.plot.contour(
+        x="iwv_mean",
+        y="altitude",
+        levels=20,
+        vmin=-psi_lim,
+        vmax=psi_lim,
+        colors="k",
+        linewidths=1,
+    )
+
+    mse_binned = (
+        ds_iwv_space_period["mse"]
+        .groupby_bins(ds_iwv_space_period["iwv"], bins=bins)
+        .mean()
+    )
+
+    # mse_binned = mse_binned - ds_iwv_space_period["mse"].mean("iwv")
+    # mse_lim_max = np.abs(mse_binned).quantile(0.95).values
+    # print(f"period {period}: mse_lim = {mse_lim_max:.1f} J kg^-1")
+    # mse_lim_max = 4000
+    # mse_lim_min = -1* mse_lim_max
+
+    # mse_lim_max = np.abs(mse_binned).quantile(0.8).values
+    # mse_lim_min = np.abs(mse_binned).quantile(0.05).values
+    # print(f"period {period}: mse_lim = {mse_lim_min:.1f} to {mse_lim_max:.1f} kJ kg^-1")
+
+    mse_lim_max, mse_lim_min = 345, 330
+
+    mse_binned.plot.contourf(
+        x="iwv_bins",
+        y="altitude",
+        levels=20,
+        cmap="RdBu_r",
+        vmin=mse_lim_min,
+        vmax=mse_lim_max,
+    )
+
+    plt.title(period)
+
+for ax in axes[:-1]:
+    ax.set_xlabel("")
+
+plt.ylim(ymin=250, ymax=12e3)
+plt.xlim(bin_centers[0], bin_centers[-1])
 # %%
