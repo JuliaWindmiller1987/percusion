@@ -1,9 +1,11 @@
 # %%
 
 import xarray as xr
+from xarray.groupers import BinGrouper, UniqueGrouper
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.ndimage import gaussian_filter1d
 import seaborn as sns
 import percusion
 from percusion import utils
@@ -16,15 +18,24 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
 
+PERIODS = {
+    "east (Sal)": ("2024-08-11", "2024-09-05"),
+    "west (Barbados)": ("2024-09-06", "2024-09-28"),
+}
+
 bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
 
 # %%
 
-hamp_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
-ds_hamp = xr.open_dataset(hamp_path_v2)
+HAMP_CID = "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y"
+ds_hamp = xr.open_dataset(HAMP_CID, engine="zarr")
+
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
 hamp_orcestra = hamp_orcestra.dropna(dim="time", subset=["IWV"])
 iwv_hamp_orcestra = hamp_orcestra["IWV"]
+iwv_hamp_orcestra = iwv_hamp_orcestra.assign_coords(
+    lat=hamp_orcestra["lat"], day=hamp_orcestra.time.dt.floor("D")
+)
 # %%
 
 ds_ds = xr.open_dataset(
@@ -137,9 +148,11 @@ for i, t in enumerate(ds_iwv["circle_time_pd"][1:], start=1):
 
 # %%
 
-fig, ax = plt.subplots(
-    1, 2, figsize=(10, 4), sharey=True, gridspec_kw={"width_ratios": [3, 1]}
-)
+fig = plt.figure(figsize=(10, 7), layout="constrained")
+subfig_top, subfig_bottom = fig.subfigures(2, 1, height_ratios=[1, 0.8])
+
+ax = subfig_top.subplots(1, 2, sharey=True, gridspec_kw={"width_ratios": [3, 1]})
+ax_lat = subfig_bottom.subplots(1, 2, sharey=True, sharex=True)
 
 col_ds, col_hamp = "C0", "C1"
 marker = "o"
@@ -199,14 +212,14 @@ plt.xticks(x_ticks, x_labels, rotation=45)
 plt.xlabel("flight date / MM-DD")
 plt.ylabel("CWV / mm")
 
-plt.tight_layout()
 plt.xlim(0, x_ticks[-1] + 0.5)
-plt.scatter(
+
+plt.axvline(
     x_ticks[np.where(np.array(x_labels) == "09-06")[0][0]],
-    bins[0],
-    marker=10,
     color=hlines_kwargs["color"],
     alpha=hlines_kwargs["alpha"],
+    linewidth=hlines_kwargs["linewidth"],
+    linestyle=hlines_kwargs["linestyle"],
 )
 
 
@@ -253,18 +266,77 @@ for h_type in ["step"]:
 plt.axhline(cwv_threshold, **hlines_kwargs)
 plt.ylim(30, bins[-1])
 plt.xlim(0, 0.08)
-plt.legend()
+plt.legend(frameon=False)
 
 ax[1].set_xlabel("PDF")
 
-for a in ax:
+#
+
+sigma_deg = 0.2
+dx = 0.2
+sigma_bins = int(sigma_deg / dx)
+
+bins_lat = np.arange(2, 18 + dx, dx)
+bins_lat_centers = bin_to_center(bins_lat)
+
+for a, (name, (start, end)) in zip(ax_lat, PERIODS.items()):
+    iwv_period = iwv_hamp_orcestra.sel(time=slice(start, end))
+    iwv_lat_mean = iwv_period.groupby_bins("lat", bins=bins_lat).mean()
+
+    groupers = {
+        "lat": BinGrouper(bins=bins_lat, labels=bins_lat_centers),
+        "day": UniqueGrouper(),
+    }
+    iwv_lat_daily_mean = iwv_period.groupby(groupers).mean()
+
+    cmap = plt.get_cmap("Oranges")
+    day_colors = cmap(np.linspace(0.35, 0.85, iwv_lat_daily_mean.sizes["day"]))
+
+    for day in iwv_lat_daily_mean.day.values:
+
+        val_smoothed = gaussian_filter1d(
+            iwv_lat_daily_mean.sel(day=day).values,
+            sigma=sigma_bins,
+            axis=0,
+            mode="nearest",
+        )
+
+        a.plot(
+            bins_lat_centers,
+            val_smoothed,
+            color=day_colors[np.where(iwv_lat_daily_mean.day.values == day)[0][0]],
+            alpha=0.9,
+            linewidth=0.5,
+            zorder=10,
+        )
+
+    val_mean_smoothed = gaussian_filter1d(
+        iwv_lat_mean.values, sigma=sigma_bins, axis=0, mode="nearest"
+    )
+    a.plot(
+        bins_lat_centers,
+        val_mean_smoothed,
+        color=col_hamp,
+        linewidth=2,
+        zorder=20,
+    )
+    a.axhline(cwv_threshold, **hlines_kwargs)
+    a.set_xlabel("latitude / °N")
+    a.set_xlim(2, 18)
+
+a.set_ylim(30, bins[-1])
+
+ax_lat[0].set_ylabel("CWV / mm")
+
+
+all_axes = list(ax) + list(ax_lat)
+
+for a in all_axes:
     a.spines["left"].set_position(("outward", 5))
 
-panel_labels = ["a)", "b)"]
-offsets = [-0.1, -0.2]
-for a, lbl in zip(ax, panel_labels):
+for a, lbl, off in zip(all_axes, ["a)", "b)", "c)", "d)"], [-0.1, -0.2, -0.15, -0.15]):
     a.text(
-        offsets[ax.tolist().index(a)],
+        off,
         1.05,
         lbl,
         transform=a.transAxes,
@@ -275,7 +347,7 @@ for a, lbl in zip(ax, panel_labels):
         bbox=dict(facecolor="white", edgecolor="none", alpha=0.7, pad=1.5),
     )
 
-sns.despine()
+sns.despine(fig=fig)
 
 plt.savefig(
     f"{PROJECT_ROOT}/figures/transition_circles.pdf",
@@ -291,6 +363,7 @@ cwv_pdf_max_wales = bin_to_center(bins_cwv_wales[10:])[
 print(f"Maximum PDF value for dropsondes: {cwv_pdf_max_ds}")
 print(f"Maximum PDF value for HAMP: {cwv_pdf_max_hamp}")
 print(f"Maximum PDF value for WALES: {cwv_pdf_max_wales}")
+
 
 # %%
 ## Print what fraction of data points were sampled below given CWV threshold
@@ -340,3 +413,6 @@ print(
 #         color=color,
 #         s=100,
 #     )
+
+
+# %%
