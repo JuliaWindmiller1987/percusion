@@ -8,6 +8,8 @@ import percusion
 from percusion import utils
 from doldrumsVerticalMotion import circleUtils
 import matplotlib.colors as colors
+from matplotlib.colors import ListedColormap
+from matplotlib.ticker import FuncFormatter
 import pandas as pd
 import scipy.ndimage
 from metpy.calc import density, mixing_ratio_from_specific_humidity, moist_static_energy
@@ -62,8 +64,8 @@ ds_hamp = xr.open_dataset(
 hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
 
 iwv_hamp_orcestra = hamp_orcestra["IWV"]
-cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.1).values), float(
-    iwv_hamp_orcestra.quantile(0.9).values
+cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.05).values), float(
+    iwv_hamp_orcestra.quantile(0.95).values
 )
 
 cwv_xmin, cwv_xmax = np.round([cwv_xmin, cwv_xmax], 0)
@@ -226,13 +228,12 @@ wales_wv_binned_iwv = (
     .mean()
     .compute()
 )
-
 # %%
 # --------------------------------------------------------------------------
 # Three-panel figure, 3 rows (full width, different heights):
 #   a) RH / cloud-occurrence-frequency contour plot
-#   b) vertical velocity
-#   c) longwave radiation flux + IWP
+#   b) longwave radiation flux + IWP
+#   c) streamfunction + MSE
 # --------------------------------------------------------------------------
 
 
@@ -251,29 +252,29 @@ def add_cbar(mappable, cax, title, frac=0.9):
     return cb
 
 
+linewidth = 1.0
+
 fig = plt.figure(figsize=(10, 7.5))
 gs = fig.add_gridspec(
     3,
     5,
-    height_ratios=[2, 2, 1.5],
+    height_ratios=[2, 1.5, 2],  # a) cloud/RH | b) radiation | c) streamfunction
     width_ratios=[1, 0.01, 0.025, 0.075, 0.025],  # panels | colour bars
-    hspace=0.075,
+    hspace=0.1,
     wspace=0.04,
 )
 
 ax_cloud_mask = fig.add_subplot(gs[0, 0])
-ax_vertical_velocity = fig.add_subplot(gs[1, 0], sharex=ax_cloud_mask)
-ax_rad_flux = fig.add_subplot(gs[2, 0], sharex=ax_cloud_mask)
+ax_rad_flux = fig.add_subplot(gs[1, 0], sharex=ax_cloud_mask)
+ax_vertical_velocity = fig.add_subplot(gs[2, 0], sharex=ax_cloud_mask)
 
 cax_wv = fig.add_subplot(gs[0, 2])
 cax_cloud_mask = fig.add_subplot(gs[0, 4])
-cax_mse = fig.add_subplot(gs[1, 2])
+cax_mse = fig.add_subplot(gs[2, 2])
 
 # ---------------------------------------------------------------------
 # Panel a) CWV / cloud-occurrence-frequency contour plot
 # ---------------------------------------------------------------------
-pos = ax_cloud_mask.get_position()
-
 wv_plot = wales_wv_binned_iwv.plot.contourf(
     y="altitude",
     ax=ax_cloud_mask,
@@ -290,7 +291,6 @@ cloud_mask_plot = cloud_mask_binned_iwv.plot.contourf(
     levels=np.arange(0.05, 0.51, 0.025) * 100,
     y="altitude",
     ax=ax_cloud_mask,
-    label=f"IWV bin {bin}",
     cmap=cmap,
     norm=colors.Normalize(vmin=0, vmax=30),
     add_colorbar=False,
@@ -306,18 +306,62 @@ specmacs_stereo_heights.frequency.plot.contour(
     y="height",
     ax=ax_cloud_mask,
     colors="k",
-    linewidths=1,
+    linewidths=linewidth,
     linestyles=[":", "--", "-"],
 )
 
-ax_cloud_mask.set_xlim(bin_centers[0], bin_centers[-1])
 ax_cloud_mask.set_ylim(ymin=250, ymax=13e3)
-ax_cloud_mask.set_ylabel("height / m")
-ax_cloud_mask.set_xlabel(" ")
 
 # ---------------------------------------------------------------------
-# Panel b) streamfunction (vertical velocity) contour plot and MSE color plot
+# Panel b) longwave radiation flux (left axis) and IWP (right, twin axis)
 # ---------------------------------------------------------------------
+color_ful = "#E8824F"
+dic_ful = {"color": color_ful, "linewidth": linewidth, "ax": ax_rad_flux}
+ful_binned_iwv.plot(**dic_ful)
+ful_bacardi_low_lat_binned_iwv.plot(**dic_ful, linestyle="--")
+ful_bacardi_high_lat_binned_iwv.plot(**dic_ful, linestyle=":")
+
+ax_rad_flux.set_ylabel("ULRF / W m$^{-2}$", color=color_ful)
+ax_rad_flux.tick_params(axis="y", colors=color_ful)
+ax_rad_flux.set_ylim(200, 300)
+ax_rad_flux.spines["left"].set_color(color_ful)
+ax_rad_flux.set_title("")
+
+ax1_twin = ax_rad_flux.twinx()
+color_iwp = "#4FA1E8"
+dic_iwp = {"ax": ax1_twin, "color": color_iwp, "linewidth": linewidth}
+(hamp_orcestra_binned_iwv.IWP / 1e3).plot.line(**dic_iwp)
+(hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle="--")
+(hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle=":")
+
+ax1_twin.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
+ax1_twin.tick_params(axis="y", colors=color_iwp)
+ax1_twin.set_ylim(0, 0.7)
+ax1_twin.spines["right"].set_color(color_iwp)
+ax1_twin.spines["left"].set_color(color_ful)
+ax1_twin.set_title("")
+
+# ---------------------------------------------------------------------
+# Panel c) streamfunction contour plot and MSE colour plot
+# ---------------------------------------------------------------------
+mse_lim_max, mse_lim_min = 350, 330
+
+brbg = plt.get_cmap("BrBG")
+bg = ListedColormap(brbg(np.linspace(0.5, 1.0, 256)), name="BG")
+
+# shading first, so the streamfunction contours are drawn on top
+mse_fig = mse_binned.plot.contourf(
+    x="iwv_bins",
+    y="altitude",
+    ax=ax_vertical_velocity,
+    levels=np.arange(mse_lim_min, mse_lim_max, 1),
+    cmap=bg,
+    vmin=mse_lim_min,
+    vmax=mse_lim_max,
+    add_colorbar=False,
+    alpha=0.75,
+)
+add_cbar(mse_fig, cax_mse, "MSE / kJ kg$^{-1}$")
 
 fig_psi = psi.plot.contour(
     x="iwv_mean",
@@ -325,7 +369,7 @@ fig_psi = psi.plot.contour(
     ax=ax_vertical_velocity,
     levels=np.arange(-1, 5.1, 1),
     colors="k",
-    linewidths=1,
+    linewidths=linewidth,
 )
 
 psi_plot = psi.sel(altitude=slice(250, 12e3))  # only the plotted range
@@ -341,70 +385,15 @@ ax_vertical_velocity.annotate(
     fontsize=7,
 )
 
-mse_lim_max, mse_lim_min = 345, 330
-
-mse_fig = mse_binned.plot.contourf(
-    x="iwv_bins",
-    y="altitude",
-    ax=ax_vertical_velocity,
-    levels=np.arange(320, 350, 1),
-    cmap="BrBG",
-    vmin=mse_lim_min,
-    vmax=mse_lim_max,
-    add_colorbar=False,
-)
-
-pos_w = ax_vertical_velocity.get_position()
-
-add_cbar(mse_fig, cax_mse, "MSE / kJ kg$^{-1}$")
-
-ax_vertical_velocity.set_xlabel("")
-ax_vertical_velocity.set_ylabel("height / m")
-ax_vertical_velocity.set_ylim(ymin=250, ymax=12e3)
-
-
-# ---------------------------------------------------------------------
-# Panel c) longwave radiation flux (left axis) and IWP (right, twin axis)
-# ---------------------------------------------------------------------
-color_ful = "C1"
-ful_binned_iwv.plot(ax=ax_rad_flux, color=color_ful)
-ful_bacardi_low_lat_binned_iwv.plot(ax=ax_rad_flux, color=color_ful, linestyle="--")
-ful_bacardi_high_lat_binned_iwv.plot(ax=ax_rad_flux, color=color_ful, linestyle=":")
-
-ax_rad_flux.set_ylabel(" ULRF / W m$^{-2}$", color=color_ful)
-ax_rad_flux.tick_params(axis="y", colors=color_ful)
-ax_rad_flux.set_ylim(200, 300)
-ax_rad_flux.spines["left"].set_color(color_ful)
-ax_rad_flux.set_xlim(bin_centers[0], bin_centers[-1])
-ax_rad_flux.set_xlabel("CWV / mm")
-ax_rad_flux.set_title("")
-
-ax1_twin = ax_rad_flux.twinx()
-color_iwp = "C0"
-(hamp_orcestra_binned_iwv.IWP / 1e3).plot.line(ax=ax1_twin, color=color_iwp)
-(hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(
-    ax=ax1_twin, color=color_iwp, linestyle="--"
-)
-(hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(
-    ax=ax1_twin, color=color_iwp, linestyle=":"
-)
-
-
-ax1_twin.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
-ax1_twin.tick_params(axis="y", colors=color_iwp)
-ax1_twin.set_ylim(0, 0.7)
-ax1_twin.spines["right"].set_color(color_iwp)
-ax1_twin.spines["left"].set_color(color_ful)
-ax1_twin.set_title("")
-
+ax_vertical_velocity.set_ylim(ymin=0, ymax=12e3)
 
 # ---------------------------------------------------------------------
 # Panel labels a) - c)
 # ---------------------------------------------------------------------
 panel_labels = ["a)", "b)", "c)"]
-for a, lbl in zip([ax_cloud_mask, ax_vertical_velocity, ax_rad_flux], panel_labels):
+for a, lbl in zip([ax_cloud_mask, ax_rad_flux, ax_vertical_velocity], panel_labels):
     a.text(
-        -0.15,
+        -0.1,
         1.0,
         lbl,
         transform=a.transAxes,
@@ -416,17 +405,31 @@ for a, lbl in zip([ax_cloud_mask, ax_vertical_velocity, ax_rad_flux], panel_labe
     )
 
 # ---------------------------------------------------------------------
-# Spines
+# Axes, ticks and spines
 # ---------------------------------------------------------------------
-sns.despine(ax=ax_cloud_mask, top=True, right=True)
-sns.despine(ax=ax_rad_flux, top=True, right=True)
-for a in [ax_rad_flux, ax1_twin]:
-    sns.despine(ax=a, top=True, right=False)
-sns.despine(ax=ax_vertical_velocity, top=True, right=True)
+ax_vertical_velocity.set_xlim(44.75, 61.25)  # shared by all panels
+ax_vertical_velocity.set_xticks(np.arange(45, 62, 2))
+
+km = FuncFormatter(lambda y, _: f"{y / 1e3:g}")
 
 for a in [ax_cloud_mask, ax_vertical_velocity]:
+    a.yaxis.set_major_formatter(km)
+    a.set_ylabel("height / km")
+
+y_offset = 0
+trim = True
+
+for a in [ax_cloud_mask, ax_vertical_velocity]:
+    sns.despine(ax=a, top=True, right=True, offset=y_offset, trim=trim)
+
+for a in [ax_rad_flux, ax1_twin]:
+    sns.despine(ax=a, top=True, right=False, offset=y_offset, trim=trim)
+
+# x tick labels and label only on the lowest panel (c)
+for a in [ax_cloud_mask, ax_rad_flux, ax1_twin]:
     a.tick_params(axis="x", labelbottom=False)
     a.set_xlabel("")
+ax_vertical_velocity.set_xlabel("CWV / mm")
 
 plt.savefig(
     f"{PROJECT_ROOT}/figures/itcz_cwv_space.pdf",
