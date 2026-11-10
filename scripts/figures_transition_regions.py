@@ -5,6 +5,7 @@ from xarray.groupers import BinGrouper, UniqueGrouper
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as pe
 from scipy.ndimage import gaussian_filter1d
 import seaborn as sns
 import percusion
@@ -20,10 +21,12 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 PERIODS = {
     "east (Sal)": ("2024-08-11", "2024-09-05"),
-    "west (Barbados)": ("2024-09-06", "2024-09-28"),
+    "west (Barbados)": ("2024-09-07", "2024-09-28"),
 }
 
 bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
+
+cwv_threshold = 48
 
 # %%
 
@@ -49,6 +52,8 @@ iwv_ds_orcestra = ds_ds["iwv_mean"]
 
 iwv_circle_min = np.empty(len(ds_ds.circle_id))
 iwv_circle_max = np.empty(len(ds_ds.circle_id))
+iwv_circle_std = np.empty(len(ds_ds.circle_id))
+iwv_circle_transition = np.empty(len(ds_ds.circle_id), dtype=bool)
 
 for i, circle_id in enumerate(ds_ds.circle_id.values):
     sonde_ids = circleUtils.get_sonde_serial_ids(ds_ds, circle_id)
@@ -59,14 +64,32 @@ for i, circle_id in enumerate(ds_ds.circle_id.values):
 
     iwv_circle_min[i] = iwv_circle_i.min().values
     iwv_circle_max[i] = iwv_circle_i.max().values
+    iwv_circle_std[i] = iwv_circle_i.std().values
+
+    if iwv_circle_min[i] < cwv_threshold < iwv_circle_max[i]:
+        iwv_circle_transition[i] = True
+    else:
+        iwv_circle_transition[i] = False
+
 
 ds_ds["iwv_circle_min"] = (("circle_id"), iwv_circle_min)
 ds_ds["iwv_circle_max"] = (("circle_id"), iwv_circle_max)
+ds_ds["iwv_circle_std"] = (("circle_id"), iwv_circle_std)
+ds_ds["iwv_circle_transition"] = (("circle_id"), iwv_circle_transition)
 
 
-ds_iwv = ds_ds[["iwv_circle_min", "iwv_circle_max", "iwv_mean"]]
+ds_iwv = ds_ds[
+    [
+        "iwv_circle_min",
+        "iwv_circle_max",
+        "iwv_mean",
+        "iwv_circle_transition",
+        "iwv_circle_std",
+    ]
+].copy()
 ds_iwv["circle_time_pd"] = pd.DatetimeIndex(ds_ds["circle_time"])
 
+# %%
 
 # WALES water vapor
 store = (
@@ -125,8 +148,8 @@ print(
 # %%
 # Plotting
 
-cwv_threshold = 48
-bins = np.arange(0, 75, 1.0)
+
+bins = np.arange(0, 68, 1.0)
 
 x_values = np.empty(len(ds_iwv["circle_time_pd"]))
 x_values[0] = 0
@@ -148,13 +171,13 @@ for i, t in enumerate(ds_iwv["circle_time_pd"][1:], start=1):
 
 # %%
 
-fig = plt.figure(figsize=(10, 7), layout="constrained")
+fig = plt.figure(figsize=(10, 6), layout="constrained")
 subfig_top, subfig_bottom = fig.subfigures(2, 1, height_ratios=[1, 0.8])
 
 ax = subfig_top.subplots(1, 2, sharey=True, gridspec_kw={"width_ratios": [3, 1]})
 ax_lat = subfig_bottom.subplots(1, 2, sharey=True, sharex=True)
 
-col_ds, col_hamp = "C0", "C1"
+col_ds, col_hamp = "C0", "#444865"  # "#FC9241"
 marker = "o"
 
 plt.sca(ax[0])
@@ -171,14 +194,12 @@ for i in range(num_circles):
 
     iwv_min_circle_i = ds_iwv["iwv_circle_min"][i]
     iwv_max_circle_i = ds_iwv["iwv_circle_max"][i]
+    transition = ds_iwv["iwv_circle_transition"][i]
 
-    if iwv_min_circle_i < cwv_threshold < iwv_max_circle_i:
+    if transition:
         alpha = 1.0
         num_transition_circles += 1
-    elif iwv_max_circle_i < cwv_threshold:
-        alpha = 0.35
-        num_smaller_cwv_circles += 1
-    elif iwv_min_circle_i > cwv_threshold:
+    else:
         alpha = 0.35
         num_larger_cwv_circles += 1
 
@@ -200,9 +221,7 @@ for i in range(num_circles):
     )
 
 print(
-    f"Out of {len(ds_ds.circle_id)}: \n {num_transition_circles} circles are transition circles, \n"
-    f" {num_smaller_cwv_circles} circles have CWV entirely below {cwv_threshold} mm, \n"
-    f" {num_larger_cwv_circles} circles have CWV entirely above {cwv_threshold} mm."
+    f"Out of {len(ds_ds.circle_id)}: \n {num_transition_circles} circles are transition circles. \n"
 )
 
 plt.axhline(cwv_threshold, **hlines_kwargs)
@@ -214,13 +233,25 @@ plt.ylabel("CWV / mm")
 
 plt.xlim(0, x_ticks[-1] + 0.5)
 
-plt.axvline(
+plt.vlines(
     x_ticks[np.where(np.array(x_labels) == "09-06")[0][0]],
-    color=hlines_kwargs["color"],
-    alpha=hlines_kwargs["alpha"],
-    linewidth=hlines_kwargs["linewidth"],
-    linestyle=hlines_kwargs["linestyle"],
+    30,
+    38,
+    color="k",
+    alpha=1,
+    linewidth=0.75,
+    linestyle="solid",
 )
+
+for day in ["08-25", "09-19"]:
+    plt.text(
+        x_ticks[np.where(np.array(x_labels) == day)[0][0]],
+        32,
+        "East Atlantic" if day == "08-25" else "West Atlantic",
+        fontsize=9,
+        va="bottom",
+        ha="center",
+    )
 
 
 plt.sca(ax[1])
@@ -230,6 +261,7 @@ hist_kwargs = {
     "density": True,
     "orientation": "horizontal",
     "bins": bins,
+    "clip_on": True,
 }
 
 for h_type in ["step"]:
@@ -256,7 +288,7 @@ for h_type in ["step"]:
     pdf_values_wales, bins_cwv_wales, _ = ax[1].hist(
         cwv_wales_filtered.values,
         histtype=h_type,
-        color="#709D9D",
+        color="C2",
         alpha=alpha,
         label="WALES",
         **hist_kwargs,
@@ -279,6 +311,34 @@ sigma_bins = int(sigma_deg / dx)
 bins_lat = np.arange(2, 18 + dx, dx)
 bins_lat_centers = bin_to_center(bins_lat)
 
+from matplotlib.colors import LinearSegmentedColormap
+
+hex_green_blue = [
+    "#40916c",
+    "#52b788",
+    "#74c69d",
+    "#95d5b2",
+    "#b7e4c7",
+    "#89c2d9",
+    "#61a5c2",
+    "#468faf",
+    "#2a6f97",
+    "#013a63",
+]
+
+cmap_green_blue = LinearSegmentedColormap.from_list("green_blue", hex_green_blue)
+cmap_green_blue_r = cmap_green_blue.reversed()  # dark blue -> green
+
+n_days = 12
+x = np.concatenate(
+    [np.linspace(0, 0.4, n_days // 2), np.linspace(0.6, 1, n_days - n_days // 2)]
+)
+day_colors = cmap_green_blue(x)
+
+# cmap = plt.get_cmap("viridis")
+# day_colors = cmap(np.linspace(0, 0.85, n_days))
+
+
 for a, (name, (start, end)) in zip(ax_lat, PERIODS.items()):
     iwv_period = iwv_hamp_orcestra.sel(time=slice(start, end))
     iwv_lat_mean = iwv_period.groupby_bins("lat", bins=bins_lat).mean()
@@ -288,9 +348,6 @@ for a, (name, (start, end)) in zip(ax_lat, PERIODS.items()):
         "day": UniqueGrouper(),
     }
     iwv_lat_daily_mean = iwv_period.groupby(groupers).mean()
-
-    cmap = plt.get_cmap("Oranges")
-    day_colors = cmap(np.linspace(0.35, 0.85, iwv_lat_daily_mean.sizes["day"]))
 
     for day in iwv_lat_daily_mean.day.values:
 
@@ -313,12 +370,14 @@ for a, (name, (start, end)) in zip(ax_lat, PERIODS.items()):
     val_mean_smoothed = gaussian_filter1d(
         iwv_lat_mean.values, sigma=sigma_bins, axis=0, mode="nearest"
     )
+
     a.plot(
         bins_lat_centers,
         val_mean_smoothed,
         color=col_hamp,
         linewidth=2,
         zorder=20,
+        path_effects=[pe.withStroke(linewidth=3, foreground="white")],
     )
     a.axhline(cwv_threshold, **hlines_kwargs)
     a.set_xlabel("latitude / °N")
