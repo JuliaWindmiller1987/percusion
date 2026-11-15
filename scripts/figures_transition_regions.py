@@ -20,8 +20,8 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 # %%
 
 PERIODS = {
-    "east (Sal)": ("2024-08-11", "2024-09-05"),
-    "west (Barbados)": ("2024-09-07", "2024-09-28"),
+    "East Atlantic": ("2024-08-11", "2024-09-05"),
+    "West Atlantic": ("2024-09-07", "2024-09-28"),
 }
 
 bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
@@ -379,9 +379,20 @@ for a, (name, (start, end)) in zip(ax_lat, PERIODS.items()):
         zorder=20,
         path_effects=[pe.withStroke(linewidth=3, foreground="white")],
     )
+
+    a.text(
+        10,
+        32,
+        name,
+        fontsize=9,
+        va="bottom",
+        ha="center",
+    )
+
     a.axhline(cwv_threshold, **hlines_kwargs)
     a.set_xlabel("latitude / °N")
     a.set_xlim(2, 18)
+
 
 a.set_ylim(30, bins[-1])
 
@@ -422,7 +433,6 @@ cwv_pdf_max_wales = bin_to_center(bins_cwv_wales[10:])[
 print(f"Maximum PDF value for dropsondes: {cwv_pdf_max_ds}")
 print(f"Maximum PDF value for HAMP: {cwv_pdf_max_hamp}")
 print(f"Maximum PDF value for WALES: {cwv_pdf_max_wales}")
-
 
 # %%
 ## Print what fraction of data points were sampled below given CWV threshold

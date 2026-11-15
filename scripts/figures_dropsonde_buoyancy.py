@@ -17,8 +17,8 @@ from metpy.units import units
 BEACH_CID = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
 
 PERIODS = {
-    "east (Sal)": ("2024-08-11", "2024-09-05"),
-    "west (Barbados)": ("2024-09-07", "2024-09-28"),
+    "East Atlantic": ("2024-08-11", "2024-09-05"),
+    "West Atlantic": ("2024-09-07", "2024-09-28"),
     "all": ("2024-08-11", "2024-09-28"),
 }
 
@@ -121,7 +121,7 @@ for ax, (name, (start, end)) in zip(axes, PERIODS.items()):
     ax.set_ylim(-0.7, 0.15)
 
     ax.text(
-        -0.18 if name == "east (Sal)" else -0.11,
+        -0.18 if name == "East Atlantic" else -0.11,
         1.05,
         f"{chr(97 + list(PERIODS.keys()).index(name))})",
         transform=ax.transAxes,
@@ -130,6 +130,15 @@ for ax, (name, (start, end)) in zip(axes, PERIODS.items()):
         va="top",
         ha="left",
         bbox=dict(facecolor="white", edgecolor="none", alpha=0.7, pad=1.5),
+    )
+
+    ax.text(
+        52,
+        0.1,
+        name,
+        fontsize=9,
+        va="bottom",
+        ha="center",
     )
 
 

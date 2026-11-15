@@ -297,9 +297,7 @@ cloud_mask_plot = cloud_mask_binned_iwv.plot.contourf(
 )
 
 add_cbar(wv_plot, cax_wv, "RH / %")
-add_cbar(
-    cloud_mask_plot, cax_cloud_mask, "freq. of Z > $10^{-5}$ mm$^{6}$ m$^{-3}$ / %"
-)
+add_cbar(cloud_mask_plot, cax_cloud_mask, "cloud occurrence freq. / %")
 
 specmacs_stereo_heights.frequency.plot.contour(
     levels=[0.01, 0.02, 0.04],
@@ -318,7 +316,7 @@ ax_cloud_mask.set_ylim(ymin=250, ymax=13e3)
 color_ful = "#E8824F"
 dic_ful = {"color": color_ful, "linewidth": linewidth, "ax": ax_rad_flux}
 ful_binned_iwv.plot(**dic_ful)
-ful_bacardi_low_lat_binned_iwv.plot(**dic_ful, linestyle="--")
+# ful_bacardi_low_lat_binned_iwv.plot(**dic_ful, linestyle="--")
 ful_bacardi_high_lat_binned_iwv.plot(**dic_ful, linestyle=":")
 
 ax_rad_flux.set_ylabel("ULRF / W m$^{-2}$", color=color_ful)
@@ -331,7 +329,7 @@ ax1_twin = ax_rad_flux.twinx()
 color_iwp = "#4FA1E8"
 dic_iwp = {"ax": ax1_twin, "color": color_iwp, "linewidth": linewidth}
 (hamp_orcestra_binned_iwv.IWP / 1e3).plot.line(**dic_iwp)
-(hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle="--")
+# (hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle="--")
 (hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle=":")
 
 ax1_twin.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
