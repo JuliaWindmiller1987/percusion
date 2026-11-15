@@ -90,62 +90,6 @@ ds_iwv = ds_ds[
 ds_iwv["circle_time_pd"] = pd.DatetimeIndex(ds_ds["circle_time"])
 
 # %%
-
-# WALES water vapor
-store = (
-    "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
-)
-ds_wales_wv = xr.open_dataset(store, engine="zarr")
-ds_wales_wv = ds_wales_wv.sel(time=slice(utils.campaign_start, utils.campaign_end))
-ds_wales_wv = ds_wales_wv.dropna(dim="time", how="all", subset=["wv"])
-# %%
-# CWV from number of water molucles per unit volumn
-
-wv_flags = ds_wales_wv["wv_flags"]
-below_aircraft = ds_wales_wv.altitude <= ds_wales_wv.flight_altitude
-
-n_v = ds_wales_wv["wv"].where((wv_flags == 0) & below_aircraft)  # molecules/m^3
-
-vertical_resolution_wales = (
-    ds_wales_wv.altitude[1:].values - ds_wales_wv.altitude[:-1].values
-)
-
-if np.max(vertical_resolution_wales) - np.min(vertical_resolution_wales) > 1e-5:
-    raise ValueError(
-        "Vertical resolution of WALES water vapor data is not constant. Please check the data."
-    )
-else:
-    vertical_resolution_wales = vertical_resolution_wales[0]
-
-molar_mass_water = 18.01528e-3  # kg/mol
-Avogadro_number = 6.02214076e23  # molecules/mol
-
-cwv_wales = (
-    (n_v * vertical_resolution_wales).sum(dim="altitude")
-    * molar_mass_water
-    / Avogadro_number
-)  # kg/m^2
-
-# %%
-
-valid = xr.where(wv_flags == 0, 1, 0).where(below_aircraft)
-wales_mask = valid.mean(
-    "altitude", skipna=True
-)  # fraction valid, of available data only
-
-crit_data_fraction = 0.90  # fraction of valid data points
-cwv_wales_filtered = xr.where(
-    (wales_mask >= crit_data_fraction),
-    cwv_wales,
-    0,
-)
-
-print(
-    f"Fraction of WALES data points with more than {crit_data_fraction*100:.0f}% valid data: "
-    f"{np.sum(wales_mask >= crit_data_fraction)/len(wales_mask)*100:.2f}%"
-)
-
-# %%
 # Plotting
 
 
@@ -285,15 +229,6 @@ for h_type in ["step"]:
         **hist_kwargs,
     )
 
-    pdf_values_wales, bins_cwv_wales, _ = ax[1].hist(
-        cwv_wales_filtered.values,
-        histtype=h_type,
-        color="C2",
-        alpha=alpha,
-        label="WALES",
-        **hist_kwargs,
-    )
-
 
 plt.axhline(cwv_threshold, **hlines_kwargs)
 plt.ylim(30, bins[-1])
@@ -427,12 +362,8 @@ plt.savefig(
 
 cwv_pdf_max_ds = bin_to_center(bins_cwv_ds)[np.argmax(pdf_values_ds)]
 cwv_pdf_max_hamp = bin_to_center(bins_cwv_hamp)[np.argmax(pdf_values_hamp)]
-cwv_pdf_max_wales = bin_to_center(bins_cwv_wales[10:])[
-    np.argmax(pdf_values_wales[10:])
-]  # exclude the first bins (0-10 mm) for WALES as these are the filtered out data points with insufficient valid data
 print(f"Maximum PDF value for dropsondes: {cwv_pdf_max_ds}")
 print(f"Maximum PDF value for HAMP: {cwv_pdf_max_hamp}")
-print(f"Maximum PDF value for WALES: {cwv_pdf_max_wales}")
 
 # %%
 ## Print what fraction of data points were sampled below given CWV threshold
