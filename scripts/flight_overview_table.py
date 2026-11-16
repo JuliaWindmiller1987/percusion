@@ -179,6 +179,8 @@ def url_string(flight_id):
     return f"\\href{{https://orcestra-campaign.org/reports/{flight_id}.html}}{{{flight_id}}}"
 
 
+duration_list = []
+
 for flight_id, flight_info in flights.items():
 
     date_obj = pd.to_datetime(flight_info.get("date"))
@@ -188,7 +190,12 @@ for flight_id, flight_info in flights.items():
 
     takeoff_time = flight_info.get("takeoff")
     landing_time = flight_info.get("landing")
-    flight_duration = landing_time - takeoff_time
+    flight_duration = landing_time.replace(
+        second=0, microsecond=0
+    ) - takeoff_time.replace(second=0, microsecond=0)
+    duration_min = int(flight_duration.total_seconds() // 60)
+
+    duration_list.append(duration_min)
 
     start_and_end_locations = get_takeoff_landing_location(flight_info, ds)
 
@@ -203,11 +210,9 @@ for flight_id, flight_info in flights.items():
                 else flight_id
             ),
             "Date": f"{month:02d}-{day:02d}",
-            "Takeoff": f"{takeoff_time.strftime("%H:%M")} ({start_and_end_locations['takeoff']})",
+            "Take-off": f"{takeoff_time.strftime("%H:%M")} ({start_and_end_locations['takeoff']})",
             "Landing": f"{landing_time.strftime("%H:%M")} ({start_and_end_locations['landing']})",
-            # "Duration": (
-            #     str(flight_duration).split(".")[0][:-3] if flight_duration else None
-            # ),
+            "Duration": f"{duration_min // 60}:{duration_min % 60:02d}",
             "Coordination": ", ".join(
                 count_events(
                     abbreviate_kinds(specified_events(flight_info, coordination_kinds))
@@ -220,12 +225,19 @@ for flight_id, flight_info in flights.items():
 
     # print(", ".join(specified_events(flight_info, coordination_kinds)), flight_id)
 
+print(
+    f"Median flight duration: {np.median(duration_list) // 60:.0f}:{int(np.median(duration_list) % 60):02d}"
+)
 
 # Create DataFrame
 df = pd.DataFrame(flight_data)
 
+
 caption = (
     "Overview of HALO flights during the campaign. "
+    "Dates are given as month-day (MM-DD) in 2024. "
+    "Takeoff and landing times are in UTC (HH:MM), with the airport in brackets "
+    "(SAL: Sal, Cabo Verde; BB: Barbados), and durations are in hours and minutes (h:min). "
     "The \\textit{Coordination} column lists the platforms coordinated with during each flight. "
     "Numbers in brackets indicate repeated coordination events with the same platform. "
     "The \\textit{Circles} column shows how many circles were flown during the flight. "
