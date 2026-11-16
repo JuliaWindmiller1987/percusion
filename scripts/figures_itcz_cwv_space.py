@@ -163,26 +163,42 @@ cloud_mask_binned_iwv = (
 # %%
 # HAMP passive binned by IWV
 
-hamp_orcestra_binned_iwv = hamp_orcestra.groupby_bins(
-    iwv_hamp_orcestra, bins=bins
-).mean()
+
+def calc_orcestra_binned(ds, iwv_ds, bins=bins, cond=None):
+    """Return the mean of the dataset binned by IWV."""
+    if cond is not None:
+        ds = ds.where(cond, drop=True)
+        iwv_ds = iwv_ds.where(cond, drop=True)
+    return ds.groupby_bins(iwv_ds.IWV, bins=bins).mean().compute()
+
+
+hamp_orcestra_binned_iwv = calc_orcestra_binned(hamp_orcestra, hamp_orcestra, bins=bins)
 
 lat_threshold = 12
-
-hamp_orcestra_low_lat = hamp_orcestra.where(
-    hamp_orcestra.lat <= lat_threshold, drop=True
-)
-hamp_orcestra_high_lat = hamp_orcestra.where(
-    hamp_orcestra.lat > lat_threshold, drop=True
+hamp_orcestra_high_lat_binned_iwv = calc_orcestra_binned(
+    hamp_orcestra, hamp_orcestra, bins=bins, cond=hamp_orcestra.lat > lat_threshold
 )
 
-hamp_orcestra_low_lat_binned_iwv = hamp_orcestra_low_lat.groupby_bins(
-    hamp_orcestra_low_lat.IWV, bins=bins
-).mean()
+east_period = np.datetime64("2024-08-11"), np.datetime64("2024-09-05")
+hamp_orcestra_north_east_binned_iwv = calc_orcestra_binned(
+    hamp_orcestra,
+    hamp_orcestra,
+    bins=bins,
+    cond=(hamp_orcestra.lat > lat_threshold)
+    & (hamp_orcestra.time >= east_period[0])
+    & (hamp_orcestra.time <= east_period[1]),
+)
 
-hamp_orcestra_high_lat_binned_iwv = hamp_orcestra_high_lat.groupby_bins(
-    hamp_orcestra_high_lat.IWV, bins=bins
-).mean()
+west_period = np.datetime64("2024-09-07"), np.datetime64("2024-09-28")
+hamp_orcestra_north_west_binned_iwv = calc_orcestra_binned(
+    hamp_orcestra,
+    hamp_orcestra,
+    bins=bins,
+    cond=(hamp_orcestra.lat > lat_threshold)
+    & (hamp_orcestra.time >= west_period[0])
+    & (hamp_orcestra.time <= west_period[1]),
+)
+
 
 # %%
 # Upwelling longwave radiation binned by IWV
@@ -192,31 +208,32 @@ ds_bacardi = xr.open_dataset(
 
 ful_bacardi = ds_bacardi["FUL"]
 hamp_bacardi_interpolated = hamp_orcestra[["IWV", "lat"]].interp(time=ful_bacardi.TIME)
-ful_binned_iwv = ful_bacardi.groupby_bins(
-    hamp_bacardi_interpolated.IWV, bins=bins
-).mean()
 
-ful_bacardi_low_lat = ful_bacardi.where(
-    hamp_bacardi_interpolated.lat <= lat_threshold, drop=True
-)
-ful_bacardi_high_lat = ful_bacardi.where(
-    hamp_bacardi_interpolated.lat > lat_threshold, drop=True
-)
 
-ful_bacardi_low_lat_binned_iwv = ful_bacardi_low_lat.groupby_bins(
-    hamp_bacardi_interpolated.IWV.where(
-        hamp_bacardi_interpolated.lat <= lat_threshold, drop=True
-    ),
+ful_binned_iwv = calc_orcestra_binned(ful_bacardi, hamp_bacardi_interpolated, bins=bins)
+ful_bacardi_high_lat_binned_iwv = calc_orcestra_binned(
+    ful_bacardi,
+    hamp_bacardi_interpolated,
     bins=bins,
-).mean()
-
-ful_bacardi_high_lat_binned_iwv = ful_bacardi_high_lat.groupby_bins(
-    hamp_bacardi_interpolated.IWV.where(
-        hamp_bacardi_interpolated.lat > lat_threshold, drop=True
-    ),
+    cond=hamp_bacardi_interpolated.lat > lat_threshold,
+)
+ful_north_east_binned_iwv = calc_orcestra_binned(
+    ful_bacardi,
+    hamp_bacardi_interpolated,
     bins=bins,
-).mean()
+    cond=(hamp_bacardi_interpolated.lat > lat_threshold)
+    & (hamp_bacardi_interpolated.time >= east_period[0])
+    & (hamp_bacardi_interpolated.time <= east_period[1]),
+)
 
+ful_north_west_binned_iwv = calc_orcestra_binned(
+    ful_bacardi,
+    hamp_bacardi_interpolated,
+    bins=bins,
+    cond=(hamp_bacardi_interpolated.lat > lat_threshold)
+    & (hamp_bacardi_interpolated.time >= west_period[0])
+    & (hamp_bacardi_interpolated.time <= west_period[1]),
+)
 # %%
 # WALES water vapor binned by IWV
 
@@ -316,8 +333,9 @@ ax_cloud_mask.set_ylim(ymin=250, ymax=13e3)
 color_ful = "#E8824F"
 dic_ful = {"color": color_ful, "linewidth": linewidth, "ax": ax_rad_flux}
 ful_binned_iwv.plot(**dic_ful)
-# ful_bacardi_low_lat_binned_iwv.plot(**dic_ful, linestyle="--")
-ful_bacardi_high_lat_binned_iwv.plot(**dic_ful, linestyle=":")
+ful_north_east_binned_iwv.plot(**dic_ful, linestyle=":")
+# ful_bacardi_high_lat_binned_iwv.plot(**dic_ful, linestyle=":")
+# ful_north_west_binned_iwv.plot(**dic_ful, linestyle="--")
 
 ax_rad_flux.set_ylabel("ULRF / W m$^{-2}$", color=color_ful)
 ax_rad_flux.tick_params(axis="y", colors=color_ful)
@@ -329,8 +347,9 @@ ax1_twin = ax_rad_flux.twinx()
 color_iwp = "#4FA1E8"
 dic_iwp = {"ax": ax1_twin, "color": color_iwp, "linewidth": linewidth}
 (hamp_orcestra_binned_iwv.IWP / 1e3).plot.line(**dic_iwp)
-# (hamp_orcestra_low_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle="--")
-(hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle=":")
+(hamp_orcestra_north_east_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle=":")
+# (hamp_orcestra_high_lat_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle=":")
+# (hamp_orcestra_north_west_binned_iwv.IWP / 1e3).plot.line(**dic_iwp, linestyle="--")
 
 ax1_twin.set_ylabel("IWP / kg m$^{-2}$", color=color_iwp)
 ax1_twin.tick_params(axis="y", colors=color_iwp)

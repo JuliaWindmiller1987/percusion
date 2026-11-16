@@ -368,9 +368,11 @@ We start by showing that the research flights sampled the Atlantic ITCZ, includi
 \label{fig:transition}
 \end{figure}
 
-As described in Section~\ref{sec:campaign_design}, the 48\,\unit{mm} CWV contour was used to guide the placement of dropsonde circles at the edges and within the ITCZ. Figure~\ref{fig:transition}a shows CWV calculated from the dropsondes released in these circles. Of the 87 dropsonde circles with sufficient data to calculate circle mean values, 51 contain at least one dropsonde with CWV below 48\,\unit{mm} and at least one with CWV above 48\,\unit{mm}, indicating that they sampled the 48\,\unit{mm} contour. Of the remaining 36 circles, 35 contain only dropsondes with CWV values above 48\,\unit{mm} and only one contains exclusively dropsondes with CWV below 48\,\unit{mm}. 
-Flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre. 
-This pattern changes in the western basin (from 7 September 2024 onwards), where the flights differed substantially (see Section~\ref{sec:implementation}). None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre. Thus, the western flights also sampled the ITCZ structure in moisture space, albeit less systematically than those in the east.
+As described in Sect.~\ref{sec:campaign_design}, the 48\,\unit{mm} CWV contour was used to guide the placement of dropsonde circles both at the edges of the ITCZ and in its centre.
+Figure~\ref{fig:transition}a shows CWV calculated from the dropsondes released in these circles.
+Of the 87 dropsonde circles with sufficient data to calculate circle mean values, 51 contain dropsondes with CWV both below and above 48\,\unit{mm} and thus straddle the contour (edge circles), 35 contain only dropsondes with CWV above 48\,\unit{mm} (centre circles), and only one contains only dropsondes with CWV below 48\,\unit{mm}.
+Flights from Sal (all flights before 6 September 2024) typically included two circles at the ITCZ edges, one in the ITCZ centre, and one coordinated with the ATR. As shown in Fig.~\ref{fig:transition}a, eight of the eleven flights in the eastern tropical Atlantic sampled both ITCZ edges and the ITCZ centre.
+This pattern changed in the western basin (from 7 September 2024 onwards), where the flights differed substantially (see Sect.~\ref{sec:implementation}). None of the flights sampled both ITCZ edges and the centre. Nevertheless, seven of the eleven flights included at least one circle at an ITCZ edge and one in the centre.
 
 Our sampling differed between the eastern and the western Atlantic largely because the CWV field itself differed between the two basins.
 These differences are evident in the mean and per-flight meridional cross-sections of CWV from HAMP, computed in 0.1\textdegree{} latitude bins (Fig.~\ref{fig:transition}c, d).
@@ -380,11 +382,12 @@ At the northern edge, it does so on only about half of the flights.
 On some of the days with a sharp northern drop, a second CWV maximum appears north of about 12\,\unit{^{\circ}N}.
 Accordingly, the mean cross-section for the eastern domain shows a CWV plateau between about 7 and 10\,\unit{^{\circ}N}, with CWV decreasing more gradually towards the north than towards the south.
 
-In the west (Fig.~\ref{fig:transition}d), most flights also show a CWV plateau, but the CWV value of the plateau ranges from values similar to those in the east down to about 48\,\unit{mm}.
+In the west (Fig.~\ref{fig:transition}d), most flights also show a CWV plateau, but its value varies between flights, from values similar to those in the east down to about 48\,\unit{mm}.
 As a result, the mean CWV peaks at only about 55\,\unit{mm}, compared with about 60\,\unit{mm} in the east.
-The plateau edges are also less clear, with only one flight showing a sharp drop at the southern edge and only one other at the northern edge.
-This is partly because airspace restrictions resulted in the flights in the west often covering a narrower latitude band, so that the edges may lie outside the sampled range.
-However, the combination of airspace restrictions and CWV plateau values sometimes close to the 48\,\unit{mm} threshold used to define the ITCZ edges, it was often difficult to identify, and therefore to sample, these edges.
+The plateau edges are also less clear as only one flight shows a sharp drop at the southern edge and only one other at the northern edge.
+There are two reasons for this.
+First, airspace restrictions often confined the western flights to a narrower latitude band, so that the edges may lie outside the sampled range.
+Second, when the plateau value was close to the 48\,\unit{mm} threshold used to define the ITCZ edges, the edges were difficult to identify and therefore to sample.
 
 Finally, Fig.~\ref{fig:transition}b shows the full distribution of CWV values measured by the dropsondes and by HAMP. It highlights that the observations were concentrated near the ITCZ edge and within the moist ITCZ. In particular, the distribution exhibits a pronounced peak near 57\,\unit{mm}, close to the peak at 55\,\unit{mm} reported by \cite{Mapes2018}. The dropsonde-derived CWV also shows a weaker secondary peak near 50\,\unit{mm}. This differs from \cite{Mapes2018}, who found a local minimum around 48\,\unit{mm}. This likely reflects our targeted sampling of the 48\,\unit{mm} contour. Consistent with our objectives, the majority of our observations were collected in the region of high CWV but also allow for analysis of the adjacent drier subtropical regions as 24$\%$ of both the dropsonde and HAMP measurements fall below 48\,\unit{mm} and our observations include CWV values as low as 30\,\unit{mm}.  
 Finally, the close agreement between the CWV distributions derived from dropsondes and measured by HAMP indicates that the dropsonde circles adequately capture the variability observed throughout the flights.
@@ -396,7 +399,7 @@ Finally, the close agreement between the CWV distributions derived from dropsond
     \centering
     \includegraphics[width=\linewidth]{figures/itcz_cwv_space.pdf}
     % TODO (figure): SST vs CWV depends on answer from Manfred (VELOX skin temperature).
-    \caption{ITCZ in moisture space. (a) Cloud occurrence frequency from the HAMP radar (yellow to brown), relative humidity from WALES (blue) and frequency of stereoscopically derived cloud-top heights from specMACS (black contours: dotted 0.01\%, dashed 0.02\%, solid 0.04\%). (b) Upwelling longwave radiation flux (ULRF) from BACARDI and ice water path (IWP) from the HAMP passive radiometers, for all measurements (solid) and for measurements north (dotted) of 12\,\unit{^{\circ}N}. (c) Moist static energy from individual dropsondes (colours) and streamfunction computed from the dropsonde circles sorted by CWV (black contours; interval 1\,\unit{g\,m^{-2}\,s^{-1}}; the cross marks the maximum).}
+    \caption{ITCZ in moisture space. (a) Cloud occurrence frequency from the HAMP radar (yellow to brown), relative humidity from WALES (blue) and frequency of stereoscopically derived cloud-top heights from specMACS (black contours: dotted 0.01\%, dashed 0.02\%, solid 0.04\%). (b) Upwelling longwave radiation flux (ULRF) from BACARDI and ice water path (IWP) from the HAMP passive radiometers, for all measurements (solid) and for measurements collected north of 12\,\unit{^{\circ}N} in the eastern basin (dotted). (c) Moist static energy from individual dropsondes (colours) and streamfunction computed from the dropsonde circles sorted by CWV (black contours; interval 1\,\unit{g\,m^{-2}\,s^{-1}}; the cross marks the maximum).}
     \label{fig:itcz_cwv}
 \end{figure}
 
@@ -407,33 +410,38 @@ Figure~\ref{fig:itcz_cwv} shows how cloudiness, humidity, radiation, and the lar
 All quantities in Fig.~\ref{fig:itcz_cwv}a and b are averaged in 1\,\unit{mm} CWV bins, using the CWV measured by HAMP, between 44 and 62\,\unit{mm}, the 10th and 90th percentiles of the observed CWV distribution.
 
 
-As expected, clouds become deeper and more frequent with increasing CWV. Shallow trade-wind clouds first become detectable at around 50\,\unit{mm}, although their low occurrence frequency at lower CWV is thought to reflect the limited sensitivity of the radar to non-precipitating low clouds far from the radar \citep{konowEURECLtSup2021}.
+As expected, clouds become deeper and more frequent with increasing CWV. Shallow trade-wind clouds first become detectable at around 50\,\unit{mm}, although their low occurrence frequency at lower CWV likely reflects the limited sensitivity of the radar to non-precipitating low clouds far from the radar (about $-30$\,\unit{dBZ} at a range of 13\,\unit{km}; \citealp{mechHAMPMicrowavePackage2014a}).
 % Add specMACS
 Above a CWV of about 55\,\unit{mm}, there is a rapid increase in deep convection. This is apparent in a decrease in the upwelling longwave radiation flux and increases in ice water path and cloud occurrence frequency.
 Although cloud occurrence increases throughout the column, a local maximum persists near 5.5\,\unit{km}. Together with the maxima associated with trade-wind clouds and deep convection, it is reminiscent of the trimodal structure of tropical convection \citep{johnsonTrimodalCharacteristicsTropical1999}.
 The observed sharp increase of deep convection with CWV is consistent with the well-documented sharp increase of precipitation with CWV \citep[e.g.,][]{Bretherton2004, Peters2006}.
 
 Figure~\ref{fig:itcz_cwv}c shows the overturning circulation in moisture space together with the moist static energy profiles.
-The moisture-space streamfunction $\Psi$ is calculated following \citet{Bretherton2005}, who introduced it for a closed domain, and \citet{schulzObservingTropicalAtmosphere2018}, who first applied it to observations.
+The moisture-space streamfunction $\Psi$ was introduced by \citet{Bretherton2005} for a closed domain and first applied to observations by \citet{schulzObservingTropicalAtmosphere2018}, who combined observed CWV with vertical motion from reanalyses.
+Here, $\Psi$ is calculated from observed CWV and observed vertical motion, to our knowledge for the first time.
+This is the first time that $\Psi$ is calculated using observations of vertical motion (rather than reanalysis data).
 To this end, all circles with vertical velocity profiles ($N = 87$) are sorted from highest to lowest CWV, and $\Psi$ is calculated as $\Psi_i(z) = \Psi_{i-1}(z) + \overline{\rho}(z)\,w_i(z)/N$, with $\Psi_0 = 0$, where $w_i$ is the circle-mean vertical velocity of the $i$th circle and $\overline{\rho}$ is the mean density profile of all circles.
 Unlike \citet{schulzObservingTropicalAtmosphere2018}, who start the integration at the dry end, we start at the moist end because the circles mainly sample the moistest rather than the driest region of the overturning circulation. The value of $\Psi$ at the dry end then corresponds to the mass flux that descends in the unsampled dry regions.
 Each circle receives equal weight, which assumes that the circles approximately sample the CWV distribution of the region, although the ITCZ edges are somewhat over-represented (Fig.~\ref{fig:transition}b).
 The streamfunction (Fig.~\ref{fig:itcz_cwv}c) reaches a maximum of about 6\,\unit{g\,m^{-2}\,s^{-1}} at around 8\,\unit{km} and 56\,\unit{mm}. Net ascent in the upper troposphere is thus confined to circles with CWV above about 56\,\unit{mm}, which roughly coincides with the transition to frequent deep convection in Fig.~\ref{fig:itcz_cwv}a and b. 
 The overturning circulation is broadly consistent with those that \citet{schulzObservingTropicalAtmosphere2018} reconstructed from several reanalyses, except that the inflow in our observations is more confined to the boundary layer.
 
-The shading in Fig.~\ref{fig:itcz_cwv}c shows the moist static energy $h$ from the dropsondes, averaged in moisture space in the same way as the variables in Fig.~\ref{fig:itcz_cwv}a and b. It is calculated as $h = c_{pd} T + L_v q + g z$ \citep{mayMetPyPythonPackage2016a}, where $c_{pd}$ is the specific heat capacity of dry air at constant pressure, $T$ is temperature, $L_v$ is the latent heat of vaporisation, $q$ is specific humidity, $g$ is gravitational acceleration, and $z$ is height.
-As in \citet{Bretherton2005} and \citet{schulzObservingTropicalAtmosphere2018}, Fig.~\ref{fig:itcz_cwv}c allows us to visually analyse the energy transport associated with the overturning circulation.
-Compared to \citet{schulzObservingTropicalAtmosphere2018}, the stronger confinement of the inflow to the boundary layer, where $h$ is high, makes the circulation less efficient at exporting energy. 
+The shading in Fig.~\ref{fig:itcz_cwv}c shows the moist static energy $h$ from the dropsondes, averaged in moisture space in the same way as the variables in Fig.~\ref{fig:itcz_cwv}a and b. It is calculated as $h = c_\mathrm{pd} T + \ell_\mathrm{v} q + g z$ \citep{mayMetPyPythonPackage2016a}, where $c_\mathrm{pd}$ is the specific heat capacity of dry air at constant pressure, $T$ is temperature, the specific enthalpy of vaporization $\ell_\mathrm{v}$ (often called the latent heat of vaporization), $q$ is specific humidity, $g$ is gravitational acceleration, and $z$ is height.
+As in \citet{Bretherton2005} and \citet{schulzObservingTropicalAtmosphere2018}, Fig.~\ref{fig:itcz_cwv}c visualizes the energy transport associated with the overturning circulation.
+Compared to \citet{schulzObservingTropicalAtmosphere2018}, who sampled the seasonal rather than spatial variation, with regions of deep convection more similar to what we sample in the west, the stronger confinement of the inflow to the boundary layer, where $h$ is high, makes the circulation less efficient at exporting energy. 
 When the analysis is done separately for the eastern and western domain (not shown), the inflow layer appears deeper and the circulation more efficient in the west, whereas an additional shallow circulation becomes apparent in the east.
 These results need additional analysis, especially given the small number of circles and the limited sampling of the dry end of the circulation. However, they illustrate how the data collected during PERCUSION might be used to assess observationally how efficiently the ITCZ exports energy.
 
 Finally, we note two limitations of the moisture-space perspective.
 First, it hides how sharp the ITCZ edges are in physical space. We define the ITCZ as the region with CWV above 48\,\unit{mm}, the moist margin of \citet{Mapes2018}, yet deep convection becomes frequent only near 60\,\unit{mm} (Fig.~\ref{fig:itcz_cwv}), consistent with the precipitation pick-up found by \citet{Bretherton2004} and \citet{Peters2006}. In physical space, however, the two thresholds lie close together. Where CWV crosses 48\,\unit{mm}, it increases by a median of about 6\,\unit{mm} per degree latitude (not shown) and thus reaches 60\,\unit{mm} within about 2\textdegree{}, or roughly 200\,\unit{km}. This matches the distance between the 48\,\unit{mm} contour and the precipitation peak reported by \citet{Mapes2018}. Because the gradient is similar for thresholds between about 45 and 55\,\unit{mm} (not shown), a range of CWV values might have been suitable to identify the edges of the ITCZ during the campaign.
 
-Second, CWV alone does not determine whether deep convection occurs. CWV is a simple measure that captures how the entrainment of dry or moist air affects convection \citep[e.g.,][]{hollowayMoistureVerticalStructure2009}. However, north of the ITCZ, a second CWV maximum frequently reached values comparable to those within the ITCZ (Fig.~\ref{fig:transition}c) but was often free of deep convection. 
-Accordingly, ice water path increases and upwelling longwave radiation decreases more slowly with CWV north of 12\,\unit{^{\circ}N} than in the full dataset (Fig.~\ref{fig:itcz_cwv}b).
-A better predictor of the onset of deep convection is the lower-tropospheric buoyancy $B_L$ of an entraining plume \citep{ahmedReverseEngineeringTropical2018, ahmedDeepConvectiveAdjustment2020}, which accounts not only for humidity at different levels but also for stability variations. Calculated from the dropsondes and following the method of \citet{ahmedDeepConvectiveAdjustment2020}, $B_L$ is systematically lower north of 12\,\unit{^{\circ}N} than south of it at the same CWV (Fig.~\ref{fig:beyond_moisture_space}). 
-The lack of deep convection north of 12\,\unit{^{\circ}N} may therefore be explained by more stable conditions. 
+Second, CWV alone does not determine whether deep convection occurs.
+A better predictor may be the lower-tropospheric buoyancy $B_L$ of an entraining plume \citep{ahmedReverseEngineeringTropical2018, ahmedDeepConvectiveAdjustment2020}, which accounts for the vertical distribution of water vapour and temperature.
+Figure~\ref{fig:beyond_moisture_space} shows $B_L$ calculated from the dropsondes following \citet{ahmedDeepConvectiveAdjustment2020}.
+In the west, $B_L$ is strongly correlated with CWV.
+In the east, $B_L$ at a given CWV decreases northward, suggesting conditions that are less favourable for convection.
+This is consistent with the ice water path increasing and the upwelling longwave radiation decreasing markedly more slowly with CWV in measurements from the eastern flights north of 12\unit{{\degree}}\,N than in the full dataset (Fig.~\ref{fig:itcz_cwv}b).
+
 
 \begin{figure}
     \centering
