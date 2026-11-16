@@ -34,9 +34,24 @@ for flight in flights.keys():
     for i_seg, seg in enumerate(flights[flight]["segments"]):
         if "circle" in seg["kinds"]:
             if seg["segment_id"] in dropsonde_lev4.circle_id.values:
-                flights_ds_circles[flight]["segments"][i_seg]["kinds"] = seg[
-                    "kinds"
-                ] + ["omega_c"]
+
+                num_nan_wvel = np.sum(
+                    np.isnan(
+                        dropsonde_lev4.where(
+                            dropsonde_lev4.circle_id == seg["segment_id"], drop=True
+                        ).wvel.values[0]
+                    )
+                )
+
+                if num_nan_wvel / dropsonde_lev4.altitude.size == 1.0:
+                    print(
+                        f"Flight {flight} has circle segment {seg['segment_id']} with no vertical motion data in dropsonde dataset."
+                    )
+
+                else:
+                    flights_ds_circles[flight]["segments"][i_seg]["kinds"] = seg[
+                        "kinds"
+                    ] + ["omega_c"]
             else:
                 print(
                     f"Flight {flight} has circle segment {seg['segment_id']} not in dropsonde dataset."
