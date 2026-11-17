@@ -14,7 +14,7 @@ import numpy as np
 import xarray as xr
 from metpy.units import units
 
-BEACH_CID = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
+BEACH_CID = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
 
 PERIODS = {
     "East Atlantic": ("2024-08-11", "2024-09-05"),
