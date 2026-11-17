@@ -78,7 +78,7 @@ bin_centers = (bins[:-1] + bins[1:]) / 2
 # %%
 # Dropsondes
 ds_ds = xr.open_dataset(
-    "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
+    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
 ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
 
@@ -203,11 +203,11 @@ hamp_orcestra_north_west_binned_iwv = calc_orcestra_binned(
 # %%
 # Upwelling longwave radiation binned by IWV
 ds_bacardi = xr.open_dataset(
-    "ipfs://bafybeiaoalflfftmsfqakenwp5gpxnxfjhaxkrjq7gpa4ucpbwj5jdb6qi", engine="zarr"
+    "ipfs://bafybeic7yakug2r2dbxsk6b5oi7ajvztlxu3agk3dsaho6rc5weaod6qdy", engine="zarr"
 )
 
-ful_bacardi = ds_bacardi["FUL"]
-hamp_bacardi_interpolated = hamp_orcestra[["IWV", "lat"]].interp(time=ful_bacardi.TIME)
+ful_bacardi = ds_bacardi["F_up_terrestrial"]
+hamp_bacardi_interpolated = hamp_orcestra[["IWV", "lat"]].interp(time=ful_bacardi.time)
 
 
 ful_binned_iwv = calc_orcestra_binned(ful_bacardi, hamp_bacardi_interpolated, bins=bins)
