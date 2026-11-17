@@ -56,7 +56,7 @@ ds = ds.sel(time=slice(campaign_start, campaign_end))
 
 # %%
 
-cid4 = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
+cid4 = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
 ds_dropsonde_lev4 = xr.open_dataset(cid4, engine="zarr")
 
 
@@ -105,11 +105,14 @@ plt.plot(ds.lon, ds.lat, **halo_plot_dic)
 
 number_of_skipped_circles = 0
 
+all_nan = ds_dropsonde_lev4.wvel.isnull().all(dim="altitude")
+circles_without_wvel = ds_dropsonde_lev4.circle_id.where(all_nan, drop=True).values
+
 for s in segments:
 
-    if (
-        "circle" in s["kinds"]
-        and s["segment_id"] not in ds_dropsonde_lev4.circle_id.values
+    if "circle" in s["kinds"] and (
+        s["segment_id"] not in ds_dropsonde_lev4.circle_id.values
+        or s["segment_id"] in circles_without_wvel
     ):
         number_of_skipped_circles += 1
         print(
