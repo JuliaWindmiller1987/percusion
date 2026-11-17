@@ -19,7 +19,7 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 # %%
 
 ds = xr.open_dataset(
-    "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
+    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
 
 # %%
