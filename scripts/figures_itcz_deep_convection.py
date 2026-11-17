@@ -80,7 +80,7 @@ lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
 # %%
 # Dropsonde data
 sondes_ds = xr.open_dataset(
-    "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
+    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
 sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
 sondes_flight_day = sondes_ds.sel(launch_time=flight_date)
