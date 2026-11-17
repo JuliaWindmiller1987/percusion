@@ -50,6 +50,8 @@ sondes_ds = xr.open_dataset(
 )
 
 sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+sondes_ds = sondes_ds.assign_coords(altitude=sondes_ds.altitude / 1e3)
+
 circles_flight_day = sondes_ds.sel(circle_time=flight_date)
 
 iwv_crit = 48.0  # kg/m^2
@@ -129,7 +131,7 @@ ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
 ds_hamp_passiv = xr.open_dataset(
     "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
-) 
+)
 ds_hamp_passiv_flight = ds_hamp_passiv.sel(time=slice(flight_start, flight_end))
 ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_end))
 
@@ -140,7 +142,6 @@ ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_en
 # LAM dataset
 url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
 lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
-lam_ds = lam_ds.assign(sfcwind=lambda dx: np.hypot(dx.uas, dx.vas))
 time = f"{flight_date} 16:00"
 
 # %%
@@ -158,7 +159,9 @@ scatter_kwargs = {
 
 fig = plt.figure(figsize=(12, 8))
 
-gs = fig.add_gridspec(2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1])
+gs = fig.add_gridspec(
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.15
+)
 
 ax_lam = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
 ax_ds = fig.add_subplot(gs[0, 1])
@@ -170,7 +173,16 @@ base_map(coastline_kwargs={"color": "k"}, ax=ax_lam)
 vmin, vmax, vcenter = 30, 70, 48
 norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
 cmap = plt.cm.Blues.copy()
-im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
+im_les = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
+
+egh.healpix_contour(
+    ds_lam_sel,
+    ax=ax_lam,
+    levels=[48],
+    colors="k",
+    linewidths=0.5,
+    zorder=10,
+)
 
 pos = ax_lam.get_position()
 
@@ -178,7 +190,7 @@ width_scale = 0.8
 
 cax_lam_positions = [
     pos.x0 + pos.width * (1 - width_scale) / 2,  # left
-    pos.y1 - 0.44,  # bottom
+    pos.y1 - 0.45,  # bottom
     pos.width * width_scale,  # width
     0.015,  # height
 ]
@@ -186,7 +198,7 @@ cax_lam_positions = [
 cax_lam = fig.add_axes(cax_lam_positions)
 
 cb = fig.colorbar(
-    im,
+    im_les,
     cax=cax_lam,
     orientation="horizontal",
     label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
@@ -248,6 +260,10 @@ cmap_wales_ticklocator = FixedLocator(
 )
 
 ds_wales_sel_segment = ds_wales_no_wv.sel(time=slice(segment_start, segment_end))
+ds_wales_sel_segment = ds_wales_sel_segment.assign_coords(
+    altitude=ds_wales_sel_segment.altitude / 1e3
+)
+
 im_wales = ds_wales_sel_segment["bsrg"].plot(
     alpha=0.9,
     x="time",
@@ -267,6 +283,9 @@ cmap.set_under((1, 1, 1, 0))  # transparent
 reflectivity_segment = ds_hamp_flight.radar_reflectivity.sel(
     time=slice(segment_start, segment_end)
 )
+reflectivity_segment = reflectivity_segment.assign_coords(
+    altitude=reflectivity_segment.altitude / 1e3
+)
 
 
 im_hamp = reflectivity_segment.plot(
@@ -280,32 +299,25 @@ im_hamp = reflectivity_segment.plot(
 
 
 pos = ax_wales.get_position()
+ax_wales.set_position([pos.x0, pos.y0, pos.width * 0.82, pos.height])
+pos = ax_wales.get_position()
 
-cax_wv_positions = [
-    pos.x0 - 0.025,  # left
-    pos.y1 - 0.38,  # bottom
-    0.5 * pos.width,  # width
-    0.015,  # height
-]
-
-cax_wv = fig.add_axes(cax_wv_positions)
-cax_wales = fig.add_axes(cax_wv_positions + np.array([0.425, 0, 0, 0]))
-
+cbar_width = 0.01
+cax_wv = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
+cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
 
 cb = fig.colorbar(
     im_hamp,
     cax=cax_wv,
-    orientation="horizontal",
-    label=r"equivalent reflectivity factor / mm$^6$ m$^{-3}$",
-    shrink=0.75,
+    orientation="vertical",
+    label=r"$Z_e$ / mm$^6$ m$^{-3}$",
 )
 
 cb_wales = fig.colorbar(
     im_wales,
     cax=cax_wales,
-    orientation="horizontal",
+    orientation="vertical",
     label=r"total backscatter ratio / ",
-    shrink=0.75,
 )
 
 circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
@@ -316,14 +328,15 @@ cwv_circle_in_segment = circles_flight_day.sel(
     circle_id=segment_for_plot["segment_id"]
 ).iwv_mean.values
 
+ax_ds.axvline(0, color="k", linestyle=":", linewidth=1, zorder=0)
 
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
-ax_ds.set_ylabel("height / m")
+ax_ds.set_ylabel("height / km")
 ax_ds.set_title(" ")
-ax_ds.set_ylim(ymin=0, ymax=13e3)
+ax_ds.set_ylim(ymin=0, ymax=13)
 ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
-ax_wales.set_ylim(ymin=500, ymax=13e3)
+ax_wales.set_ylim(ymin=0.5, ymax=11)
 
 # plt.suptitle(flight_id)
 
