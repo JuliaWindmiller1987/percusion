@@ -83,6 +83,7 @@ sondes_ds = xr.open_dataset(
     "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
 sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+sondes_ds = sondes_ds.assign_coords(altitude=sondes_ds.altitude / 1e3)
 sondes_flight_day = sondes_ds.sel(launch_time=flight_date)
 circles_flight_day = sondes_ds.sel(circle_time=flight_date)
 
@@ -110,7 +111,9 @@ ec_start, ec_end = ec_underpass_events[0]["time"] - np.timedelta64(
 
 fig = plt.figure(figsize=(12, 8))
 
-gs = fig.add_gridspec(2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1])
+gs = fig.add_gridspec(
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.15
+)
 
 ax_sat = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
 ax_ds = fig.add_subplot(gs[0, 1])
@@ -119,6 +122,25 @@ ax_hamp = fig.add_subplot(gs[1, :])
 
 base_map(coastline_kwargs={"color": "w"}, ax=ax_sat)
 im = egh.healpix_show(ds_lam_sel, ax=ax_sat, alpha=1.0, cmap="Greys_r")
+
+pos = ax_sat.get_position()
+width_scale = 0.8
+
+cax_lam = fig.add_axes(
+    [
+        pos.x0 + pos.width * (1 - width_scale) / 2,  # left
+        pos.y1 - 0.45,  # bottom
+        pos.width * width_scale,  # width
+        0.015,  # height
+    ]
+)
+
+cb_lam = fig.colorbar(
+    im,
+    cax=cax_lam,
+    orientation="horizontal",
+    label=rf"outgoing shortwave radiation / {ds_lam_sel.units}",
+)
 
 segment_for_hamp = "circle_mid"
 
@@ -149,13 +171,25 @@ for k in ["circle", "straight_leg", "ec_track", "atr_coordination"]:
 ax_sat.set_xlabel("longitude / °")
 ax_sat.set_ylabel("latitude / °")
 ax_sat.spines[["right", "top"]].set_visible(False)
-ax_sat.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.2), ncol=4)
 ax_sat.set_title(flight_id)
+ax_sat.legend(
+    loc="upper left",
+    ncol=1,
+    frameon=True,
+    edgecolor="k",
+    labelcolor="white",
+    fontsize=9,
+    facecolor="k",
+    framealpha=0.5,
+)
 
 cmap_wales = plt.get_cmap("Blues").copy()
 cmap_wales.set_under((1, 1, 1, 0))  # transparent
 
 ds_wales_sel_segment = ds_wales_wv.sel(time=slice(segment_start, segment_end))
+ds_wales_sel_segment = ds_wales_sel_segment.assign_coords(
+    altitude=ds_wales_sel_segment.altitude / 1e3
+)
 im_wales = ds_wales_sel_segment["RH"].plot(
     alpha=0.9,
     x="time",
@@ -172,7 +206,12 @@ ds_hamp_sel_segment = ds_hamp_flight.sel(
 cmap = plt.get_cmap("pink_r").copy()
 cmap.set_under((1, 1, 1, 0))  # transparent
 
-im_hamp = ds_hamp_sel_segment["radar_reflectivity"].plot(
+reflectivity_segment = ds_hamp_sel_segment["radar_reflectivity"]
+reflectivity_segment = reflectivity_segment.assign_coords(
+    altitude=reflectivity_segment.altitude / 1e3
+)
+
+im_hamp = reflectivity_segment.plot(
     y="altitude",
     ax=ax_hamp,
     label=f"IWV bin {bin}",
@@ -182,31 +221,25 @@ im_hamp = ds_hamp_sel_segment["radar_reflectivity"].plot(
 )
 
 pos = ax_hamp.get_position()
+ax_hamp.set_position([pos.x0, pos.y0, pos.width * 0.82, pos.height])
+pos = ax_hamp.get_position()
 
-cax_wv_positions = [
-    pos.x0 - 0.025,  # left
-    pos.y1 - 0.38,  # bottom
-    0.5 * pos.width,  # width
-    0.015,  # height
-]
-
-cax_wv = fig.add_axes(cax_wv_positions)
-cax_wales = fig.add_axes(cax_wv_positions + np.array([0.425, 0, 0, 0]))
+cbar_width = 0.01
+cax_wv = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
+cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
 
 cb = fig.colorbar(
     im_hamp,
     cax=cax_wv,
-    orientation="horizontal",
-    label=r"equivalent reflectivity factor / mm$^6$ m$^{-3}$",
-    shrink=0.75,
+    orientation="vertical",
+    label=r"$Z_e$ / mm$^6$ m$^{-3}$",
 )
 
 cb_wales = fig.colorbar(
     im_wales,
     cax=cax_wales,
-    orientation="horizontal",
+    orientation="vertical",
     label=r"RH / %",
-    shrink=0.75,
 )
 
 ax_hamp.axvline(
@@ -229,10 +262,13 @@ ax_hamp.set_ylim(ymin=0)
 circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color=kinds2color("circle")
 )
+
+ax_ds.axvline(0, color="k", linestyle=":", linewidth=1, zorder=0)
+
 ax_ds.set_xlabel("vertical velocity / m s$^{-1}$")
-ax_ds.set_ylabel("height / m")
+ax_ds.set_ylabel("height / km")
 ax_ds.set_title(" ")
-ax_ds.set_ylim(ymin=0, ymax=13e3)
+ax_ds.set_ylim(ymin=0, ymax=13)
 ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
 
 cwv_circle_in_segment = circles_flight_day.sel(
