@@ -17,7 +17,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
-dropsonde_lev4_id = "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i"
+dropsonde_lev4_id = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
 dropsonde_lev4 = xr.open_dataset(dropsonde_lev4_id, engine="zarr")
 
 # %%
@@ -248,6 +248,7 @@ caption = (
 latex_table = df.to_latex(index=False, caption=caption, label="tab:flights")
 latex_table = latex_table.replace(r"\toprule", "")
 latex_table = latex_table.replace(r"\bottomrule", "")
+latex_table = latex_table.replace(r"\midrule", "")
 print(latex_table)
 
 with open(PROJECT_ROOT / "tables" / "flight_overview_table.tex", "w") as f:
