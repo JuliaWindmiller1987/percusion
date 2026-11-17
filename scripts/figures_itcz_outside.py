@@ -46,7 +46,7 @@ tracks = all_tracks.sel(time=flight_date)
 # %%
 # Dropsonde data
 sondes_ds = xr.open_dataset(
-    "ipfs://bafybeihfqxfckruepjhrkafaz6xg5a4sepx6ahhv4zds4b3hnfiyj35c5i", engine="zarr"
+    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
 )
 
 sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
@@ -127,9 +127,9 @@ ds_hamp = xr.open_dataset(
 )
 ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
-hamp_passiv_path_v2 = PROJECT_ROOT / "data" / "HAMP_with_IWV_IWP_LWP_TLWP_v2.nc"
-ds_hamp_passiv = xr.open_dataset(hamp_passiv_path_v2)
-
+ds_hamp_passiv = xr.open_dataset(
+    "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
+) 
 ds_hamp_passiv_flight = ds_hamp_passiv.sel(time=slice(flight_start, flight_end))
 ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_end))
 
@@ -170,7 +170,7 @@ base_map(coastline_kwargs={"color": "k"}, ax=ax_lam)
 vmin, vmax, vcenter = 30, 70, 48
 norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
 cmap = plt.cm.Blues.copy()
-# im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
+im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
 
 pos = ax_lam.get_position()
 
@@ -185,13 +185,13 @@ cax_lam_positions = [
 
 cax_lam = fig.add_axes(cax_lam_positions)
 
-# cb = fig.colorbar(
-#     im,
-#     cax=cax_lam,
-#     orientation="horizontal",
-#     label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
-#     shrink=0.75,
-# )
+cb = fig.colorbar(
+    im,
+    cax=cax_lam,
+    orientation="horizontal",
+    label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
+    shrink=0.75,
+)
 
 
 mask = (tracks.time >= segment_start) & (tracks.time <= segment_end)
@@ -214,13 +214,6 @@ ax_lam.scatter(
     zorder=31,
 )
 
-
-# ax_lam.plot(
-#     tracks.lon.where(~mask),
-#     tracks.lat.where(~mask),
-#     color="k",
-#     alpha=0.5,
-# )
 
 ax_lam.plot(
     tracks.lon.where(mask),
