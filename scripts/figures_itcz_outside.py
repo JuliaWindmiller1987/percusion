@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
 from matplotlib.ticker import FixedLocator
+from matplotlib.colors import LinearSegmentedColormap
 
 import easygems.healpix as egh
 import seaborn as sns
@@ -102,15 +103,11 @@ except KeyError:
 
 
 # %%
-skip_wales = True
-
-if not skip_wales:
-    # WALES dataset
-    store = "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_no_wv.zarr"
-    ds_wales_no_wv = xr.open_dataset(store, engine="zarr")
-    ds_wales_no_wv = ds_wales_no_wv.sel(time=slice(flight_start, flight_end))
-    ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrg_flags == 0)
-
+# WALES dataset
+wales_store = percusion.utils.wales_path
+ds_wales_no_wv = xr.open_dataset(wales_store, engine="zarr")
+ds_wales_no_wv = ds_wales_no_wv.sel(time=slice(flight_start, flight_end))
+ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrg_flags == 0)
 
 # %%
 # HAMP dataset
@@ -224,37 +221,34 @@ ax_lam.set_title(flight_id)
 # cmap_wales = plt.get_cmap("Blues").copy()
 # cmap_wales.set_under((1, 1, 1, 0))  # transparent
 
-from matplotlib.colors import LinearSegmentedColormap
 
-if not skip_wales:
+cmap_wales = LinearSegmentedColormap.from_list(
+    "WALES_BSR",
+    """#cce5ff
+    #99ccff #7399ff #4d66ff #264cd9 #0033b3 #005993 #008073 #008c39 #009900 #20a620 #40b340
+    #81cd43 #c2e847 #e0f323 #ffff00 #ffef00 #ffe000 #ffc426 #ffa84d #ff8833 #ff691a #f2470d
+    #e62600 #d21300 #bf0000 #ac0000 #990000 #4c0000""".split(),
+)
+cmap_wales.set_under((1, 1, 1, 0))  # transparent
 
-    cmap_wales = LinearSegmentedColormap.from_list(
-        "WALES_BSR",
-        """#cce5ff
-        #99ccff #7399ff #4d66ff #264cd9 #0033b3 #005993 #008073 #008c39 #009900 #20a620 #40b340
-        #81cd43 #c2e847 #e0f323 #ffff00 #ffef00 #ffe000 #ffc426 #ffa84d #ff8833 #ff691a #f2470d
-        #e62600 #d21300 #bf0000 #ac0000 #990000 #4c0000""".split(),
-    )
-    cmap_wales.set_under((1, 1, 1, 0))  # transparent
+cmap_wales_ticklocator = FixedLocator(
+    [1, 1.2, 1.4, 1.6, 1.8, 2.0, 4.0, 6.0, 8.0, 10.0, 30.0, 50.0, 70.0, 90.0]
+)
 
-    cmap_wales_ticklocator = FixedLocator(
-        [1, 1.2, 1.4, 1.6, 1.8, 2.0, 4.0, 6.0, 8.0, 10.0, 30.0, 50.0, 70.0, 90.0]
-    )
+ds_wales_sel_segment = ds_wales_no_wv.sel(time=slice(segment_start, segment_end))
+ds_wales_sel_segment = ds_wales_sel_segment.assign_coords(
+    altitude=ds_wales_sel_segment.altitude / 1e3
+)
 
-    ds_wales_sel_segment = ds_wales_no_wv.sel(time=slice(segment_start, segment_end))
-    ds_wales_sel_segment = ds_wales_sel_segment.assign_coords(
-        altitude=ds_wales_sel_segment.altitude / 1e3
-    )
-
-    im_wales = ds_wales_sel_segment["bsrg"].plot(
-        alpha=0.9,
-        x="time",
-        #    levels=np.arange(0, 81, 3),
-        ax=ax_wales,
-        cmap=cmap_wales,
-        norm=colors.LogNorm(vmin=1, vmax=100),
-        add_colorbar=False,
-    )
+im_wales = ds_wales_sel_segment["bsrg"].plot(
+    alpha=0.9,
+    x="time",
+    #    levels=np.arange(0, 81, 3),
+    ax=ax_wales,
+    cmap=cmap_wales,
+    norm=colors.LogNorm(vmin=1, vmax=100),
+    add_colorbar=False,
+)
 
 
 # HAMP radar reflectivity
@@ -299,14 +293,13 @@ ax_wales.axhline(
     wvel_circle_sel_lmt_max_alt, color="k", linestyle="--", linewidth=1, zorder=0
 )
 
-if not skip_wales:
-    cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
-    cb_wales = fig.colorbar(
-        im_wales,
-        cax=cax_wales,
-        orientation="vertical",
-        label=r"total backscatter ratio / ",
-    )
+cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
+cb_wales = fig.colorbar(
+    im_wales,
+    cax=cax_wales,
+    orientation="vertical",
+    label=r"total backscatter ratio / ",
+)
 
 
 wvel_circle_sel.plot(y="altitude", ax=ax_ds, label="Vertical velocity", color="C1")
