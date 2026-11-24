@@ -10,10 +10,6 @@ lat_max = 22
 
 campaign_start, campaign_end = "2024-08-11 11:59:00", "2024-09-28 20:02:00"
 
-# CIDs for the different datasets
-wales_path = "/work/mh0066/m301046/data/wales/wales.zarr"
-waleswv_path = "/work/mh0066/m301046/data/wales/waleswv.zarr"
-
 halo_plot_dic = {
     "color": "#F2935C",
     "alpha": 0.75,
