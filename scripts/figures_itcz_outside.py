@@ -19,8 +19,10 @@ from pathlib import Path
 
 importlib.reload(percusion)
 from percusion.utils import base_map, kinds2color
+from percusion.datasets import open_dataset
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
+
 
 # %%
 flights = get_flight_segments()["HALO"]
@@ -36,22 +38,38 @@ segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
-all_tracks = xr.open_dataset(
-    "ipfs://bafybeias3h5uxtt4ky4d4gn6l6gxjqfkzbde5jlunya6g3umnkvn7xoyoe", engine="zarr"
-)
-tracks = all_tracks.sel(time=flight_date)
+tracks = open_dataset("bahamas").sel(time=flight_date)
 
 # %%
 # Dropsonde data
-sondes_ds = xr.open_dataset(
-    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
-)
-
-sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+sondes_ds = open_dataset("dropsondes").swap_dims({"circle": "circle_id"})
 sondes_ds = sondes_ds.assign_coords(altitude=sondes_ds.altitude / 1e3)
 
 circles_flight_day = sondes_ds.sel(circle_time=flight_date)
 wvel_circle_sel = circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel
+
+# %%
+
+# WALES dataset
+ds_wales_no_wv = open_dataset("wales").sel(time=slice(flight_start, flight_end))
+ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrgl_flags == 0)
+
+# %%
+# HAMP dataset
+ds_hamp_flight = open_dataset("hamp_radar").sel(time=slice(flight_start, flight_end))
+
+ds_hamp_passiv_flight = open_dataset("hamp_radiometer").sel(
+    time=slice(flight_start, flight_end)
+)
+ds_hamp_passiv_segment = ds_hamp_passiv_flight.sel(
+    time=slice(segment_start, segment_end)
+)
+
+# %%
+# LAM dataset
+time = f"{flight_date} 16:00"
+lam_ds = open_dataset("lam").sel(time=time)
+ds_lam_sel = lam_ds["prw"].compute()
 
 # %%
 # Vertical velocity in the lower to mid-tropsphere in the circle segment
@@ -100,44 +118,6 @@ try:
 except KeyError:
     print("No low IWV sondes on this day.")
 
-
-# %%
-
-wales_path = "/work/mh0066/m301046/data/wales/wales.zarr"
-wales_wv_path = "/work/mh0066/m301046/data/wales/waleswv.zarr"
-
-# WALES dataset
-ds_wales_no_wv = xr.open_dataset(wales_path, engine="zarr")
-ds_wales_no_wv = ds_wales_no_wv.sel(time=slice(flight_start, flight_end))
-ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrgl_flags == 0)
-
-
-# %%
-# HAMP dataset
-
-ds_hamp = xr.open_dataset(
-    "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
-)
-ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
-
-ds_hamp_passiv = xr.open_dataset(
-    "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
-)
-ds_hamp_passiv_flight = ds_hamp_passiv.sel(time=slice(flight_start, flight_end))
-ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_end))
-
-
-# %%
-
-# %%
-# LAM dataset
-url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
-lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
-time = f"{flight_date} 16:00"
-
-# %%
-
-ds_lam_sel = lam_ds["prw"].sel(time=time).compute()
 
 # %%
 
