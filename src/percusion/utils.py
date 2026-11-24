@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import xarray as xr
 import warnings
+from percusion.datasets import open_dataset
 
 lon_min = -62
 lon_max = -10
@@ -45,6 +46,12 @@ event_kinds_dic = {
         "label": "METEOR overpass",
     },
 }
+
+
+def get_sonde_serial_ids(ds, circle_id):
+    idx = int(ds.sondes_per_circle.cumsum(dim="circle_id").sel(circle_id=circle_id))
+    nb_sondes_in_circle = ds.sondes_per_circle.sel(circle_id=circle_id).values
+    return ds.vaisala_serial_id.isel(sonde=slice(idx - nb_sondes_in_circle, idx)).values
 
 
 def base_map(
@@ -104,10 +111,8 @@ def list_of_kinds(list_of_dicts):
 
 def get_halo_position(freq="1s"):
     """Return the HALO position at a given time frequency."""
-    # root = "ipns://latest.orcestra-campaign.org"
-    root = "ipfs://QmWyyXuoTGJbf9MGSEjsfAdZzX8fWPfJByDgTb1yR9LWUg"
     return (
-        xr.open_dataset(f"{root}/products/HALO/position_attitude.zarr", engine="zarr")
+        open_dataset("bahamas")
         .reset_coords(("lat", "lon"))[["lat", "lon"]]
         .resample(time=freq)
         .mean()

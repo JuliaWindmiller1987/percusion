@@ -9,8 +9,8 @@ import matplotlib.patheffects as pe
 from scipy.ndimage import gaussian_filter1d
 import seaborn as sns
 import percusion
+from percusion.datasets import open_dataset
 from percusion import utils
-from doldrumsVerticalMotion import circleUtils
 import matplotlib.colors as colors
 
 from pathlib import Path
@@ -29,23 +29,17 @@ bin_to_center = lambda bins: (bins[:-1] + bins[1:]) / 2
 cwv_threshold = 48
 
 # %%
-
-HAMP_CID = "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y"
-ds_hamp = xr.open_dataset(HAMP_CID, engine="zarr")
-
-hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
-hamp_orcestra = hamp_orcestra.dropna(dim="time", subset=["IWV"])
-iwv_hamp_orcestra = hamp_orcestra["IWV"]
+hamp_radiometer_orcestra = open_dataset("hamp_radiometer").sel(
+    time=slice(utils.campaign_start, utils.campaign_end)
+)
+hamp_radiometer_orcestra = hamp_radiometer_orcestra.dropna(dim="time", subset=["IWV"])
+iwv_hamp_orcestra = hamp_radiometer_orcestra["IWV"]
 iwv_hamp_orcestra = iwv_hamp_orcestra.assign_coords(
-    lat=hamp_orcestra["lat"], day=hamp_orcestra.time.dt.floor("D")
+    lat=hamp_radiometer_orcestra["lat"], day=hamp_radiometer_orcestra.time.dt.floor("D")
 )
 # %%
 
-ds_ds = xr.open_dataset(
-    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
-)
-
-ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
+ds_ds = open_dataset("dropsondes").swap_dims({"circle": "circle_id"})
 ds_ds = ds_ds.dropna(dim="circle_id", subset=["iwv_mean"])
 
 iwv_ds_orcestra = ds_ds["iwv_mean"]
@@ -56,7 +50,7 @@ iwv_circle_std = np.empty(len(ds_ds.circle_id))
 iwv_circle_transition = np.empty(len(ds_ds.circle_id), dtype=bool)
 
 for i, circle_id in enumerate(ds_ds.circle_id.values):
-    sonde_ids = circleUtils.get_sonde_serial_ids(ds_ds, circle_id)
+    sonde_ids = utils.get_sonde_serial_ids(ds_ds, circle_id)
 
     iwv_circle_i = ds_ds["iwv"].where(
         ds_ds.vaisala_serial_id.isin(sonde_ids), drop=True

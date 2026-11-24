@@ -26,6 +26,7 @@ from percusion.utils import (
 )
 
 import percusion
+from percusion.datasets import open_dataset
 from pathlib import Path
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -34,9 +35,7 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 sns.set_context("paper")
 
 # %%
-all_tracks = xr.open_dataset(
-    "ipfs://bafybeias3h5uxtt4ky4d4gn6l6gxjqfkzbde5jlunya6g3umnkvn7xoyoe", engine="zarr"
-)
+all_tracks = open_dataset("bahamas")
 
 # %%
 

@@ -1,14 +1,18 @@
 # %%
 import numpy as np
-import xarray as xr
 import matplotlib.pyplot as plt
+from percusion.datasets import open_dataset
+from percusion import utils
 
-ds = xr.open_dataset(
-    "ipfs://bafybeif52irmuurpb27cujwpqhtbg5w6maw4d7zppg2lqgpew25gs5eczm", engine="zarr"
-)
-ds_orcestra = ds.sel(TIME=slice("2024-08-11", "2024-08-15"))
+campaign_start = utils.campaign_start
+campaign_end = utils.campaign_end
 
+# %%
 m_to_feet = 3.28084
+
+# %%
+
+ds_orcestra = open_dataset("bahamas2").sel(TIME=slice(campaign_start, campaign_end))
 ds_orcestra["flight_level"] = ds_orcestra.HP * m_to_feet * 1e-2
 
 # %%

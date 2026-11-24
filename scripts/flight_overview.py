@@ -3,8 +3,6 @@ from orcestra import get_flight_segments
 import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
-
-from orcestra.flightplan import sal, tbpb
 import numpy as np
 
 import importlib
@@ -24,6 +22,7 @@ import pandas as pd
 # %%
 
 import percusion
+from percusion.datasets import open_dataset
 from pathlib import Path
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -56,8 +55,7 @@ ds = ds.sel(time=slice(campaign_start, campaign_end))
 
 # %%
 
-cid4 = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
-ds_dropsonde_lev4 = xr.open_dataset(cid4, engine="zarr")
+ds_dropsonde_lev4 = open_dataset("dropsondes")
 
 
 # %%

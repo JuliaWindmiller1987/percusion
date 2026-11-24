@@ -14,7 +14,11 @@ import numpy as np
 import xarray as xr
 from metpy.units import units
 
-BEACH_CID = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
+from pathlib import Path
+import percusion
+from percusion.datasets import open_dataset
+
+PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 PERIODS = {
     "East Atlantic": ("2024-08-11", "2024-09-05"),
@@ -99,7 +103,7 @@ def add_buoyancy(ds, sonde_dim="sonde"):
 
 # %% --- load data and compute buoyancy --------------------------------------------
 
-sondes = xr.open_dataset(BEACH_CID, engine="zarr")
+sondes = open_dataset("dropsondes")
 sondes = add_buoyancy(sondes)
 
 # %% --- scatter plot: B_L vs CWV, coloured by launch latitude --------------------
@@ -146,7 +150,11 @@ axes[0].set_ylabel("B$_L$ / m s$^{-2}$")
 sns.despine(offset=5)
 
 fig.colorbar(sc, ax=axes, label="launch latitude / °N", pad=0.01)
-fig.savefig("figures/sondes_buoyancy_vs_cwv.pdf", bbox_inches="tight")
+
+plt.savefig(
+    f"{PROJECT_ROOT}/figures/sondes_buoyancy_vs_cwv.pdf",
+    bbox_inches="tight",
+)
 
 # %%
 

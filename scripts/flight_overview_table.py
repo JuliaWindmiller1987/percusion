@@ -12,13 +12,13 @@ import copy
 
 # %%
 import percusion
+from percusion.datasets import open_dataset
 from pathlib import Path
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
-dropsonde_lev4_id = "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi"
-dropsonde_lev4 = xr.open_dataset(dropsonde_lev4_id, engine="zarr")
+dropsonde = open_dataset("dropsondes")
 
 # %%
 
@@ -33,17 +33,17 @@ for flight in flights.keys():
 
     for i_seg, seg in enumerate(flights[flight]["segments"]):
         if "circle" in seg["kinds"]:
-            if seg["segment_id"] in dropsonde_lev4.circle_id.values:
+            if seg["segment_id"] in dropsonde.circle_id.values:
 
                 num_nan_wvel = np.sum(
                     np.isnan(
-                        dropsonde_lev4.where(
-                            dropsonde_lev4.circle_id == seg["segment_id"], drop=True
+                        dropsonde.where(
+                            dropsonde.circle_id == seg["segment_id"], drop=True
                         ).wvel.values[0]
                     )
                 )
 
-                if num_nan_wvel / dropsonde_lev4.altitude.size == 1.0:
+                if num_nan_wvel / dropsonde.altitude.size == 1.0:
                     print(
                         f"Flight {flight} has circle segment {seg['segment_id']} with no vertical motion data in dropsonde dataset."
                     )
