@@ -12,7 +12,7 @@ m_to_feet = 3.28084
 
 # %%
 
-ds_orcestra = open_dataset("bahamas2").sel(TIME=slice(campaign_start, campaign_end))
+ds_orcestra = open_dataset("bahamas").sel(TIME=slice(campaign_start, campaign_end))
 ds_orcestra["flight_level"] = ds_orcestra.HP * m_to_feet * 1e-2
 
 # %%
