@@ -19,6 +19,7 @@ from pathlib import Path
 
 importlib.reload(percusion)
 from percusion.utils import base_map, kinds2color
+from percusion.datasets import open_dataset
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
@@ -37,22 +38,61 @@ segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
-all_tracks = xr.open_dataset(
-    "ipfs://bafybeias3h5uxtt4ky4d4gn6l6gxjqfkzbde5jlunya6g3umnkvn7xoyoe", engine="zarr"
-)
-
-tracks = all_tracks.sel(time=flight_date)
+tracks = open_dataset("bahamas").sel(time=flight_date)
 
 # %%
 # Dropsonde data
-sondes_ds = xr.open_dataset(
-    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
-)
-
-sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+sondes_ds = open_dataset("dropsondes").swap_dims({"circle": "circle_id"})
 sondes_ds = sondes_ds.assign_coords(altitude=sondes_ds.altitude / 1e3)
 
 circles_flight_day = sondes_ds.sel(circle_time=flight_date)
+wvel_circle_sel = circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel
+
+# %%
+
+# WALES dataset
+ds_wales_no_wv = open_dataset("wales").sel(time=slice(flight_start, flight_end))
+ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrgl_flags == 0)
+
+# %%
+# HAMP dataset
+ds_hamp_flight = open_dataset("hamp_radar").sel(time=slice(flight_start, flight_end))
+
+ds_hamp_passiv_flight = open_dataset("hamp_radiometer").sel(
+    time=slice(flight_start, flight_end)
+)
+ds_hamp_passiv_segment = ds_hamp_passiv_flight.sel(
+    time=slice(segment_start, segment_end)
+)
+
+# %%
+# LAM dataset
+time = f"{flight_date} 16:00"
+lam_ds = open_dataset("lam").sel(time=time)
+ds_lam_sel = lam_ds["prw"].compute()
+
+# %%
+# Vertical velocity in the lower to mid-tropsphere in the circle segment
+
+wvel_circle_sel_lmt = wvel_circle_sel.sel(altitude=slice(1.5, 8))
+wvel_circle_sel_lmt_max_alt = wvel_circle_sel_lmt.isel(
+    altitude=wvel_circle_sel_lmt.argmax()
+).altitude.values
+wvel_circle_sel_lmt_min_alt = wvel_circle_sel_lmt.isel(
+    altitude=wvel_circle_sel_lmt.argmin()
+).altitude.values
+wvel_circle_sel_lmt_0 = wvel_circle_sel_lmt.isel(
+    altitude=np.abs(wvel_circle_sel_lmt).argmin()
+).altitude.values
+print(
+    f"Max vertical velocity in the lower to mid-troposphere: {wvel_circle_sel_lmt.max().values:.3f} m/s at {wvel_circle_sel_lmt_max_alt:.2f} km"
+)
+print(
+    f"Min vertical velocity in the lower to mid-troposphere: {wvel_circle_sel_lmt.min().values:.3f} m/s at {wvel_circle_sel_lmt_min_alt:.2f} km"
+)
+print(f"Zero crossing altitude: {wvel_circle_sel_lmt_0:.3f} km")
+
+# %%
 
 iwv_crit = 48.0  # kg/m^2
 
@@ -78,75 +118,6 @@ try:
 except KeyError:
     print("No low IWV sondes on this day.")
 
-# %%
-
-# # "HALO-20240811a", "HALO-20240813a", "HALO-20240822a",
-
-# for flight_id in ["HALO-20240903a", "HALO-20240907a"]:
-#     flight = flights[flight_id]
-
-#     flight_start, flight_end = flight["takeoff"], flight["landing"]
-#     flight_date = flight["date"]
-
-#     circles_flight_day = sondes_ds.sel(circle_time=flight_date)
-
-#     segment_for_plot = [s for s in flight["segments"] if s["name"] == "circle_north"][0]
-
-#     segment_start = np.datetime64(segment_for_plot["start"])
-#     segment_end = np.datetime64(segment_for_plot["end"])
-
-#     circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
-#         y="altitude", label=flight_id
-#     )
-
-#     segment_sondes = sondes_ds.sel(launch_time=slice(segment_start, segment_end))
-
-#     print(
-#         f"Min IWV {segment_sondes.iwv.min().values}, max IWV {segment_sondes.iwv.max().values}"
-#     )
-
-#     print(
-#         f"Mean IWV in circle segment: {circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).iwv_mean.values:.2f} kg/m^2"
-#     )
-# plt.axvline(0)
-
-# ax_ds = plt.gca()
-# ax_ds.set_xlim(xmin=-0.075, xmax=0.075)
-# plt.legend(frameon=False)
-
-# %%
-# WALES dataset
-store = "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_no_wv.zarr"
-ds_wales_no_wv = xr.open_dataset(store, engine="zarr")
-ds_wales_no_wv = ds_wales_no_wv.sel(time=slice(flight_start, flight_end))
-ds_wales_no_wv = ds_wales_no_wv.where(ds_wales_no_wv.bsrg_flags == 0)
-
-
-# %%
-# HAMP dataset
-ds_hamp = xr.open_dataset(
-    "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
-)
-ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
-
-ds_hamp_passiv = xr.open_dataset(
-    "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
-)
-ds_hamp_passiv_flight = ds_hamp_passiv.sel(time=slice(flight_start, flight_end))
-ds_hamp_passiv_segment = ds_hamp_passiv.sel(time=slice(segment_start, segment_end))
-
-
-# %%
-
-# %%
-# LAM dataset
-url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
-lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
-time = f"{flight_date} 16:00"
-
-# %%
-
-ds_lam_sel = lam_ds["prw"].sel(time=time).compute()
 
 # %%
 
@@ -160,7 +131,7 @@ scatter_kwargs = {
 fig = plt.figure(figsize=(12, 8))
 
 gs = fig.add_gridspec(
-    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.15
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.4
 )
 
 ax_lam = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
@@ -184,27 +155,18 @@ egh.healpix_contour(
     zorder=10,
 )
 
+ax_lam.apply_aspect()
 pos = ax_lam.get_position()
 
-width_scale = 0.8
-
-cax_lam_positions = [
-    pos.x0 + pos.width * (1 - width_scale) / 2,  # left
-    pos.y1 - 0.45,  # bottom
-    pos.width * width_scale,  # width
-    0.015,  # height
-]
-
-cax_lam = fig.add_axes(cax_lam_positions)
+cbar_width = 0.01
+cax_lam = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
 
 cb = fig.colorbar(
     im_les,
     cax=cax_lam,
-    orientation="horizontal",
-    label=rf" {ds_lam_sel.long_name} / {ds_lam_sel.units}",
-    shrink=0.75,
+    orientation="vertical",
+    label=rf"{ds_lam_sel.long_name} / {ds_lam_sel.units}",
 )
-
 
 mask = (tracks.time >= segment_start) & (tracks.time <= segment_end)
 
@@ -225,7 +187,6 @@ ax_lam.scatter(
     s=10,
     zorder=31,
 )
-
 
 ax_lam.plot(
     tracks.lon.where(mask),
@@ -264,7 +225,7 @@ ds_wales_sel_segment = ds_wales_sel_segment.assign_coords(
     altitude=ds_wales_sel_segment.altitude / 1e3
 )
 
-im_wales = ds_wales_sel_segment["bsrg"].plot(
+im_wales = ds_wales_sel_segment["bsrgl"].plot(
     alpha=0.9,
     x="time",
     #    levels=np.arange(0, 81, 3),
@@ -304,7 +265,7 @@ pos = ax_wales.get_position()
 
 cbar_width = 0.01
 cax_wv = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
-cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
+
 
 cb = fig.colorbar(
     im_hamp,
@@ -313,6 +274,12 @@ cb = fig.colorbar(
     label=r"$Z_e$ / mm$^6$ m$^{-3}$",
 )
 
+ax_wales.axhline(
+    wvel_circle_sel_lmt_max_alt, color="k", linestyle="--", linewidth=1, zorder=0
+)
+
+
+cax_wales = fig.add_axes([pos.x1 + 0.095, pos.y0, cbar_width, pos.height])
 cb_wales = fig.colorbar(
     im_wales,
     cax=cax_wales,
@@ -320,9 +287,8 @@ cb_wales = fig.colorbar(
     label=r"total backscatter ratio / ",
 )
 
-circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
-    y="altitude", ax=ax_ds, label="Vertical velocity", color="C1"
-)
+
+wvel_circle_sel.plot(y="altitude", ax=ax_ds, label="Vertical velocity", color="C1")
 
 cwv_circle_in_segment = circles_flight_day.sel(
     circle_id=segment_for_plot["segment_id"]
@@ -359,4 +325,77 @@ print(
 (ds_hamp_passiv_segment.IWV.dropna(dim="time") < 50.00).sum() / len(
     ds_hamp_passiv_segment.IWV.dropna(dim="time")
 )
+
+# %%
+
+plt.scatter(
+    ds_hamp_passiv_segment.lat,
+    ds_hamp_passiv_segment.IWV,
+    c=ds_hamp_passiv_segment.time.values,
+    cmap="viridis",
+)
+plt.colorbar()
+# %%
+
+plt.scatter(
+    ds_hamp_passiv_segment.lat,
+    ds_hamp_passiv_segment.IWV,
+    c=ds_hamp_passiv_segment.lon.values,
+    cmap="viridis",
+)
+plt.colorbar()
+# %%
+
+ds_hamp_passiv_segment.IWV.plot()
+# %%
+
+from cartopy.geodesic import Geodesic
+
+geod = Geodesic()
+
+
+def window_distance(ds, t0, t1):
+    p0 = ds.sel(time=t0, method="nearest")
+    p1 = ds.sel(time=t1, method="nearest")
+    # inverse() returns [[distance_m, azimuth_start, azimuth_end]]
+    dist_m = geod.inverse(
+        (float(p0.lon), float(p0.lat)), (float(p1.lon), float(p1.lat))
+    )[0, 0]
+    return dist_m
+
+
+# %%
+
+t0 = ds_hamp_passiv_segment.time.isel(time=0).values
+t1 = ds_hamp_passiv_segment.time.isel(time=0).values + np.timedelta64(3, "m")
+
+delta_t_min = 3
+tslices = [
+    (
+        ds_hamp_passiv_segment.time.isel(time=0).values,
+        ds_hamp_passiv_segment.time.isel(time=0).values
+        + np.timedelta64(delta_t_min, "m"),
+    ),
+    (
+        ds_hamp_passiv_segment.time.isel(time=-1).values
+        - np.timedelta64(delta_t_min, "m"),
+        ds_hamp_passiv_segment.time.isel(time=-1).values,
+    ),
+]
+
+for t0, t1 in tslices:
+    print(f"Time window: {t0} to {t1}")
+    ds_hamp_passiv_segment.IWV.sel(time=slice(t0, t1)).plot()
+    window_dist_km = window_distance(ds_hamp_passiv_segment, t0, t1) / 1000
+    window_dist_deg = window_dist_km / 110
+    window_cwv_delta = (
+        ds_hamp_passiv_segment.IWV.max() - ds_hamp_passiv_segment.IWV.min()
+    )
+
+    print(f"Distance covered in first 3 minutes: {window_dist_km:.2f} km")
+    print(f"Change in CWV in first 3 minutes: {window_cwv_delta:.2f} mm")
+    print(
+        f"Gradient of IWV in first 3 minutes: {(window_cwv_delta / window_dist_deg):.2f} mm/°"
+    )
+
 # %%

@@ -18,6 +18,7 @@ from pathlib import Path
 
 importlib.reload(percusion)
 from percusion.utils import base_map, kinds2color
+from percusion.datasets import open_dataset
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
@@ -36,27 +37,18 @@ segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
-all_tracks = xr.open_dataset(
-    "ipfs://bafybeias3h5uxtt4ky4d4gn6l6gxjqfkzbde5jlunya6g3umnkvn7xoyoe", engine="zarr"
-)
-flight_date = flight_id[5:9] + "-" + flight_id[9:11] + "-" + flight_id[11:13]
-
-tracks = all_tracks.sel(time=flight_date)
+tracks = open_dataset("bahamas").sel(time=slice(flight_start, flight_end))
 
 # %%
 # HAMP dataset
-ds_hamp = xr.open_dataset(
-    "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
+ds_hamp_radar_flight = open_dataset("hamp_radar").sel(
+    time=slice(flight_start, flight_end)
 )
-ds_hamp_flight = ds_hamp.sel(time=slice(flight_start, flight_end))
 
 # %%
 # WALES dataset
-store = (
-    "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
-)
-ds_wales_wv = xr.open_dataset(store, engine="zarr")
-ds_wales_wv = ds_wales_wv.sel(time=slice(flight_start, flight_end))
+
+ds_wales_wv = open_dataset("wales_wv").sel(time=slice(flight_start, flight_end))
 ds_wales_wv = ds_wales_wv.where(ds_wales_wv.wv_flags == 0)
 
 k_B = 1.380649e-23  # J/K
@@ -74,15 +66,15 @@ ds_wales_wv["RH"] = 100 * e / es
 
 # %%
 # LAM dataset
-url = "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk"
-lam_ds = xr.open_dataset(url, chunks={}, engine="zarr", zarr_format=3)
+lam_time = f"{flight_date} 15:20"
+
+ds_lam_sel = open_dataset("lam")["rsut"].sel(time=lam_time, method="nearest")
+ds_lam_sel = ds_lam_sel.compute()
+print(ds_lam_sel.time.values, lam_time)
 
 # %%
 # Dropsonde data
-sondes_ds = xr.open_dataset(
-    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
-)
-sondes_ds = sondes_ds.swap_dims({"circle": "circle_id"})
+sondes_ds = open_dataset("dropsondes").swap_dims({"circle": "circle_id"})
 sondes_ds = sondes_ds.assign_coords(altitude=sondes_ds.altitude / 1e3)
 sondes_flight_day = sondes_ds.sel(launch_time=flight_date)
 circles_flight_day = sondes_ds.sel(circle_time=flight_date)
@@ -96,10 +88,6 @@ meteor_overpass_events = [
     e for e in flight["events"] if "meteor_overpass" in e["kinds"]
 ]
 
-lam_time = f"{flight_date} 15:20"  # ec_underpass_events[0]["time"]
-ds_lam_sel = lam_ds["rsut"].sel(time=lam_time, method="nearest").compute()
-
-print(ds_lam_sel.time.values, lam_time)
 
 # %%
 
@@ -199,7 +187,7 @@ im_wales = ds_wales_sel_segment["RH"].plot(
     add_colorbar=False,
 )
 
-ds_hamp_sel_segment = ds_hamp_flight.sel(
+ds_hamp_sel_segment = ds_hamp_radar_flight.sel(
     time=slice(time_plot_hamp_start, time_plot_hamp_end)
 )
 

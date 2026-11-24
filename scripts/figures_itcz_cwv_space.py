@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import percusion
 from percusion import utils
-from doldrumsVerticalMotion import circleUtils
+from percusion.datasets import open_dataset
 import matplotlib.colors as colors
 from matplotlib.colors import ListedColormap
 from matplotlib.ticker import FuncFormatter
@@ -58,29 +58,25 @@ def calc_streamfunction(ds_ds, smooth_sigma=None):
 # %%
 # HAMP (passive)
 
-ds_hamp = xr.open_dataset(
-    "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y", engine="zarr"
+hamp_radiometer_orcestra = open_dataset("hamp_radiometer").sel(
+    time=slice(utils.campaign_start, utils.campaign_end)
 )
-hamp_orcestra = ds_hamp.sel(time=slice(utils.campaign_start, utils.campaign_end))
 
-iwv_hamp_orcestra = hamp_orcestra["IWV"]
-cwv_xmin, cwv_xmax = float(iwv_hamp_orcestra.quantile(0.05).values), float(
+iwv_hamp_orcestra = hamp_radiometer_orcestra["IWV"]
+iwv_xmin, iwv_xmax = float(iwv_hamp_orcestra.quantile(0.05).values), float(
     iwv_hamp_orcestra.quantile(0.95).values
 )
 
-cwv_xmin, cwv_xmax = np.round([cwv_xmin, cwv_xmax], 0)
+iwv_xmin, iwv_xmax = np.round([iwv_xmin, iwv_xmax], 0)
 
 # %%
 
-bins = np.arange(cwv_xmin, cwv_xmax + 1, 1.0)
+bins = np.arange(iwv_xmin, iwv_xmax + 1, 1.0)
 bin_centers = (bins[:-1] + bins[1:]) / 2
 
 # %%
 # Dropsondes
-ds_ds = xr.open_dataset(
-    "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi", engine="zarr"
-)
-ds_ds = ds_ds.swap_dims({"circle": "circle_id"})
+ds_ds = open_dataset("dropsondes").swap_dims({"circle": "circle_id"})
 
 # Calculate streamfunction
 
@@ -103,16 +99,12 @@ mse_binned = ds_iwv_space["mse"].groupby_bins(ds_iwv_space["iwv"], bins=bins).me
 
 # %%
 # HAMP (active)
-ds_hamp_active = xr.open_dataset(
-    "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a", engine="zarr"
-)
-
-ds_hamp_active = ds_hamp_active.sel(
+ds_hamp_radar = open_dataset("hamp_radar").sel(
     time=slice(utils.campaign_start, utils.campaign_end)
 )
 
 # %%
-cloud_mask = xr.where(ds_hamp_active["radar_reflectivity"] > 1e-5, 1, 0)
+cloud_mask = xr.where(ds_hamp_radar["radar_reflectivity"] > 1e-5, 1, 0)
 
 
 # %%
@@ -120,8 +112,9 @@ cloud_mask = xr.where(ds_hamp_active["radar_reflectivity"] > 1e-5, 1, 0)
 store = (
     "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
 )
-ds_wales_wv = xr.open_dataset(store, engine="zarr")
-ds_wales_wv = ds_wales_wv.sel(time=slice(utils.campaign_start, utils.campaign_end))
+ds_wales_wv = open_dataset("wales_wv").sel(
+    time=slice(utils.campaign_start, utils.campaign_end)
+)
 
 k_B = 1.380649e-23  # J/K
 
@@ -155,7 +148,7 @@ specmacs_stereo_heights = specmacs_stereo_heights.assign_coords(
 # %%
 # Cloud mask binned by IWV
 
-iwv_hamp_interpolated = iwv_hamp_orcestra.interp(time=ds_hamp_active.time)
+iwv_hamp_interpolated = iwv_hamp_orcestra.interp(time=ds_hamp_radar.time)
 cloud_mask_binned_iwv = (
     cloud_mask.groupby_bins(iwv_hamp_interpolated, bins=bins).mean().compute() * 100
 )
@@ -172,43 +165,49 @@ def calc_orcestra_binned(ds, iwv_ds, bins=bins, cond=None):
     return ds.groupby_bins(iwv_ds.IWV, bins=bins).mean().compute()
 
 
-hamp_orcestra_binned_iwv = calc_orcestra_binned(hamp_orcestra, hamp_orcestra, bins=bins)
+hamp_orcestra_binned_iwv = calc_orcestra_binned(
+    hamp_radiometer_orcestra, hamp_radiometer_orcestra, bins=bins
+)
 
 lat_threshold = 12
 hamp_orcestra_high_lat_binned_iwv = calc_orcestra_binned(
-    hamp_orcestra, hamp_orcestra, bins=bins, cond=hamp_orcestra.lat > lat_threshold
+    hamp_radiometer_orcestra,
+    hamp_radiometer_orcestra,
+    bins=bins,
+    cond=hamp_radiometer_orcestra.lat > lat_threshold,
 )
 
 east_period = np.datetime64("2024-08-11"), np.datetime64("2024-09-05")
 hamp_orcestra_north_east_binned_iwv = calc_orcestra_binned(
-    hamp_orcestra,
-    hamp_orcestra,
+    hamp_radiometer_orcestra,
+    hamp_radiometer_orcestra,
     bins=bins,
-    cond=(hamp_orcestra.lat > lat_threshold)
-    & (hamp_orcestra.time >= east_period[0])
-    & (hamp_orcestra.time <= east_period[1]),
+    cond=(hamp_radiometer_orcestra.lat > lat_threshold)
+    & (hamp_radiometer_orcestra.time >= east_period[0])
+    & (hamp_radiometer_orcestra.time <= east_period[1]),
 )
 
 west_period = np.datetime64("2024-09-07"), np.datetime64("2024-09-28")
 hamp_orcestra_north_west_binned_iwv = calc_orcestra_binned(
-    hamp_orcestra,
-    hamp_orcestra,
+    hamp_radiometer_orcestra,
+    hamp_radiometer_orcestra,
     bins=bins,
-    cond=(hamp_orcestra.lat > lat_threshold)
-    & (hamp_orcestra.time >= west_period[0])
-    & (hamp_orcestra.time <= west_period[1]),
+    cond=(hamp_radiometer_orcestra.lat > lat_threshold)
+    & (hamp_radiometer_orcestra.time >= west_period[0])
+    & (hamp_radiometer_orcestra.time <= west_period[1]),
 )
 
 
 # %%
 # Upwelling longwave radiation binned by IWV
-ds_bacardi = xr.open_dataset(
-    "ipfs://bafybeic7yakug2r2dbxsk6b5oi7ajvztlxu3agk3dsaho6rc5weaod6qdy", engine="zarr"
+ds_bacardi = open_dataset("bacardi").sel(
+    time=slice(utils.campaign_start, utils.campaign_end)
 )
 
 ful_bacardi = ds_bacardi["F_up_terrestrial"]
-hamp_bacardi_interpolated = hamp_orcestra[["IWV", "lat"]].interp(time=ful_bacardi.time)
-
+hamp_bacardi_interpolated = hamp_radiometer_orcestra[["IWV", "lat"]].interp(
+    time=ful_bacardi.time
+)
 
 ful_binned_iwv = calc_orcestra_binned(ful_bacardi, hamp_bacardi_interpolated, bins=bins)
 ful_bacardi_high_lat_binned_iwv = calc_orcestra_binned(
