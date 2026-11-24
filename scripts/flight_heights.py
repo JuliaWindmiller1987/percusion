@@ -12,8 +12,13 @@ m_to_feet = 3.28084
 
 # %%
 
-ds_orcestra = open_dataset("bahamas").sel(TIME=slice(campaign_start, campaign_end))
-ds_orcestra["flight_level"] = ds_orcestra.HP * m_to_feet * 1e-2
+ds_orcestra = (
+    utils.get_halo_position()
+    .sel(time=slice(campaign_start, campaign_end))
+    .dropna(dim="time", subset=["pressure_altitude_m"])
+)
+
+ds_orcestra["flight_level"] = ds_orcestra.pressure_altitude_m * m_to_feet * 1e-2
 
 # %%
 
@@ -38,7 +43,9 @@ plt.xlabel("Flight level / ft")
 plt.legend()
 
 plt.figure(figsize=(6, 4))
-ds_orcestra["HP"].plot.hist(bins=np.arange(10e3, 15e3, 100), density=True)
+ds_orcestra["pressure_altitude_m"].plot.hist(
+    bins=np.arange(10e3, 15e3, 100), density=True
+)
 
 for name, level in flight_levels.items():
     level_m = level / (m_to_feet * 1e-2)
@@ -72,7 +79,7 @@ for name, level in flight_levels.items():
     )
 
     mean_hp = (
-        ds_orcestra["HP"]
+        ds_orcestra["pressure_altitude_m"]
         .where(
             cond,
             drop=True,

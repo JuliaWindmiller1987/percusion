@@ -18,7 +18,7 @@ import percusion
 from pathlib import Path
 
 importlib.reload(percusion)
-from percusion.utils import base_map, kinds2color
+from percusion.utils import base_map, get_halo_position
 from percusion.datasets import open_dataset
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -38,7 +38,7 @@ segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
-tracks = open_dataset("bahamas").sel(time=flight_date)
+tracks = get_halo_position().sel(time=flight_date)
 
 # %%
 # Dropsonde data

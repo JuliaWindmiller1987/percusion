@@ -3,9 +3,8 @@
 """Generate image with flight track superimposed on GOES visible image"""
 
 from orcestra import get_flight_segments
-from orcestra.flightplan import LatLon, path_preview, path_as_ds, plot_path
+from orcestra.flightplan import LatLon
 from orcestra.weathermaps import goes_overlay
-import xarray as xr
 import numpy as np
 from scipy.stats import binned_statistic_2d
 import h5py
@@ -13,7 +12,6 @@ import h5py
 import matplotlib.pyplot as plt
 import seaborn as sns
 from glob import glob
-import cartopy.crs as ccrs
 
 from percusion.utils import (
     base_map,
@@ -23,10 +21,10 @@ from percusion.utils import (
     lat_max,
     halo_plot_dic,
     event_kinds_dic,
+    get_halo_position,
 )
 
 import percusion
-from percusion.datasets import open_dataset
 from pathlib import Path
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -35,7 +33,7 @@ PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 sns.set_context("paper")
 
 # %%
-all_tracks = open_dataset("bahamas")
+all_tracks = get_halo_position()
 
 # %%
 

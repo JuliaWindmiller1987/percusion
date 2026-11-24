@@ -17,7 +17,7 @@ import percusion
 from pathlib import Path
 
 importlib.reload(percusion)
-from percusion.utils import base_map, kinds2color
+from percusion.utils import base_map, kinds2color, get_halo_position
 from percusion.datasets import open_dataset
 
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
@@ -37,7 +37,7 @@ segment_end = np.datetime64(segment_for_plot["end"])
 
 # %%
 # BAHAMAS dataset
-tracks = open_dataset("bahamas").sel(time=slice(flight_start, flight_end))
+tracks = get_halo_position().sel(time=slice(flight_start, flight_end))
 
 # %%
 # HAMP dataset
