@@ -127,22 +127,42 @@ def specified_events(flight_info, specified_kinds):
     return list_of_spec_kinds  # count_events(abbreviate_kinds(list_of_spec_kinds))
 
 
-def get_takeoff_landing_location(flight_info, ds):
-    dict_of_locations = {"takeoff": None, "landing": None}
-    for s in dict_of_locations.keys():
-        rel_time = flight_info.get(s)
+def get_takeoff_landing_location(
+    flight_info, ds, flight_id=None, window=pd.Timedelta(hours=1)
+):
+    """Return the take-off and landing airport (SAL or BB) for one flight.
+
+    Uses the mean HALO longitude in the first/last hour of the flight. If BAHAMAS
+    has no valid data in that window, falls back to the first/last valid data point
+    of the flight.
+    """
+    takeoff, landing = flight_info["takeoff"], flight_info["landing"]
+    flight_lon = ds.lon.sel(time=slice(takeoff, landing)).dropna("time")
+    error_msg = None
+    dict_of_locations = {}
+    for s in ["takeoff", "landing"]:
         time_slice = (
-            slice(rel_time - pd.Timedelta(hours=1), rel_time)
-            if s == "landing"
-            else slice(rel_time, rel_time + pd.Timedelta(hours=1))
+            slice(takeoff, takeoff + window)
+            if s == "takeoff"
+            else slice(landing - window, landing)
         )
-        position = ds.sel(time=time_slice)
+        lon = ds.lon.sel(time=time_slice).dropna("time")
 
-        lon = int(position.lon.mean("time").values)
-        loc = "SAL" if lon > -30 else "BB"
-        dict_of_locations[s] = loc
+        if lon.size == 0:
+            if flight_lon.size == 0:
+                print(f"{flight_id}: no valid BAHAMAS data for the whole flight.")
+                dict_of_locations[s] = None
+                continue
 
-    return dict_of_locations
+            phase, which = ("beginning", "first") if s == "takeoff" else ("end", "last")
+            lon = flight_lon.isel(time=[0 if s == "takeoff" else -1])
+            t_fallback = pd.Timestamp(lon.time.values[0])
+            error_msg = f"Problem with BAHAMAS at the {phase} of the flight ({which} available data point at {t_fallback:%H:%M} UTC)."
+
+        mean_lon = float(lon.mean())
+        dict_of_locations[s] = "SAL" if mean_lon > -30 else "BB"
+
+    return dict_of_locations, error_msg
 
 
 def count_all_occurrences(flights, specified_kinds):
@@ -183,6 +203,8 @@ duration_list = []
 
 for flight_id, flight_info in flights.items():
 
+    print(flight_id)
+
     date_obj = pd.to_datetime(flight_info.get("date"))
 
     month = date_obj.month
@@ -197,7 +219,10 @@ for flight_id, flight_info in flights.items():
 
     duration_list.append(duration_min)
 
-    start_and_end_locations = get_takeoff_landing_location(flight_info, ds)
+    start_and_end_locations, error_msg = get_takeoff_landing_location(flight_info, ds)
+
+    if error_msg not in [None, ""]:
+        print(f"Warning for flight {flight_id}: {error_msg}")
 
     n_circles = len(specified_events(flight_info, ["circle"]))
     n_ds_circles = len(specified_events(flight_info, ["omega_c"]))
