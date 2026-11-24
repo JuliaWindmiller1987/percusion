@@ -5,8 +5,7 @@ import xarray as xr
 # Fixed IPFS CIDs (not ipns://latest) so the figures stay reproducible
 DATASETS = {
     # HALO
-    "bahamas": "ipfs://bafybeias3h5uxtt4ky4d4gn6l6gxjqfkzbde5jlunya6g3umnkvn7xoyoe",
-    "bahamas2": "ipfs://bafybeif52irmuurpb27cujwpqhtbg5w6maw4d7zppg2lqgpew25gs5eczm",  # used in flight_heights.py; rename as fits
+    "bahamas": "ipfs://bafybeif52irmuurpb27cujwpqhtbg5w6maw4d7zppg2lqgpew25gs5eczm",  # used in flight_heights.py; rename as fits
     "dropsondes": "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi",  # BEACH level 4
     "hamp_radar": "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a",
     "hamp_radiometer": "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y",

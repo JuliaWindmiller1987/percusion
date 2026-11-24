@@ -111,13 +111,19 @@ def list_of_kinds(list_of_dicts):
 
 def get_halo_position(freq="1s"):
     """Return the HALO position at a given time frequency."""
-    return (
-        open_dataset("bahamas")
-        .reset_coords(("lat", "lon"))[["lat", "lon"]]
-        .resample(time=freq)
-        .mean()
-        .load()
-    )
+
+    dic_rename = {
+        "IRS_LON": "lon",
+        "IRS_LAT": "lat",
+        "TIME": "time",
+        "HP": "pressure_altitude_m",
+    }
+
+    ds_bahamas = open_dataset("bahamas")
+    ds_bahamas = ds_bahamas[list(dic_rename)]
+    ds_bahamas = ds_bahamas.rename(dic_rename)
+
+    return ds_bahamas.resample(time=freq).mean().load()
 
 
 def kinds2color(kinds):
