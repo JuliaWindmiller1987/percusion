@@ -8,8 +8,7 @@ overviewPaper.synctex.gz
 overviewPaper.tdo
 overviewPaper.bbl
 overviewPaper.blg
-data/*.he5
-data/*.ph
+data/*
 .DS_Store
 src/percusion.egg-info
 src/percusion/__pycache__
