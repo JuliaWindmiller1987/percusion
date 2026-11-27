@@ -232,7 +232,7 @@ In particular:
 \begin{itemize}
 \item flights were scheduled on days when flight operations could be conducted in a region and manner that would allow for an EarthCARE overpass,
 \item flights took place during daytime, because several of the passive remote sensing instruments require sunlight; nighttime overpasses of EarthCARE were therefore not targeted,
-\item HALO took the most direct route to the EarthCARE ground track after takeoff and remained on it, often for the majority of the flight, always for at least twenty minutes before and after the satellite underpass,
+\item HALO took the most direct route to the EarthCARE ground track after takeoff and often remained on it for the majority of the flight, with a planned minimum of ten minutes on the track before and after the satellite overpass,
 \item when the dominant CWV gradient was oriented north--south: dropsonde circles with a radius of about 130\,\unit{km} were placed at the southern and northern edges and in the centre of the ITCZ,
 \item when the dominant CWV gradient was oriented east--west (occasionally in the western basin): dropsonde circles of the same size were arranged along this gradient,
 \item the order in which the circles were flown was not fixed but depended on the timing of the EarthCARE underpass and the length of the flight,
@@ -245,7 +245,6 @@ In particular:
 \begin{figure}
 \centering
 \includegraphics[width=1\linewidth]{figures/HALO-20240903a_flight_track.pdf}
-% TODO (figure): larger, more contrasting crosses; METEOR colour clearly different from EarthCARE green; same scheme as in Fig. flight_overview.
 \caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background (15:20 UTC) and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR). The two crosses show the locations of the EarthCARE underpass (purple) and the RV METEOR overpass (red).}
 \label{fig:generic_flight_east}
 \end{figure}
@@ -271,7 +270,6 @@ More generally, defining the ITCZ in terms of CWV provides a natural connection 
 \label{sec:instrumentation}
 
 HALO operated in an updated version of the “flying cloud observatory” configuration described by \cite{stevensHighAltitudeLongRangeAircraft2019}. This configuration combines active and passive remote-sensing instruments with in situ measurements from dropsondes, providing a comprehensive view of the atmospheric state, including its thermodynamic and dynamical structure as well as the microphysical properties of aerosol particles, clouds, and precipitation. The complete configuration used during PERCUSION is shown in Fig.~\ref{fig:instrumentation}.
-% TODO: add HALO endurance sentence
 A key component of the remote-sensing suite is the HALO Microwave Package (HAMP), which combines a suite of passive microwave radiometers with a cloud radar \citep{mechHAMPMicrowavePackage2014, ewaldCalibration35GHz2019}. The passive radiometers consist of three downward-looking modules with 26 frequencies in different bands between 22.24 and 183.31\,\unit{GHz} $\pm$ 12.5\,\unit{GHz} that sample water vapour and oxygen absorption bands, as well as window channels. These measurements provide information on the different thermodynamic phases of water and their vertically integrated amounts, such as column water vapour, liquid water path and ice water path. The nadir-pointing microwave cloud and precipitation radar operates at 35.5\,\unit{GHz} (Ka band) and is suitable for penetrating columns with heavy precipitation. It measures radar reflectivity, reflectivity-weighted Doppler velocity, and the linear-depolarisation ratio to determine target shape.
 
 The lidar system WALES (WAter vapour Lidar Experiment in Space) was developed as an airborne demonstrator for a mission proposal within the European Space Agency's (ESA) Earth Explorer programme. WALES operates at four wavelengths near 935\,\unit{nm} to deliver profiles of the water vapour mixing ratio below the aircraft at a vertical resolution of [X]\,\unit{m} and a horizontal resolution of [Y]\,\unit{km}, using the DIfferential Absorption Lidar (DIAL) technique \citep{wirthAirborneMultiwavelengthWater2009}. Additionally, it has backscatter lidar channels at 532\,\unit{nm} and 1064\,\unit{nm}; at 532\,\unit{nm}, aerosol depolarisation and extinction can be retrieved using the High Spectral Resolution Lidar (HSRL) method. At 1064\,\unit{nm}, only attenuated backscatter measurements are possible. % TODO: WALES resolutions
@@ -339,8 +337,11 @@ While a brief overview of these research flights is provided below, more detaile
 Of the 23 research flights, 21 included an EarthCARE underpass. The two exceptions were the flights on 21 August 2024 (\href{https://orcestra-campaign.org/reports/HALO-20240821a.html}{HALO-20240821a}) and 6 September 2024 (\href{https://orcestra-campaign.org/reports/HALO-20240906a.html}{HALO-20240906a}).
 On 21 August 2024, repairs delayed take-off, which made the planned coordination with EarthCARE impossible.
 The flight on 6 September 2024 was originally planned for 5 September but had to be postponed by one day because of a technical issue shortly before take-off. This left insufficient time to adapt the flight plan, in coordination with air traffic control, to the location of the EarthCARE overpass on 6 September 2024.
-Details of the coordination with EarthCARE and the results of the calibration and validation can be found in \citet{grossPersistentEarthCAREUnderflight2026}.
-% TODO: add when we were on the ground track for less than plus minus 20 minutes
+Based on the flight segmentation, HALO flew along the EarthCARE ground track for at least 10\,min both before and after the overpass for 13 of the 21 overpasses, and for at least 10\,min on at least one side of the overpass for 20 of them.
+Shorter times on the track were caused, for example, by airspace restrictions, small shifts in the timing of the flight relative to the overpass, and weather conditions.
+% TODO: at the moment calculated from the flight segmentations and the results are not completely consistent with table 5 in grossPersistentEarthCAREUnderflight2026. Need to check and update.
+More details on the coordination with EarthCARE and the results of the calibration and validation can be found in \citet{grossPersistentEarthCAREUnderflight2026}.
+
 In addition to coordination with EarthCARE, a defining feature of the HALO operations was the extensive coordination with other platforms. These included 16 overpasses of RV METEOR, 14 coordinated measurement events with the SAFIRE ATR-42, four overpasses of the Cape Verde Atmospheric Observatory (CVAO), two overpasses of the Barbados Cloud Observatory (BCO), and two underpasses of the PACE satellite.
 
 Across all flights, 93 circles were flown, including 10 coordinated with the SAFIRE ATR-42 and 10 with the RV METEOR. Of these, 90 were targeted dropsonde circles designed to calculate area-averaged properties of the three-dimensional wind field.

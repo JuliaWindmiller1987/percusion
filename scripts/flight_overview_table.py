@@ -18,76 +18,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(percusion.__file__).resolve().parents[2]
 
 # %%
-dropsonde = open_dataset("dropsondes")
-
-# %%
-
-flights = get_flight_segments()["HALO"]
-flights.pop("HALO-20240809b", None)
-flights.pop("HALO-20240929a", None)
-flight_ids = list(flights.keys())
-
-flights_ds_circles = copy.deepcopy(flights)
-
-for flight in flights.keys():
-
-    for i_seg, seg in enumerate(flights[flight]["segments"]):
-        if "circle" in seg["kinds"]:
-            if seg["segment_id"] in dropsonde.circle_id.values:
-
-                num_nan_wvel = np.sum(
-                    np.isnan(
-                        dropsonde.where(
-                            dropsonde.circle_id == seg["segment_id"], drop=True
-                        ).wvel.values[0]
-                    )
-                )
-
-                if num_nan_wvel / dropsonde.altitude.size == 1.0:
-                    print(
-                        f"Flight {flight} has circle segment {seg['segment_id']} with no vertical motion data in dropsonde dataset."
-                    )
-
-                else:
-                    flights_ds_circles[flight]["segments"][i_seg]["kinds"] = seg[
-                        "kinds"
-                    ] + ["omega_c"]
-            else:
-                print(
-                    f"Flight {flight} has circle segment {seg['segment_id']} not in dropsonde dataset."
-                )
-                print(f"Segment name: {seg['name']}, Remarks: {seg['remarks']}")
-
-flights = flights_ds_circles
-# %%
-
-events = [
-    {**e, "flight_id": flight_id}
-    for flight_id, flight in flights.items()
-    for e in flight["events"]
-]
-
-coordination_kinds = ["atr_coordination"] + list_of_kinds(events)
-
-# %%
-
-ds = get_halo_position()
-
-campaign_start = flights[flight_ids[0]]["takeoff"]
-campaign_end = flights[flight_ids[-1]]["landing"]
-ds = ds.sel(time=slice(campaign_start, campaign_end))
-# %%
-
-
-def return_as_list(x):
-    kinds_list = []
-    for item in x:
-        kinds_list += (
-            item["kinds"] if isinstance(item["kinds"], (list)) else [item["kinds"]]
-        )
-    return kinds_list
-
-
 abbreviations = {
     "bco_overpass": "BCO",
     "cvao_overpass": "CVAO",
@@ -99,18 +29,31 @@ abbreviations = {
 }
 
 
+def return_as_list(x):
+    kinds_list = []
+    for item in x:
+        kinds_list += (
+            item["kinds"] if isinstance(item["kinds"], (list)) else [item["kinds"]]
+        )
+    return kinds_list
+
+
 def abbreviate_kinds(kinds):
     return [abbreviations[k] if k in abbreviations else k for k in kinds]
 
 
-def count_events(x):
+def count_events(x, num_long_enough_on_track=0):
     list_counted = []
     for item in set(x):
         count = x.count(item)
         if count > 1:
             item_counted = f"{item} ({count})" if item != " " else f"{count}"
         else:
-            item_counted = item
+            if item == "EC":
+                item_counted = f"{item}$^{{{num_long_enough_on_track}}}$"
+            else:
+                item_counted = item
+
         list_counted.append(item_counted)
     return sorted(list_counted)
 
@@ -124,7 +67,7 @@ def specified_events(flight_info, specified_kinds):
     for s in return_as_list(flight_info["segments"]):
         if s in specified_kinds:
             list_of_spec_kinds.append(s)
-    return list_of_spec_kinds  # count_events(abbreviate_kinds(list_of_spec_kinds))
+    return list_of_spec_kinds
 
 
 def get_takeoff_landing_location(
@@ -175,6 +118,72 @@ def count_all_occurrences(flights, specified_kinds):
 
 # %%
 
+flights = get_flight_segments()["HALO"]
+halo_position = get_halo_position()
+dropsondes = open_dataset("dropsondes")
+
+# %%
+
+flights.pop("HALO-20240809b", None)
+flights.pop("HALO-20240929a", None)
+flight_ids = list(flights.keys())
+
+flights_ds_circles = copy.deepcopy(flights)
+
+for flight in flights.keys():
+
+    for i_seg, seg in enumerate(flights[flight]["segments"]):
+        if "circle" in seg["kinds"]:
+            if seg["segment_id"] in dropsondes.circle_id.values:
+
+                num_nan_wvel = np.sum(
+                    np.isnan(
+                        dropsondes.where(
+                            dropsondes.circle_id == seg["segment_id"], drop=True
+                        ).wvel.values[0]
+                    )
+                )
+
+                if num_nan_wvel / dropsondes.altitude.size == 1.0:
+                    print(
+                        f"Flight {flight} has circle segment {seg['segment_id']} with no vertical motion data in dropsonde dataset."
+                    )
+
+                else:
+                    flights_ds_circles[flight]["segments"][i_seg]["kinds"] = seg[
+                        "kinds"
+                    ] + ["omega_c"]
+            else:
+                print(
+                    f"Flight {flight} has circle segment {seg['segment_id']} not in dropsonde dataset."
+                )
+                print(f"Segment name: {seg['name']}, Remarks: {seg['remarks']}")
+
+flights = flights_ds_circles
+# %%
+
+events = [
+    {**e, "flight_id": flight_id}
+    for flight_id, flight in flights.items()
+    for e in flight["events"]
+]
+
+segments = [
+    {**s, "flight_id": flight_id}
+    for flight_id, flight in flights.items()
+    for s in flight["segments"]
+]
+
+coordination_kinds = ["atr_coordination"] + list_of_kinds(events)
+
+# %%
+
+campaign_start = flights[flight_ids[0]]["takeoff"]
+campaign_end = flights[flight_ids[-1]]["landing"]
+halo_position = halo_position.sel(time=slice(campaign_start, campaign_end))
+
+# %%
+
 print_occurrences = [
     "circle",
     "omega_c",
@@ -190,6 +199,49 @@ for kind in print_occurrences:
     print(f"{kind}: {count_all_occurrences(flights, [kind])}")
 
 
+# %% EarthCARE underpasses with flight segments
+
+ec_underpasses = [
+    (e["flight_id"], e["time"]) for e in events if "ec_underpass" in e["kinds"]
+]
+ec_segments = [
+    (s["flight_id"], s["start"], s["end"]) for s in segments if "ec_track" in s["kinds"]
+]
+
+underpass_with_segment = [
+    (
+        flight_id,
+        t,
+        next(
+            ((s, e) for fid, s, e in ec_segments if fid == flight_id and s <= t <= e),
+            None,
+        ),
+    )
+    for flight_id, t in ec_underpasses
+]
+
+on_earthcare_plan_min = np.timedelta64(10, "m")
+dic_flight_long_enough_on_track = {
+    flight_id: (t - s >= on_earthcare_plan_min, e - t >= on_earthcare_plan_min)
+    for flight_id, t, (s, e) in underpass_with_segment
+}
+
+num_long_enough_on_both_sides = sum(
+    all(dic_flight_long_enough_on_track[flight_id])
+    for flight_id, t, (s, e) in underpass_with_segment
+)
+
+num_long_enough_on_one_side = sum(
+    any(dic_flight_long_enough_on_track[flight_id])
+    for flight_id, t, (s, e) in underpass_with_segment
+)
+
+print(
+    f"Number of EarthCARE underpasses with flight segments at least {on_earthcare_plan_min} on both sides: {num_long_enough_on_both_sides}"
+)
+print(
+    f"Number of EarthCARE underpasses with flight segments at least {on_earthcare_plan_min} on one side: {num_long_enough_on_one_side}"
+)
 # %%
 # Extract flight dates from metadata
 flight_data = []
@@ -219,13 +271,20 @@ for flight_id, flight_info in flights.items():
 
     duration_list.append(duration_min)
 
-    start_and_end_locations, error_msg = get_takeoff_landing_location(flight_info, ds)
+    start_and_end_locations, error_msg = get_takeoff_landing_location(
+        flight_info, halo_position
+    )
 
     if error_msg not in [None, ""]:
         print(f"Warning for flight {flight_id}: {error_msg}")
 
     n_circles = len(specified_events(flight_info, ["circle"]))
     n_ds_circles = len(specified_events(flight_info, ["omega_c"]))
+
+    if flight_id in dic_flight_long_enough_on_track.keys():
+        num_long_enough_on_track = sum(dic_flight_long_enough_on_track[flight_id])
+    else:
+        num_long_enough_on_track = 0
 
     flight_data.append(
         {
@@ -240,15 +299,14 @@ for flight_id, flight_info in flights.items():
             "Duration": f"{duration_min // 60}:{duration_min % 60:02d}",
             "Coordination": ", ".join(
                 count_events(
-                    abbreviate_kinds(specified_events(flight_info, coordination_kinds))
+                    abbreviate_kinds(specified_events(flight_info, coordination_kinds)),
+                    num_long_enough_on_track,
                 )
             ),
             "Circles": f"{n_circles} ({n_ds_circles})",
-            # "Segments": ", ".join(s["name"] for s in flight_info["segments"]),
         }
     )
 
-    # print(", ".join(specified_events(flight_info, coordination_kinds)), flight_id)
 
 print(
     f"Median flight duration: {np.median(duration_list) // 60:.0f}:{int(np.median(duration_list) % 60):02d}"
@@ -265,6 +323,9 @@ caption = (
     "(SAL: Sal, Cabo Verde; BB: Barbados), and durations are in hours and minutes (h:min). "
     "The \\textit{Coordination} column lists the platforms coordinated with during each flight. "
     "Numbers in brackets indicate repeated coordination events with the same platform. "
+    "For EarthCARE (EC), the superscript indicates how long HALO flew along the EarthCARE track "
+    "around the overpass: 2 if it did so for at least ten minutes both before and after the "
+    "overpass, 1 if only on one side, and 0 otherwise. "
     "The \\textit{Circles} column shows how many circles were flown during the flight. "
     "The number of circles for which vertical motion was calculated is given in brackets."
 )
