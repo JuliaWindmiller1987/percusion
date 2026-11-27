@@ -98,3 +98,22 @@ print(
     f"Total points in specified flight levels: {all_spec_fl_points} ({all_spec_fl_points/num_points*100:.1f} % of total points)"
 )
 # %%
+
+cutoff_height_km = 10
+
+cond = ds_orcestra["pressure_altitude_m"] > cutoff_height_km * 1e3
+num_high_points = (
+    ds_orcestra["pressure_altitude_m"]
+    .where(
+        cond,
+        drop=True,
+    )
+    .size
+)
+num_points = ds_orcestra["pressure_altitude_m"].size
+print(
+    f"Points above {cutoff_height_km} km: {num_high_points} ({num_high_points*100/num_points:.1f} % of total points)"
+)
+print(f"Median height: {ds_orcestra['pressure_altitude_m'].median().values:.1f} m")
+
+# %%
