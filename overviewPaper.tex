@@ -246,7 +246,7 @@ In particular:
 \centering
 \includegraphics[width=1\linewidth]{figures/HALO-20240903a_flight_track.pdf}
 % TODO (figure): larger, more contrasting crosses; METEOR colour clearly different from EarthCARE green; same scheme as in Fig. flight_overview.
-\caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background (15:20 UTC) and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR). The two crosses show the locations of the EarthCARE underpass (green) and the RV METEOR overpass (grey).}
+\caption{Example flight (flight ID HALO-20240903a) illustrating the generic flight strategy. The flight track is shown in orange, together with a GOES satellite image in the background (15:20 UTC) and column water vapour measurements from the Advanced Microwave Scanning Radiometer (AMSR). The two crosses show the locations of the EarthCARE underpass (purple) and the RV METEOR overpass (red).}
 \label{fig:generic_flight_east}
 \end{figure}
 
@@ -306,12 +306,10 @@ As part of PERCUSION, a decentralised data distribution strategy was introduced 
 
 We first used the peer-to-peer capability of IPFS for on-site data sharing during the field campaign.
 To increase retrievability and ensure long-term availability, we continue to use IPFS with multiple independent, well-connected server locations (currently the German Climate Computing Center (DKRZ), the Gesellschaft für wissenschaftliche Datenverarbeitung mbH Göttingen (GWDG) and other partner institutions), so that there is no single point of failure.
-Furthermore, users can automatically cache and share retrieved datasets, providing fast access for repeated use.
+Furthermore, users can automatically cache and share retrieved datasets, providing fast access for repeated use. PERCUSION's and, more generally, ORCESTRA's use of IPFS for distributing campaign data is also featured as a case study in the IPFS documentation (\url{https://docs.ipfs.tech/case-studies/orcestra/}).
 
-To make the data findable, we built the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), which provides search and preview functionality for the datasets. The browser extracts the metadata on demand directly from the original datasets on IPFS, so that metadata do not have to be duplicated or maintained separately.
+To make the data findable, we built the ORCESTRA Data Browser (\url{https://browser.orcestra-campaign.org/}), which provides search and preview functionality for the datasets. The browser extracts the metadata on demand directly from the original datasets on IPFS, so that metadata do not have to be duplicated or maintained separately. 
 To further enhance scholarly traceability, DOIs with embedded CIDs can be provided for each dataset.
-
-% maybe link to the IPFS / ORCESTRA case study: https://docs.ipfs.tech/case-studies/orcestra/
 
 % TODO: new retrievals
 
@@ -324,8 +322,7 @@ To further enhance scholarly traceability, DOIs with embedded CIDs can be provid
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{figures/flight_overview.pdf}
-    % TODO: METEOR crosses in a colour clearly different from EarthCARE green; same scheme as in Fig. generic_flight_east.
-    \caption{Overview of all research flights conducted during ORCESTRA. Flight tracks are shown in orange, with shaded regions indicating the areas over which vertical velocity profiles were inferred. Circles flown in coordination with the SAFIRE ATR-42 are highlighted in brown. Locations of EarthCARE underpasses are marked by green crosses, while RV METEOR overpasses are indicated by grey crosses. The blue contour shows the mean location of the 48\,\unit{mm} column water vapour contour during the campaign period.}
+    \caption{Overview of all research flights conducted during ORCESTRA. Flight tracks are shown in orange, with shaded regions indicating the areas over which vertical velocity profiles were inferred. Circles flown in coordination with the SAFIRE ATR-42 are highlighted in brown. Locations of EarthCARE underpasses are marked by purple crosses, while RV METEOR overpasses are indicated by red crosses. The blue contour shows the mean location of the 48\,\unit{mm} column water vapour contour during the campaign period.}
     \label{fig:flight_overview}
 \end{figure}
 
@@ -348,7 +345,8 @@ In addition to coordination with EarthCARE, a defining feature of the HALO opera
 
 Across all flights, 93 circles were flown, including 10 coordinated with the SAFIRE ATR-42 and 10 with the RV METEOR. Of these, 90 were targeted dropsonde circles designed to calculate area-averaged properties of the three-dimensional wind field.
 The remaining three circles served other purposes. Two circles during flight
-(\href{https://orcestra-campaign.org/reports/HALO-20240818a.html}{HALO-20240818a}) encircled an individual convective system identified during the flight. This deviation from the standard flight pattern was motivated by the testing and development of new specMACS retrievals. % TODO: explain what the circles were for
+(\href{https://orcestra-campaign.org/reports/HALO-20240818a.html}{HALO-20240818a}) encircled an individual convective system identified during the flight. This deviation from the standard flight pattern was motivated by the testing and development of new specMACS retrievals. 
+% TODO: explain what the circles were for
 The third circle was flown to gain altitude during flight (\href{https://orcestra-campaign.org/reports/HALO-20240923a.html}{HALO-20240923a}).
 
 Of the 90 dropsonde circles, 87 contained sufficient dropsonde measurements to infer circle products, including vertical velocity profiles \citep{gloecknerBEACHBarbadosEastern2026}.
@@ -499,7 +497,7 @@ Together, the vertical velocity, cloud, and aerosol distributions point to an in
 \sbox{\itczedgebox}{\includegraphics[width=0.8\linewidth]{figures/figures_itcz_deep_convection.png}}
 \usebox{\itczedgebox}\\[4pt]
 \includegraphics[width=0.8\linewidth]{figures/PERCUSION_20240903_VELOX_Pushbroom_F1_1510_1520_cut.png}
-% TODO (figure, SB): replace (a) LAM outgoing SW with LAM OLR (including caption!); zero line in (b);
+% TODO: replace (a) LAM outgoing SW with LAM OLR (including caption!);
 % FYI: congestus layer in (c)
 \caption{Example of a flight with deep convection in the centre of the ITCZ (flight ID HALO-20240903a). (a) Outgoing shortwave radiation from Limited Area Model (LAM) simulations, with flight-segmentation elements shown in different colours (see legend). For the central ITCZ circle: (b) vertical velocity profile; (c) radar reflectivity from HAMP and relative humidity profiles from WALES.
 Light grey line indicates the time period showing VELOX measurements in (d). (d) Ten-minute inset of two-dimensional brightness temperature measured by VELOX in the 7.7--12.0\,\unit{\mu m} channel.}
