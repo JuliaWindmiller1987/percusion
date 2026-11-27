@@ -100,11 +100,22 @@ tcwv_grid, lon_edges, lat_edges, _ = binned_statistic_2d(
 # %%
 
 fig, ax = base_map(coastline_kwargs={"color": "k"})
+goes_overlay(sat_date_time, ax)
+cax = ax.inset_axes([1.02, 0.0, 0.015, 1])
+
+overlays = []
+
+# %%
+
+for a in reversed(overlays):
+    a.remove()
+overlays.clear()
+cax.clear()
 
 halo_plot_dic["alpha"] = 1.0
 
-(track,) = plt.plot(plan.lon, plan.lat, **halo_plot_dic)
-# plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
+(track,) = ax.plot(plan.lon, plan.lat, **halo_plot_dic)
+overlays.append(track)
 
 from collections import defaultdict
 
@@ -125,9 +136,8 @@ for key, event in events.items():
             linewidths=3,
         )
         scatter_handles[key].append(h)
+        overlays.append(h)
 
-
-goes_overlay(sat_date_time, ax)
 
 # Satellite swath
 
@@ -140,47 +150,21 @@ cf = ax.contourf(
     alpha=0.75,
     levels=np.arange(36, 68, 4),
 )
+overlays.append(cf)
 
-cbar = plt.colorbar(
+fig.colorbar(
     cf,
     label="CWV / mm",
-    ax=ax,
+    cax=cax,
     orientation="vertical",
-    pad=0.05,
-    shrink=0.5,
 )
-
-plt.savefig(
-    f"{PROJECT_ROOT}/figures/{flight_name}_flight_track.pdf", bbox_inches="tight"
-)
-# %%
-
-from matplotlib.markers import MarkerStyle
-
-
-def set_marker(h, marker):
-    m = MarkerStyle(marker)
-    h.set_paths([m.get_path().transformed(m.get_transform())])
-
-
-# later, in another cell:
-track.set_color("#ff8500")
-col_meteor_overpass = "#ff0054"
-for h in scatter_handles["meteor_overpass"]:
-    h.set_edgecolor(col_meteor_overpass)
-    h.set_facecolor(col_meteor_overpass)
-    set_marker(h, "x")
-    h.set_sizes([150])
-
-col_ec_underpass = "#9900FF"
-for h in scatter_handles["ec_underpass"]:
-    h.set_edgecolor(col_ec_underpass)
-    h.set_facecolor(col_ec_underpass)
-    set_marker(h, "x")
-    h.set_sizes([150])
 
 fig.canvas.draw_idle()
 fig
 
+# %%
 
+fig.savefig(
+    f"{PROJECT_ROOT}/figures/{flight_name}_flight_track.pdf", bbox_inches="tight"
+)
 # %%
