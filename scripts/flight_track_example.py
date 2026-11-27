@@ -103,8 +103,12 @@ fig, ax = base_map(coastline_kwargs={"color": "k"})
 
 halo_plot_dic["alpha"] = 1.0
 
-plt.plot(plan.lon, plan.lat, **halo_plot_dic)
+(track,) = plt.plot(plan.lon, plan.lat, **halo_plot_dic)
 # plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
+
+from collections import defaultdict
+
+scatter_handles = defaultdict(list)
 
 for key, event in events.items():
     for e in event:
@@ -113,20 +117,21 @@ for key, event in events.items():
             time=t, method="nearest"
         )
 
-        plt.scatter(
+        h = ax.scatter(
             lon,
             lat,
             **event_kinds_dic[key],
             zorder=3,
             linewidths=3,
         )
+        scatter_handles[key].append(h)
 
 
 goes_overlay(sat_date_time, ax)
 
 # Satellite swath
 
-plt.contourf(
+cf = ax.contourf(
     lon_grid[:-1] + np.diff(lon_grid) / 2,
     lat_grid[:-1] + np.diff(lat_grid) / 2,
     tcwv_grid.T,
@@ -136,15 +141,46 @@ plt.contourf(
     levels=np.arange(36, 68, 4),
 )
 
-plt.colorbar(
+cbar = plt.colorbar(
+    cf,
     label="CWV / mm",
     ax=ax,
-    orientation="horizontal",
-    pad=0.1,
+    orientation="vertical",
+    pad=0.05,
     shrink=0.5,
 )
 
 plt.savefig(
     f"{PROJECT_ROOT}/figures/{flight_name}_flight_track.pdf", bbox_inches="tight"
 )
+# %%
+
+from matplotlib.markers import MarkerStyle
+
+
+def set_marker(h, marker):
+    m = MarkerStyle(marker)
+    h.set_paths([m.get_path().transformed(m.get_transform())])
+
+
+# later, in another cell:
+track.set_color("#ff8500")
+col_meteor_overpass = "#ff0054"
+for h in scatter_handles["meteor_overpass"]:
+    h.set_edgecolor(col_meteor_overpass)
+    h.set_facecolor(col_meteor_overpass)
+    set_marker(h, "x")
+    h.set_sizes([150])
+
+col_ec_underpass = "#9900FF"
+for h in scatter_handles["ec_underpass"]:
+    h.set_edgecolor(col_ec_underpass)
+    h.set_facecolor(col_ec_underpass)
+    set_marker(h, "x")
+    h.set_sizes([150])
+
+fig.canvas.draw_idle()
+fig
+
+
 # %%

@@ -12,8 +12,8 @@ lat_max = 22
 campaign_start, campaign_end = "2024-08-11 11:59:00", "2024-09-28 20:02:00"
 
 halo_plot_dic = {
-    "color": "#F2935C",
-    "alpha": 0.75,
+    "color": "#ff8500",
+    "alpha": 0.9,
     "linewidth": 1.5,
     "label": "HALO track",
     "zorder": 2,
@@ -26,7 +26,7 @@ segment_kind_dic = {
         "label": r"Circle with $\omega$",
         "compound": {
             "kind": "atr_coordination",
-            "color": "#B38970",
+            "color": "#AA7339",
             "alpha": 0.5,
             "label": r"ATR circle with $\omega$",
         },
@@ -36,13 +36,13 @@ event_kinds_dic = {
     "ec_underpass": {
         "marker": "x",
         "s": 100,
-        "color": "#709D9D",
+        "color": "#9900FF",
         "label": "EC underpass",
     },
     "meteor_overpass": {
         "marker": "x",
         "s": 100,
-        "color": "#736A65",
+        "color": "#ff0054",
         "label": "METEOR overpass",
     },
 }
