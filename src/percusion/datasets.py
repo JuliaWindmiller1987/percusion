@@ -5,14 +5,14 @@ import xarray as xr
 # Fixed IPFS CIDs (not ipns://latest) so the figures stay reproducible
 DATASETS = {
     # HALO
-    "bahamas": "ipfs://bafybeif52irmuurpb27cujwpqhtbg5w6maw4d7zppg2lqgpew25gs5eczm",  # used in flight_heights.py; rename as fits
+    "bahamas": "ipfs://bafybeif52irmuurpb27cujwpqhtbg5w6maw4d7zppg2lqgpew25gs5eczm",
     "dropsondes": "ipfs://bafybeibgeeqs5uhmbqy4hz4v3pihrfisiklcetisxkf63d2r473szaprwi",  # BEACH level 4
     "hamp_radar": "ipfs://bafybeifxtmq5mpn7vwiiwl4vlpoil7rgm2tnhmkeyqsyudleqegxzvwl3a",
     "hamp_radiometer": "ipfs://bafybeihvsq73hokuex44oueqvnotaeoikwcs5yyiydtc777td2ldcm6z4y",
     "bacardi": "ipfs://bafybeic7yakug2r2dbxsk6b5oi7ajvztlxu3agk3dsaho6rc5weaod6qdy",
     # WALES
-    "wales": "/work/mh0066/m301046/data/wales/wales.zarr",
-    "wales_wv": "/work/mh0066/m301046/data/wales/waleswv.zarr",
+    "wales": "ipfs://bafybeiewqjllj2nbeop3vzwev5t2qhueyulvct2acdig4hkcvechnlkhkq",
+    "wales_wv": "ipfs://bafybeifqk5fkmli4kqjflfoqa5pptrvhsjsiv2jknxh3rxxu2ehsgsg65i",
     # Model
     "lam": "https://eerie.cloud.dkrz.de/datasets/orcestra_1250m_2d_hpz12/kerchunk",
 }

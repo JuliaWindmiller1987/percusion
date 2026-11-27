@@ -109,9 +109,7 @@ cloud_mask = xr.where(ds_hamp_radar["radar_reflectivity"] > 1e-5, 1, 0)
 
 # %%
 # WALES water vapor
-store = (
-    "https://swift.dkrz.de/v1/dkrz_41caca03ec414c2f95f52b23b775134f/wales/wales_wv.zarr"
-)
+
 ds_wales_wv = open_dataset("wales_wv").sel(
     time=slice(utils.campaign_start, utils.campaign_end)
 )
@@ -253,14 +251,14 @@ wales_wv_binned_iwv = (
 # --------------------------------------------------------------------------
 
 
-def add_cbar(mappable, cax, title, frac=0.9):
+def add_cbar(mappable, cax, title, hfrac=0.9, wfrac=0.6):
     pos = cax.get_position()
     cax.set_position(
         [
             pos.x0,
-            pos.y0 + 0.5 * (1 - frac) * pos.height,  # move up by half the reduction
-            pos.width,
-            frac * pos.height,
+            pos.y0 + 0.5 * (1 - hfrac) * pos.height,  # move up by half the reduction
+            wfrac * pos.width,
+            hfrac * pos.height,
         ]
     )
     cb = fig.colorbar(mappable, cax=cax)

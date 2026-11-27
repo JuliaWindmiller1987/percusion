@@ -100,11 +100,26 @@ tcwv_grid, lon_edges, lat_edges, _ = binned_statistic_2d(
 # %%
 
 fig, ax = base_map(coastline_kwargs={"color": "k"})
+goes_overlay(sat_date_time, ax)
+cax = ax.inset_axes([1.02, 0.0, 0.015, 1])
+
+overlays = []
+
+# %%
+
+for a in reversed(overlays):
+    a.remove()
+overlays.clear()
+cax.clear()
 
 halo_plot_dic["alpha"] = 1.0
 
-plt.plot(plan.lon, plan.lat, **halo_plot_dic)
-# plt.scatter(loc_at_sat.lon, loc_at_sat.lat, color="C1", )
+(track,) = ax.plot(plan.lon, plan.lat, **halo_plot_dic)
+overlays.append(track)
+
+from collections import defaultdict
+
+scatter_handles = defaultdict(list)
 
 for key, event in events.items():
     for e in event:
@@ -113,20 +128,20 @@ for key, event in events.items():
             time=t, method="nearest"
         )
 
-        plt.scatter(
+        h = ax.scatter(
             lon,
             lat,
             **event_kinds_dic[key],
             zorder=3,
             linewidths=3,
         )
+        scatter_handles[key].append(h)
+        overlays.append(h)
 
-
-goes_overlay(sat_date_time, ax)
 
 # Satellite swath
 
-plt.contourf(
+cf = ax.contourf(
     lon_grid[:-1] + np.diff(lon_grid) / 2,
     lat_grid[:-1] + np.diff(lat_grid) / 2,
     tcwv_grid.T,
@@ -135,16 +150,21 @@ plt.contourf(
     alpha=0.75,
     levels=np.arange(36, 68, 4),
 )
+overlays.append(cf)
 
-plt.colorbar(
+fig.colorbar(
+    cf,
     label="CWV / mm",
-    ax=ax,
-    orientation="horizontal",
-    pad=0.1,
-    shrink=0.5,
+    cax=cax,
+    orientation="vertical",
 )
 
-plt.savefig(
+fig.canvas.draw_idle()
+fig
+
+# %%
+
+fig.savefig(
     f"{PROJECT_ROOT}/figures/{flight_name}_flight_track.pdf", bbox_inches="tight"
 )
 # %%

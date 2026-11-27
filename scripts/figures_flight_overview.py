@@ -95,10 +95,10 @@ tcwv_levels = [48]
 tcwv_colors = [cmap(norm(level)) for level in tcwv_levels]
 
 tcwv_era5.mean("valid_time").tcwv.plot.contour(
-    ax=ax, linewidths=4, levels=tcwv_levels, colors=tcwv_colors, zorder=1
+    ax=ax, linewidths=4, levels=tcwv_levels, colors=tcwv_colors, zorder=1, alpha=0.75
 )
 
-plt.plot(ds.lon, ds.lat, **halo_plot_dic)
+ax.plot(ds.lon, ds.lat, **halo_plot_dic)
 
 
 number_of_skipped_circles = 0

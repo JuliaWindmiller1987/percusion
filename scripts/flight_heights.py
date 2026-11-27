@@ -97,6 +97,14 @@ for name, level in flight_levels.items():
 print(
     f"Total points in specified flight levels: {all_spec_fl_points} ({all_spec_fl_points/num_points*100:.1f} % of total points)"
 )
+
+print(
+    f"Median height of all points: {ds_orcestra['pressure_altitude_m'].median().values:.1f} m"
+)
+
+print(
+    f"Maximum height of all points: {ds_orcestra['pressure_altitude_m'].max().values:.1f} m"
+)
 # %%
 
 cutoff_height_km = 10
