@@ -92,7 +92,7 @@ cmap = plt.get_cmap("Blues")
 norm = mcolors.Normalize(vmin=36, vmax=68)
 
 tcwv_levels = [48]
-tcwv_colors = ["#00BBFF"]  # [cmap(norm(level)) for level in tcwv_levels]
+tcwv_colors = [cmap(norm(level)) for level in tcwv_levels]
 
 tcwv_era5.mean("valid_time").tcwv.plot.contour(
     ax=ax, linewidths=4, levels=tcwv_levels, colors=tcwv_colors, zorder=1, alpha=0.75
