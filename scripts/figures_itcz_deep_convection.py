@@ -6,7 +6,6 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-from matplotlib.colors import TwoSlopeNorm
 
 import easygems.healpix as egh
 import seaborn as sns
@@ -100,7 +99,7 @@ ec_start, ec_end = ec_underpass_events[0]["time"] - np.timedelta64(
 fig = plt.figure(figsize=(12, 8))
 
 gs = fig.add_gridspec(
-    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.15
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.15, wspace=0.4
 )
 
 ax_sat = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
@@ -111,22 +110,19 @@ ax_hamp = fig.add_subplot(gs[1, :])
 base_map(coastline_kwargs={"color": "w"}, ax=ax_sat)
 im = egh.healpix_show(ds_lam_sel, ax=ax_sat, alpha=1.0, cmap="Greys_r")
 
+ax_sat.apply_aspect()
 pos = ax_sat.get_position()
-width_scale = 0.8
 
-cax_lam = fig.add_axes(
-    [
-        pos.x0 + pos.width * (1 - width_scale) / 2,  # left
-        pos.y1 - 0.45,  # bottom
-        pos.width * width_scale,  # width
-        0.015,  # height
-    ]
-)
+pos_ds = ax_ds.get_position()
+ax_ds.set_position([pos_ds.x0, pos.y0, pos_ds.width, pos.height])
+
+cbar_width = 0.01
+cax_lam = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
 
 cb_lam = fig.colorbar(
     im,
     cax=cax_lam,
-    orientation="horizontal",
+    orientation="vertical",
     label=rf"outgoing shortwave radiation / {ds_lam_sel.units}",
 )
 
@@ -245,7 +241,7 @@ for event in meteor_overpass_events:
     )
     print(f"METEOR Overpass at {event['time']}")
 
-ax_hamp.set_ylim(ymin=0)
+ax_hamp.set_ylim(ymin=0, ymax=13.5)
 
 circles_flight_day.sel(circle_id=segment_for_plot["segment_id"]).wvel.plot(
     y="altitude", ax=ax_ds, label="Vertical velocity", color=kinds2color("circle")
@@ -277,7 +273,6 @@ ax_hamp.axvspan(
     0.025,
     color="k",
     alpha=0.25,
-    clip_on=False,
 )
 
 

@@ -68,8 +68,8 @@ ds_hamp_passiv_segment = ds_hamp_passiv_flight.sel(
 # %%
 # LAM dataset
 time = f"{flight_date} 16:00"
-lam_ds = open_dataset("lam").sel(time=time)
-ds_lam_sel = lam_ds["prw"].compute()
+lam_ds = open_dataset("lam")["prw"].sel(time=time)
+ds_lam_sel = lam_ds.compute()
 
 # %%
 # Vertical velocity in the lower to mid-tropsphere in the circle segment
@@ -131,7 +131,7 @@ scatter_kwargs = {
 fig = plt.figure(figsize=(12, 8))
 
 gs = fig.add_gridspec(
-    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.4
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.15, wspace=0.4
 )
 
 ax_lam = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
@@ -157,6 +157,9 @@ egh.healpix_contour(
 
 ax_lam.apply_aspect()
 pos = ax_lam.get_position()
+
+pos_ds = ax_ds.get_position()
+ax_ds.set_position([pos_ds.x0, pos.y0, pos_ds.width, pos.height])
 
 cbar_width = 0.01
 cax_lam = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])

@@ -102,7 +102,7 @@ ds_hamp_radar_flight = open_dataset("hamp_radar").sel(
 # LAM dataset
 time = f"{flight_date} 16:00"
 
-lam_ds = open_dataset("lam").sel(time=time)
+lam_ds = open_dataset("lam")[["uas", "vas"]].sel(time=time)
 lam_ds = lam_ds.assign(sfcwind=lambda dx: np.hypot(dx.uas, dx.vas))
 ds_lam_sel = lam_ds["sfcwind"].compute()
 
@@ -118,7 +118,7 @@ scatter_kwargs = {
 fig = plt.figure(figsize=(12, 8))
 
 gs = fig.add_gridspec(
-    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.37, wspace=0.15
+    2, 2, height_ratios=[1.5, 1], width_ratios=[4, 1], hspace=0.15, wspace=0.4
 )
 
 ax_lam = fig.add_subplot(gs[0, 0], projection=ccrs.PlateCarree())
@@ -133,22 +133,20 @@ norm = TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
 cmap = plt.cm.BrBG.copy()
 im = egh.healpix_show(ds_lam_sel, cmap=cmap, norm=norm, ax=ax_lam, alpha=1.0)
 
-pos = ax_lam.get_position()
-width_scale = 0.8
 
-cax_lam = fig.add_axes(
-    [
-        pos.x0 + pos.width * (1 - width_scale) / 2,  # left
-        pos.y1 - 0.445,  # bottom
-        pos.width * width_scale,  # width
-        0.015,  # height
-    ]
-)
+ax_lam.apply_aspect()
+pos = ax_lam.get_position()
+
+pos_ds = ax_ds.get_position()
+ax_ds.set_position([pos_ds.x0, pos.y0, pos_ds.width, pos.height])
+
+cbar_width = 0.01
+cax_lam = fig.add_axes([pos.x1 + 0.015, pos.y0, cbar_width, pos.height])
 
 cb_lam = fig.colorbar(
     im,
     cax=cax_lam,
-    orientation="horizontal",
+    orientation="vertical",
     label=r"$u_{\text{sfc}}$ / m s$^{-1}$",
 )
 
@@ -172,7 +170,7 @@ ax_lam.scatter(
     sondes_flight_day.launch_lon,
     sondes_flight_day.launch_lat,
     facecolors="none",
-    label="dropsonde",
+    label=r"$\overline{u}_{0\text{--}100\,\mathrm{m}} \geq 3$ m s$^{-1}$",
     alpha=0.5,
     **scatter_kwargs,
 )
@@ -181,11 +179,18 @@ ax_lam.scatter(
     dol_sondes_flight_day.launch_lon,
     dol_sondes_flight_day.launch_lat,
     color=None,
-    label="doldrums dropsonde",
+    label=r"$\overline{u}_{0\text{--}100\,\mathrm{m}} < 3$ m s$^{-1}$",
     alpha=0.75,
     zorder=10,
     facecolors="k",
     **scatter_kwargs,
+)
+
+ax_lam.legend(
+    loc="upper left",
+    ncol=1,
+    labelcolor="k",
+    fontsize=9,
 )
 
 ax_lam.set_xlabel("longitude / °")
@@ -309,6 +314,22 @@ for t in specMACS_start_times:
         linewidth=2.0,
         clip_on=False,
     )
+
+dol_sondes_launch_times = dol_sondes_flight_day.launch_time.values
+dol_sondes_launch_times = dol_sondes_launch_times[
+    (dol_sondes_launch_times >= segment_start)
+    & (dol_sondes_launch_times <= segment_end)
+]
+
+ax_wales.scatter(
+    dol_sondes_launch_times,
+    np.full(dol_sondes_launch_times.shape, 0),  # axes fraction
+    transform=ax_wales.get_xaxis_transform(),
+    color="k",
+    marker="v",
+    s=50,
+    clip_on=False,
+)
 
 sns.despine()
 
